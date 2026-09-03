@@ -254,7 +254,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 132 tests
+node --test test/*.test.js     # 133 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

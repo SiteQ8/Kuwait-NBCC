@@ -230,6 +230,25 @@ test('Arabic checks lead with the verb rather than the English word order', () =
   assert.deepEqual(offenders, [], `these read as translated English:\n${offenders.join('\n')}`);
 });
 
+test('one concept is not rendered two ways', () => {
+  // Removable media had two renderings across the catalog for several
+  // releases, which is the kind of thing a reader notices before a test does.
+  const all = CONTROLS.flatMap((c) => [c.titleAr, c.purposeAr, c.requirementAr,
+    ...c.checksAr, ...c.evidenceAr]).join(' ');
+  const pairs = [
+    ['وسائط التخزين الخارجية', 'الوسائط المحمولة'],
+    ['الإتاحة', 'التوافرية'],
+    ['المسح الأمني', 'التحري'],
+    ['لوحة الإدارة', 'وحدة الإدارة'],
+    ['توطين', 'موطن'],
+    ['حصر', 'جرد']
+  ];
+  for (const [preferred, rejected] of pairs) {
+    const usesBoth = all.includes(preferred) && all.includes(rejected);
+    assert.ok(!usesBoth, `both "${preferred}" and "${rejected}" appear; pick one`);
+  }
+});
+
 test('a negation particle stays with its verb', () => {
   // Moving the verb forward and leaving لا behind reverses the meaning.
   for (const c of CONTROLS) {
