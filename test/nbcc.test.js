@@ -252,6 +252,62 @@ test('the shipped page carries both requirement languages', () => {
   assert.ok(site.includes('showOfficial'), 'the official text must remain reachable');
 });
 
+/* ------------------------------------------------------- accessibility */
+
+test('the shipped page carries the landmarks and links its tabs to its panels', () => {
+  const html = buildSite();
+  for (const tag of ['<header', '<main', '<footer', 'role="tablist"']) {
+    assert.ok(html.includes(tag), `the page is missing ${tag}`);
+  }
+  // A tab that does not name its panel leaves a screen reader user guessing.
+  const tabs = [...html.matchAll(/role="tab"\s+id="tab-(\w+)"\s+aria-controls="panel-(\w+)"/g)];
+  assert.equal(tabs.length, 5, 'every tab should declare the panel it controls');
+  for (const [, id, controls] of tabs) {
+    assert.equal(id, controls);
+    assert.ok(html.includes(`id="panel-${controls}" role="tabpanel" aria-labelledby="tab-${controls}"`),
+      `panel ${controls} does not point back at its tab`);
+  }
+  assert.equal((html.match(/<h1/g) || []).length, 1, 'exactly one h1');
+  assert.ok(html.includes('aria-live="polite"'), 'score changes need to be announced');
+});
+
+test('a person who asks for reduced motion gets it', () => {
+  assert.ok(buildSite().includes('prefers-reduced-motion'),
+    'the page must honour the reduced motion preference');
+});
+
+test('the skip link is reachable rather than parked off screen', () => {
+  const html = buildSite();
+  // Parking it at a negative inline offset broke right to left layout once, so
+  // it moves vertically and must stay the first thing in the document.
+  assert.ok(html.includes('class="skip"'));
+  assert.ok(!/\.skip\{[^}]*left:\s*-/.test(html), 'the skip link must not sit at a negative offset');
+  assert.ok(/\.skip:focus\{[^}]*top:/.test(html), 'focusing the skip link must bring it on screen');
+});
+
+test('text colours meet the contrast the interface promises', () => {
+  // These were measured against the paper background in a browser. The
+  // secondary slate and the ochre both had to darken to clear 4.5 to 1.
+  const html = buildSite();
+  const tok = (name) => (html.match(new RegExp(`--${name}\\s*:\\s*(#[0-9A-Fa-f]{6})`)) || [])[1];
+  const lum = (hex) => {
+    const v = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+  };
+  const ratio = (a, b) => {
+    const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m);
+    return (x + 0.05) / (y + 0.05);
+  };
+  const paper = tok('paper');
+  for (const name of ['slate', 'slate-2', 'ochre', 'crimson', 'green', 'ink']) {
+    const c = tok(name);
+    assert.ok(c, `token --${name} is missing`);
+    assert.ok(ratio(c, paper) >= 4.5,
+      `--${name} (${c}) is ${ratio(c, paper).toFixed(2)} to 1 on paper, below 4.5`);
+  }
+});
+
 /* -------------------------------------------------------------- scoping */
 
 test('cloud controls drop out when the entity uses no cloud', () => {

@@ -19,7 +19,7 @@ export const TOKENS = {
   line: '#DAD6CB',
   green: '#056839',
   greenSoft: '#E4EFE7',
-  ochre: '#B8860B',
+  ochre: '#8A6203',
   ochreSoft: '#F7EEDA',
   crimson: '#B3202E',
   crimsonSoft: '#F8E5E6',

@@ -212,6 +212,12 @@ Annex Section 1 aligns the NBCC with **NIST CSF 2.0** and **CIS Controls v8.1 IG
 nbcc crosswalk --to cis      # what an existing CIS IG1 programme already earns you
 ```
 
+## Accessibility
+
+Checked rather than claimed. Every text colour was measured against its real background in a browser across all five surfaces in both languages, and the secondary slate and the ochre both had to darken to clear the 4.5 to 1 ratio WCAG AA asks for. Tokens are asserted in the test suite so a future palette change cannot quietly drop below it.
+
+Also: every tab stop shows a visible focus indicator, the skip link is the first stop and appears when focused, tabs and panels reference each other, there is one `h1` and no skipped heading levels, score changes are announced in a polite live region, and `prefers-reduced-motion` is honoured.
+
 ## Verified against the gazette
 
 Every official string in the catalog is checked against the published Annex by `scripts/verify-against-gazette.py`, which normalises both sides and compares them character for character. As of 3 September 2026, against Kuwait Al Youm issue 1785:
@@ -242,7 +248,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 122 tests
+node --test test/*.test.js     # 126 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 
