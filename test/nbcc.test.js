@@ -150,6 +150,34 @@ test('the report renders bullets as a list rather than running prose', () => {
   assert.ok(!html.includes('\u2022'), 'raw bullet characters should not reach the report');
 });
 
+test('Arabic terminology follows the regional regulators, not a literal gloss', () => {
+  // Each of these was wrong on first writing and was corrected against the
+  // wording the Gulf cybersecurity controls actually print.
+  const expected = {
+    'GOV-3': 'تصنيف البيانات وسيادتها',
+    'GOV-4': 'التكويت والمسح الأمني للأدوار السيبرانية',
+    'PR-4.2': 'التحكم في وسائط التخزين الخارجية',
+    'CLD-11': 'التشفير الافتراضي',
+    'CLD-12': 'توطين البيانات (محتوى العميل)'
+  };
+  for (const [id, title] of Object.entries(expected)) {
+    assert.equal(getControl(id).titleAr, title);
+  }
+
+  const all = CONTROLS.flatMap((c) => [c.titleAr, c.purposeAr, c.requirementAr,
+    ...c.checksAr, ...c.evidenceAr]).join(' ');
+  const banned = {
+    'موطن': 'data residency is توطين البيانات, not موطن',
+    'التحري': 'screening is المسح الأمني',
+    'الوسائط المحمولة': 'removable media is وسائط التخزين الخارجية',
+    'وحدة الإدارة': 'a console is لوحة تحكم, not وحدة تحكم',
+    'التشفير التلقائي': 'encryption by default is التشفير الافتراضي, not التلقائي'
+  };
+  for (const [term, why] of Object.entries(banned)) {
+    assert.ok(!all.includes(term), `${why}: found "${term}"`);
+  }
+});
+
 test('the Arabic title follows the corrected English one', () => {
   // These renderings were drafted against titles that turned out to be wrong,
   // so they have to move whenever the official wording is corrected.

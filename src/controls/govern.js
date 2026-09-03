@@ -137,7 +137,7 @@ checks: [
     id: 'GOV-3',
     fn: 'GOV',
     title: 'Data Classification & Sovereignty',
-    titleAr: 'تصنيف البيانات والسيادة عليها',
+    titleAr: 'تصنيف البيانات وسيادتها',
     purpose: 'Ensure data is handled according to its sensitivity and legal requirements.',
     purposeAr: 'ضمان التعامل مع البيانات وفق درجة حساسيتها ومتطلباتها القانونية.',
     purposeSource: 'annex',
@@ -193,14 +193,14 @@ checks: [
     id: 'GOV-4',
     fn: 'GOV',
     title: 'Kuwaitization & Vetting for Cyber Roles',
-    titleAr: 'التكويت والتحري في الأدوار السيبرانية',
+    titleAr: 'التكويت والمسح الأمني للأدوار السيبرانية',
     purpose: 'Support national capacity building and reduce insider risk in critical cyber roles.',
     purposeAr: 'دعم بناء القدرات الوطنية والحد من مخاطر التهديد الداخلي في الأدوار السيبرانية الحرجة.',
     purposeSource: 'annex',
     requirement:
       'For key cybersecurity roles (e.g., SOC analysts, administrators, incident responders), prioritize qualified Kuwaiti nationals where feasible and consistent with national HR frameworks and local laws and regulations. For staff in such sensitive roles, perform basic pre-employment screening (e.g., identity verification, employment history, conflict-of-interest checks) in line with applicable laws and HR policies. Maintain a simple list of designated "sensitive cyber roles" and ensure screening is documented.',
         requirementAr:
-      'في الأدوار السيبرانية الرئيسية، ومنها مثلا محللو مركز العمليات الأمنية ومسؤولو الأنظمة والمستجيبون للحوادث، تعطى الأولوية للكوادر الكويتية المؤهلة متى كان ذلك ممكنا وبما يتسق مع أطر الموارد البشرية الوطنية والقوانين واللوائح المحلية، ويجرى للعاملين في هذه الأدوار الحساسة تحر أساسي قبل التعيين يشمل مثلا التحقق من الهوية والتاريخ الوظيفي وتعارض المصالح بما يتفق مع القوانين وسياسات الموارد البشرية السارية، كما تحفظ قائمة مبسطة بالأدوار السيبرانية الحساسة المحددة مع توثيق عمليات التحري.',
+      'في الأدوار السيبرانية الرئيسية، ومنها مثلا محللو مركز العمليات الأمنية ومسؤولو الأنظمة والمستجيبون للحوادث، تعطى الأولوية للكوادر الكويتية المؤهلة متى كان ذلك ممكنا وبما يتسق مع أطر الموارد البشرية الوطنية والقوانين واللوائح المحلية، ويجرى للعاملين في هذه الأدوار الحساسة مسح أمني أساسي قبل التعيين يشمل مثلا التحقق من الهوية والتاريخ الوظيفي وتعارض المصالح بما يتفق مع القوانين وسياسات الموارد البشرية السارية، كما تحفظ قائمة مبسطة بالأدوار السيبرانية الحساسة المحددة مع توثيق عمليات المسح الأمني.',
 checks: [
       'Qualified Kuwaiti nationals are prioritized for key cybersecurity roles where feasible.',
       'The prioritization approach is consistent with national HR frameworks and local law.',
@@ -214,10 +214,10 @@ checks: [
       'الكوادر الكويتية المؤهلة تعطى الأولوية في الأدوار السيبرانية الرئيسية متى أمكن.',
       'نهج الأولوية متسق مع أطر الموارد البشرية الوطنية والقوانين المحلية.',
       'تحفظ قائمة بالأدوار السيبرانية الحساسة المحددة.',
-      'يتحقق من الهوية قبل التعيين في الأدوار السيبرانية الحساسة.',
-      'يتحقق من التاريخ الوظيفي قبل التعيين في الأدوار السيبرانية الحساسة.',
-      'يتحقق من تعارض المصالح قبل التعيين في الأدوار السيبرانية الحساسة.',
-      'نتائج التحري موثقة ومحفوظة.'
+      'يجرى مسح أمني للهوية قبل التعيين في الأدوار السيبرانية الحساسة.',
+      'يجرى مسح أمني للتاريخ الوظيفي قبل التعيين في الأدوار السيبرانية الحساسة.',
+      'يجرى مسح أمني لتعارض المصالح قبل التعيين في الأدوار السيبرانية الحساسة.',
+      'نتائج المسح الأمني موثقة ومحفوظة.'
     ],
     evidence: [
       'Register of designated sensitive cyber roles',
@@ -227,9 +227,9 @@ checks: [
     ],
     evidenceAr: [
       'سجل الأدوار السيبرانية الحساسة المحددة',
-      'سجلات التحري المحفوظة لكل شاغل دور وفق سياسة الموارد البشرية',
+      'سجلات المسح الأمني المحفوظة لكل شاغل دور وفق سياسة الموارد البشرية',
       'بند في سياسة التوظيف يغطي أولوية الكوادر الوطنية',
-      'عينات من ملفات التعيين تبين استكمال عمليات التحري'
+      'عينات من ملفات التعيين تبين استكمال عمليات المسح الأمني'
     ],
     cadence: 'per hire',
     effort: 'low',

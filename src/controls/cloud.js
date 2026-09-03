@@ -60,7 +60,7 @@ checks: [
     id: 'CLD-2',
     fn: 'CLD',
     title: 'Provider Due Diligence',
-    titleAr: 'العناية الواجبة تجاه المزود',
+    titleAr: 'العناية الواجبة بمزود الخدمة',
     purpose: 'Evaluate the security posture of the provider before selection.',
     purposeAr: 'تقييم الوضع الأمني للمزود قبل اختياره.',
     purposeSource: 'editorial',
@@ -98,7 +98,7 @@ checks: [
     id: 'CLD-3',
     fn: 'CLD',
     title: 'Right to Audit (Third-Party Assurance)',
-    titleAr: 'حق التدقيق (ضمانات الطرف الثالث)',
+    titleAr: 'حق التدقيق (تأكيدات الأطراف الخارجية)',
     purpose: 'Preserve assurance over a shared environment without physical inspection.',
     purposeAr: 'الحفاظ على التأكيد بشأن بيئة مشتركة دون الحاجة إلى معاينة مادية.',
     purposeSource: 'editorial',
@@ -174,7 +174,7 @@ checks: [
     id: 'CLD-5',
     fn: 'CLD',
     title: 'Data Ownership & Exit',
-    titleAr: 'ملكية البيانات والخروج من الخدمة',
+    titleAr: 'ملكية البيانات وإنهاء الخدمة',
     purpose: 'Keep ownership with the entity and keep exit technically possible.',
     purposeAr: 'إبقاء الملكية لدى الجهة وإبقاء الخروج ممكنا من الناحية التقنية.',
     purposeSource: 'editorial',
@@ -332,21 +332,21 @@ checks: [
     id: 'CLD-9',
     fn: 'CLD',
     title: 'MFA for Cloud Consoles',
-    titleAr: 'المصادقة متعددة العوامل لوحدات التحكم السحابية',
+    titleAr: 'المصادقة متعددة العوامل للوحات التحكم السحابية',
     purpose: 'Protect the highest value credentials in the environment.',
     purposeAr: 'حماية أعلى بيانات الاعتماد قيمة في البيئة.',
     purposeSource: 'editorial',
     requirement:
       'Multi-Factor Authentication (MFA) MUST be enforced for all users with administrative access to the Cloud Management Console and root accounts.',
         requirementAr:
-      'يجب فرض المصادقة متعددة العوامل على جميع المستخدمين ذوي الوصول الإداري إلى وحدة الإدارة السحابية وعلى الحسابات الجذرية.',
+      'يجب فرض المصادقة متعددة العوامل على جميع المستخدمين ذوي الوصول الإداري إلى لوحة الإدارة السحابية وعلى الحسابات الجذرية.',
 checks: [
       'MFA is enforced for every user with administrative access to the cloud management console.',
       'MFA is enforced on root accounts.',
       'Enforcement is technical rather than advisory.'
     ],
     checksAr: [
-      'المصادقة متعددة العوامل مفروضة على كل مستخدم له وصول إداري إلى وحدة الإدارة السحابية.',
+      'المصادقة متعددة العوامل مفروضة على كل مستخدم له وصول إداري إلى لوحة الإدارة السحابية.',
       'المصادقة متعددة العوامل مفروضة على الحسابات الجذرية.',
       'الفرض تقني لا توجيهي.'
     ],
@@ -357,7 +357,7 @@ checks: [
     ],
     evidenceAr: [
       'سياسة فرض المصادقة متعددة العوامل من مزود الهوية السحابي',
-      'تقرير يعدد كل مدير لوحدة الإدارة وحالة المصادقة متعددة العوامل لديه',
+      'تقرير يعدد كل مدير للوحة الإدارة وحالة المصادقة متعددة العوامل لديه',
       'ما يثبت حماية الحساب الجذري بما في ذلك أي إجراء للوصول الطارئ'
     ],
     cadence: 'continuous',
@@ -408,7 +408,7 @@ checks: [
     id: 'CLD-11',
     fn: 'CLD',
     title: 'Encryption by Default',
-    titleAr: 'التشفير التلقائي',
+    titleAr: 'التشفير الافتراضي',
     purpose: 'Ensure stored data is unreadable without the key.',
     purposeAr: 'ضمان عدم إمكانية قراءة البيانات المخزنة دون المفتاح.',
     purposeSource: 'editorial',
@@ -448,9 +448,9 @@ checks: [
     id: 'CLD-12',
     fn: 'CLD',
     title: 'Data Residency (Customer Content)',
-    titleAr: 'موطن حفظ البيانات (محتوى العميل)',
+    titleAr: 'توطين البيانات (محتوى العميل)',
     purpose: 'Keep Customer Content where the national framework requires it.',
-    purposeAr: 'إبقاء محتوى العميل في الموطن الذي يفرضه الإطار الوطني.',
+    purposeAr: 'إبقاء محتوى العميل داخل النطاق الجغرافي الذي يفرضه الإطار الوطني.',
     purposeSource: 'editorial',
     requirement:
       'The Entity MUST configure cloud services and related contracts to store and process Customer Content (files, databases, application data) according to the National Data Classification Framework (Decision No. 1 of 2025).',
@@ -465,7 +465,7 @@ checks: [
     checksAr: [
       'الخدمات السحابية مهيأة لحفظ محتوى العميل بما يتفق مع الإطار الوطني لتصنيف البيانات.',
       'الخدمات السحابية مهيأة لمعالجة محتوى العميل بما يتفق مع ذلك الإطار.',
-      'العقود ذات الصلة تحمل الالتزام نفسه بموطن حفظ البيانات.',
+      'العقود ذات الصلة تحمل الالتزام نفسه بتوطين البيانات.',
       'محتوى العميل مفهوم بأنه الملفات وقواعد البيانات وبيانات التطبيقات.'
     ],
     evidence: [
@@ -490,12 +490,12 @@ checks: [
     title: 'Operational Metadata Exemption',
     titleAr: 'استثناء البيانات الوصفية التشغيلية',
     purpose: 'Keep the residency rule workable by keeping metadata non sensitive.',
-    purposeAr: 'إبقاء قاعدة الموطن قابلة للتطبيق عبر إبقاء البيانات الوصفية غير حساسة.',
+    purposeAr: 'إبقاء قاعدة التوطين قابلة للتطبيق عبر إبقاء البيانات الوصفية غير حساسة.',
     purposeSource: 'editorial',
     requirement:
       'Residency requirements apply to Customer Content. Operational Metadata (e.g., project IDs, billing logs, system status, and IP addresses) can be processed globally to ensure platform security, reliability, and accurate billing. Entities must ensure that metadata identifiers (such as Project IDs, folder names and labels) remain non-sensitive.',
         requirementAr:
-      'تسري متطلبات موطن حفظ البيانات على محتوى العميل، أما البيانات الوصفية التشغيلية مثل معرفات المشاريع وسجلات الفوترة وحالة الأنظمة وعناوين بروتوكول الإنترنت فيمكن معالجتها عالميا ضمانا لأمن المنصة وموثوقيتها ودقة الفوترة، وعلى الجهات التأكد من بقاء معرفات البيانات الوصفية مثل معرفات المشاريع وأسماء المجلدات والوسوم غير حساسة.',
+      'تسري متطلبات توطين البيانات على محتوى العميل، أما البيانات الوصفية التشغيلية مثل معرفات المشاريع وسجلات الفوترة وحالة الأنظمة وعناوين بروتوكول الإنترنت فيمكن معالجتها عالميا ضمانا لأمن المنصة وموثوقيتها ودقة الفوترة، وعلى الجهات التأكد من بقاء معرفات البيانات الوصفية مثل معرفات المشاريع وأسماء المجلدات والوسوم غير حساسة.',
 checks: [
       'The entity distinguishes Customer Content from Operational Metadata in its records.',
       'Project identifiers remain non sensitive.',

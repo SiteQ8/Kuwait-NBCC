@@ -183,7 +183,7 @@ export const MESSAGES = {
     controlsHead: 'الضوابط', findingsHead: 'الملاحظات',
     findingsMore: (n) => `و${n} أخرى، انظر "nbcc report"`,
     evidenceHeadShort: 'الأدلة',
-    evidenceLocatable: (p, n) => `${p} من الأدلة ${n} مسجلة ويمكن بلوغها`,
+    evidenceLocatable: (p, n) => `${p} من الأدلة ${n} مسجلة ويمكن تقديمها`,
     evidenceClaims: 'من الضوابط قيمت مستوفاة أو جزئية دون ما يثبتها',
     evidenceHint: (p) => `شغل "nbcc evidence ${p}" لعرض السجل.`,
 
@@ -193,14 +193,14 @@ export const MESSAGES = {
 
     registerHead: 'سجل الأدلة',
     registerSub: (n, y) => `${n} دليلا \u00b7 تحفظ ${y} سنوات \u00b7 تقدم للمركز عند الطلب`,
-    regRecorded: 'مسجل', regProducible: 'يمكن بلوغه',
+    regRecorded: 'مسجل', regProducible: 'يمكن تقديمه',
     regCounts: (h, u, s, d, m) =>
       `${h} محفوظ \u00b7 ${u} دون موضع \u00b7 ${s} متقادم \u00b7 ${d} دون تاريخ \u00b7 ${m} مفقود`,
     regRange: (a, b) => `جمعت بين ${a} و${b}`,
     regNoLocation: 'لم يسجل موضعه', regNoDate: 'دون تاريخ جمع',
     regNoRef: 'دون مرجع', regOld: (n) => `مضى عليه ${n} يوما`,
     regAttention: 'يحتاج انتباها',
-    regClaimsHead: 'مدعاة دون دليل',
+    regClaimsHead: 'ادعي استيفاؤها دون دليل',
     regClaimsSub: 'ضوابط قيمت مستوفاة أو جزئية دون ما يثبتها.',
     regHint: 'أضف ‎--csv‎ لتصدير السجل، أو ‎--missing‎ أو ‎--stale‎ لتضييقه.',
 
@@ -210,7 +210,7 @@ export const MESSAGES = {
     trendForecastSub: (d, n) => `خط مستقيم حتى ${d}، على بعد ${n} يوما`,
     trendMoved: (label, c, m) => `تحرك ${label} بمقدار ${c > 0 ? '+' : ''}${c} نقطة، أي ${m} شهريا`,
     trendDrift: (p, dir, m) =>
-      `جرت الفترة الأخيرة ${p}٪ ${dir} بمعدل ${m} شهريا، فالخط المستقيم يجمل الصورة أو يبخسها`,
+      `سارت الفترة الأخيرة ${p}٪ ${dir} بمعدل ${m} شهريا، فالخط المستقيم يجمل الصورة أو يبخسها`,
     faster: 'أسرع', slower: 'أبطأ',
     trendReaches: (d, n) => `تبلغ نسبة التطبيق 100٪ نحو ${d}، أي قبل الموعد النهائي بـ ${n} يوما.`,
     trendStalled: (c, m) => `لا معدل تقدم يبنى عليه توقع، وعند ${c}٪ اليوم يحتاج سد الفجوة ${m} نقطة شهريا.`,
@@ -250,9 +250,9 @@ export const MESSAGES = {
     crosswalkOfficial: 'منصوص عليه في الملحق', crosswalkConvenience: 'مواءمة تيسيرية',
     crosswalkReferenced: 'مرجعا', colControl: 'الضابط',
 
-    doctorHead: 'الفحص الذاتي', doctorOk: 'الكتالوج متسق داخليا.',
+    doctorHead: 'الفحص الذاتي', doctorOk: 'فهرس الضوابط متسق داخليا.',
     docControls: 'الضوابط', docChecks: 'بنود التحقق', docEvidence: 'عناصر الأدلة',
     docFunctions: 'الوظائف', docMilestones: 'المراحل',
-    docProblems: (n) => `${n} من مشكلات الكتالوج`
+    docProblems: (n) => `${n} من مشكلات فهرس الضوابط`
   }
 };

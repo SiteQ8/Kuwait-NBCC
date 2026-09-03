@@ -344,7 +344,7 @@ checks: [
     requirement:
       'Establish a security awareness program and provide training at least annually and for new joiners. At minimum, cover: social engineering and phishing, safe use of email and the web, handling of Sensitive and Restricted data, password and MFA hygiene, use of approved communication tools, use of portable media, and how to report suspicious activity or incidents. Use simple language and relevant examples.',
         requirementAr:
-      'تنشئ الجهة برنامجا للتوعية الأمنية وتقدم التدريب سنويا على الأقل وللموظفين الجدد، ويغطي كحد أدنى الهندسة الاجتماعية والتصيد والاستخدام الآمن للبريد الإلكتروني والإنترنت والتعامل مع البيانات الحساسة والمقيدة وسلامة كلمات المرور والمصادقة متعددة العوامل واستخدام أدوات التواصل المعتمدة واستخدام الوسائط المحمولة وكيفية الإبلاغ عن النشاط المشبوه أو الحوادث، وتستخدم في ذلك لغة بسيطة وأمثلة ذات صلة.',
+      'تنشئ الجهة برنامجا للتوعية الأمنية وتقدم التدريب سنويا على الأقل وللموظفين الجدد، ويغطي كحد أدنى الهندسة الاجتماعية والتصيد والاستخدام الآمن للبريد الإلكتروني والإنترنت والتعامل مع البيانات الحساسة والمقيدة وسلامة كلمات المرور والمصادقة متعددة العوامل واستخدام أدوات التواصل المعتمدة واستخدام وسائط التخزين الخارجية وكيفية الإبلاغ عن النشاط المشبوه أو الحوادث، وتستخدم في ذلك لغة بسيطة وأمثلة ذات صلة.',
 checks: [
       'A security awareness program is established.',
       'Training is delivered at least annually.',
@@ -367,7 +367,7 @@ checks: [
       'التدريب يغطي التعامل مع البيانات الحساسة والمقيدة.',
       'التدريب يغطي سلامة كلمات المرور والمصادقة متعددة العوامل.',
       'التدريب يغطي استخدام أدوات التواصل المعتمدة.',
-      'التدريب يغطي استخدام الوسائط المحمولة.',
+      'التدريب يغطي استخدام وسائط التخزين الخارجية.',
       'التدريب يغطي كيفية الإبلاغ عن النشاط المشبوه أو الحوادث.',
       'المواد تستخدم لغة بسيطة وأمثلة ذات صلة.'
     ],
@@ -551,14 +551,14 @@ checks: [
     id: 'PR-4.2',
     fn: 'PR',
     title: 'Portable Media Device Control',
-    titleAr: 'ضبط وسائط التخزين المحمولة',
+    titleAr: 'التحكم في وسائط التخزين الخارجية',
     purpose: 'Limit the risks from use of unapproved removable media devices.',
     purposeAr: 'الحد من مخاطر استخدام وسائط التخزين القابلة للإزالة غير المعتمدة.',
     purposeSource: 'annex',
     requirement:
       'Where feasible, restrict or technically disable the use of unapproved portable storage media (e.g., USB drives) on Entity systems, especially those handling Sensitive data. Establish procedures to allow only authorized portable media if necessary for business, and train staff on proper usage of portable media devices.',
         requirementAr:
-      'تقيد الجهة متى أمكن استخدام وسائط التخزين المحمولة غير المعتمدة كأقراص الناقل التسلسلي العام على أنظمتها أو تعطله تقنيا، ولا سيما الأنظمة التي تعالج بيانات حساسة، وتضع إجراءات لا تسمح إلا بالوسائط المحمولة المصرح بها إذا اقتضت حاجة العمل ذلك، وتدرب الموظفين على الاستخدام السليم لأجهزة الوسائط المحمولة.',
+      'تقيد الجهة متى أمكن استخدام وسائط التخزين الخارجية غير المعتمدة كأقراص الناقل التسلسلي العام على أنظمتها أو تعطله تقنيا، ولا سيما الأنظمة التي تعالج بيانات حساسة، وتضع إجراءات لا تسمح إلا بوسائط التخزين الخارجية المصرح بها إذا اقتضت حاجة العمل ذلك، وتدرب الموظفين على الاستخدام السليم لأجهزة وسائط التخزين الخارجية.',
 checks: [
       'Use of unapproved portable storage media is restricted or technically disabled where feasible.',
       'Systems handling Sensitive data receive the strictest portable media restriction.',
@@ -567,11 +567,11 @@ checks: [
       'Staff are trained on proper usage of portable media devices.'
     ],
     checksAr: [
-      'استخدام وسائط التخزين المحمولة غير المعتمدة مقيد أو معطل تقنيا متى أمكن.',
-      'الأنظمة التي تعالج بيانات حساسة تخضع لأشد قيود الوسائط المحمولة.',
-      'يوجد إجراء لاعتماد الوسائط المحمولة عند وجود حاجة عمل.',
-      'الوسائط المحمولة المصرح بها وحدها يمكن استخدامها.',
-      'الموظفون مدربون على الاستخدام السليم لأجهزة الوسائط المحمولة.'
+      'استخدام وسائط التخزين الخارجية غير المعتمدة مقيد أو معطل تقنيا متى أمكن.',
+      'الأنظمة التي تعالج بيانات حساسة تخضع لأشد قيود وسائط التخزين الخارجية.',
+      'يوجد إجراء لاعتماد وسائط التخزين الخارجية عند وجود حاجة عمل.',
+      'وسائط التخزين الخارجية المصرح بها وحدها يمكن استخدامها.',
+      'الموظفون مدربون على الاستخدام السليم لأجهزة وسائط التخزين الخارجية.'
     ],
     evidence: [
       'Endpoint policy showing removable media control settings',
@@ -581,7 +581,7 @@ checks: [
     ],
     evidenceAr: [
       'سياسة الأجهزة الطرفية تبين إعدادات التحكم في الوسائط القابلة للإزالة',
-      'سجل الوسائط المصرح بها واعتماداتها',
+      'سجل وسائط التخزين المصرح بها واعتماداتها',
       'وحدة تدريبية تغطي الوسائط القابلة للإزالة',
       'تقرير أحداث الأجهزة المحجوبة'
     ],
@@ -595,7 +595,7 @@ checks: [
     id: 'PR-5',
     fn: 'PR',
     title: 'Data Protection, Backup & Lifecycle',
-    titleAr: 'حماية البيانات والنسخ الاحتياطي ودورة الحياة',
+    titleAr: 'حماية البيانات والنسخ الاحتياطي ودورة حياتها',
     purpose:
       'Ensure critical data is appropriately protected, can be restored, and is disposed of safely.',
     purposeAr:
