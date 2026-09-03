@@ -30,6 +30,7 @@ export const CLOUD = [
       'Entities MUST ensure the Cloud Service Provider (CSP) is authorized to operate in the State of Kuwait in accordance with regulations issued by the relevant national authorities',
         requirementAr:
       'يجب على الجهات التأكد من أن مزود الخدمة السحابية مرخص له بالعمل في دولة الكويت وفقا للوائح الصادرة عن الجهات الوطنية المختصة',
+beyondAnnex: [2],
 checks: [
       'Every cloud service provider in use is authorized to operate in the State of Kuwait.',
       'Authorization is verified against regulations issued by the relevant national authorities.',
@@ -68,6 +69,7 @@ checks: [
       'Prior to selection, Entities MUST evaluate the CSP\u2019s security posture. This requirement is satisfied by reviewing the CSP\u2019s valid, independent international security certifications (e.g., ISO 27001, SOC 2 Type II, CSA STAR Level 2).',
         requirementAr:
       'يجب على الجهات قبل الاختيار تقييم الوضع الأمني لمزود الخدمة السحابية، ويستوفى هذا المتطلب بمراجعة الشهادات الأمنية الدولية المستقلة السارية لدى المزود مثل الأيزو 27001 وSOC 2 Type II وCSA STAR المستوى الثاني.',
+beyondAnnex: [2],
 checks: [
       'The security posture of the provider is evaluated before selection.',
       'The evaluation reviews valid independent international security certifications.',
@@ -144,6 +146,7 @@ checks: [
       'Contracts MUST include a commitment from the CSP to notify the Entity of a confirmed data incident without undue delay to allow for accurate investigation and reporting.',
         requirementAr:
       'يجب أن تتضمن العقود التزاما من مزود الخدمة السحابية بإخطار الجهة بأي حادث مؤكد يمس البيانات دون تأخير غير مبرر بما يتيح التحقيق والإبلاغ على نحو دقيق.',
+beyondAnnex: [2],
 checks: [
       'Every cloud contract commits the provider to notify the entity of a confirmed data incident.',
       'The commitment requires notification without undue delay.',
@@ -182,6 +185,7 @@ checks: [
       'The contract MUST explicitly state that the Entity retains exclusive ownership of their data. The CSP MUST provide tools or standard APIs to allow the Entity to retrieve their data upon contract termination.',
         requirementAr:
       'يجب أن ينص العقد صراحة على احتفاظ الجهة بالملكية الحصرية لبياناتها، ويجب على مزود الخدمة السحابية توفير أدوات أو واجهات برمجية قياسية تمكن الجهة من استرجاع بياناتها عند إنهاء العقد.',
+beyondAnnex: [2],
 checks: [
       'The contract explicitly states that the entity retains exclusive ownership of its data.',
       'The provider offers tools or standard APIs for data retrieval on termination.',
@@ -220,6 +224,7 @@ checks: [
       'Contracts MUST define Service Level Agreements (SLAs) for availability. The agreement SHOULD include financial remedies (service credits) for failure to meet these standards.',
         requirementAr:
       'يجب أن تحدد العقود اتفاقيات مستوى الخدمة الخاصة بالإتاحة، وينبغي أن تتضمن الاتفاقية تعويضات مالية في صورة أرصدة خدمة عند الإخفاق في بلوغ هذه المستويات.',
+beyondAnnex: [2],
 checks: [
       'Every cloud contract defines a service level agreement for availability.',
       'The agreement includes financial remedies such as service credits.',
@@ -340,6 +345,7 @@ checks: [
       'Multi-Factor Authentication (MFA) MUST be enforced for all users with administrative access to the Cloud Management Console and root accounts.',
         requirementAr:
       'يجب فرض المصادقة متعددة العوامل على جميع المستخدمين ذوي الوصول الإداري إلى لوحة الإدارة السحابية وعلى الحسابات الجذرية.',
+beyondAnnex: [2],
 checks: [
       'MFA is enforced for every user with administrative access to the cloud management console.',
       'MFA is enforced on root accounts.',
@@ -496,6 +502,7 @@ checks: [
       'Residency requirements apply to Customer Content. Operational Metadata (e.g., project IDs, billing logs, system status, and IP addresses) can be processed globally to ensure platform security, reliability, and accurate billing. Entities must ensure that metadata identifiers (such as Project IDs, folder names and labels) remain non-sensitive.',
         requirementAr:
       'تسري متطلبات توطين البيانات على محتوى العميل، أما البيانات الوصفية التشغيلية مثل معرفات المشاريع وسجلات الفوترة وحالة الأنظمة وعناوين بروتوكول الإنترنت فيمكن معالجتها عالميا ضمانا لأمن المنصة وموثوقيتها ودقة الفوترة، وعلى الجهات التأكد من بقاء معرفات البيانات الوصفية مثل معرفات المشاريع وأسماء المجلدات والوسوم غير حساسة.',
+beyondAnnex: [4],
 checks: [
       'The entity distinguishes Customer Content from Operational Metadata in its records.',
       'Project identifiers remain non sensitive.',
@@ -538,6 +545,7 @@ checks: [
       'Cloud storage resources (e.g., object storage buckets) MUST be configured to block public access by default. Public exposure MUST be an explicit, documented exception approved by the data owner.',
         requirementAr:
       'يجب تهيئة موارد التخزين السحابي مثل حاويات تخزين الكائنات لحجب الوصول العام افتراضيا، ويجب أن يكون أي كشف للعموم استثناء صريحا وموثقا ومعتمدا من مالك البيانات.',
+beyondAnnex: [1],
 checks: [
       'Cloud storage resources block public access by default.',
       'The default applies at the organization or account level, not only per resource.',

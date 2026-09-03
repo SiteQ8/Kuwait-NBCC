@@ -161,6 +161,8 @@ export const MESSAGES = {
       unassessed: 'unassessed', 'not-applicable': 'not applicable', 'out-of-scope': 'out of scope' },
     passed: 'passed', startHere: 'Start here', startHereSub: 'low effort, open now',
     checksUnit: 'checks',
+    beyond: 'beyond the Annex',
+    beyondNote: 'Marked checks are sound practice this toolkit adds. The Annex does not state them.',
 
     // doctor
     doctorHead: 'Self check', doctorOk: 'Catalog is internally consistent.',
@@ -287,6 +289,8 @@ export const MESSAGES = {
       unassessed: 'غير مقيم', 'not-applicable': 'لا ينطبق', 'out-of-scope': 'خارج النطاق' },
     passed: 'انقضت', startHere: 'ابدأ من هنا', startHereSub: 'جهد منخفض ومفتوح الآن',
     checksUnit: 'بندا',
+    beyond: 'زائد على الملحق',
+    beyondNote: 'البنود الموسومة ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
 
     doctorHead: 'الفحص الذاتي', doctorOk: 'فهرس الضوابط متسق داخليا.',
     docControls: 'الضوابط', docChecks: 'بنود التحقق', docEvidence: 'عناصر الأدلة',

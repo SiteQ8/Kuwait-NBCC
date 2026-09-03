@@ -111,6 +111,10 @@ Treat it as a direction rather than a date. It fits a straight line, and complia
 
 Scope is respected, so an entity running no cloud shrinks the denominator on Appendix A rather than registering sixteen failures.
 
+## Checks that go beyond the Annex
+
+Nine checks ask for more than the requirement states and are marked `beyond the Annex` in every output. When reporting a gap on one of them, say so: the entity is not failing the regulation, it is failing a practice this toolkit recommends. The nine sit in GOV-1, CLD-1, CLD-2, CLD-4, CLD-5, CLD-6, CLD-9, CLD-13 and CLD-14.
+
 ## Cautions
 
 Do not present any output as a determination of compliance by NCSC. The authoritative text is the gazetted Annex. The decomposition of each requirement into checks is this toolkit's own work and carries no official standing, and the ISO 27001 crosswalk is a convenience mapping, unlike the NIST CSF and CIS mappings which the Annex itself names.

@@ -110,6 +110,8 @@ const T = {
     noFindings: 'No findings. Every applicable control carries an owner, an assessed status, and a valid exception record where one is claimed.',
     waitsOn: 'waits on', none: 'none', thState: 'State', thOpen: 'Open',
     owner: 'Owner', unassigned: 'unassigned', target: 'Target',
+    beyond: 'beyond the Annex',
+    beyondNote: 'Sound practice this toolkit adds. The Annex does not state it.',
     edmark: 'summary', edmarkT: 'Appendix A prints no Purpose column. This summary is not Annex text.'
   },
   ar: {
@@ -165,6 +167,8 @@ const T = {
     noFindings: 'لا ملاحظات، فكل ضابط منطبق له مسؤول وحالة مقيمة وسجل استثناء صحيح حيثما ادعي.',
     waitsOn: 'ينتظر', none: 'لا شيء', thState: 'الحالة', thOpen: 'المفتوح',
     owner: 'المسؤول', unassigned: 'غير محدد', target: 'التاريخ المستهدف',
+    beyond: 'زائد على الملحق',
+    beyondNote: 'ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
     edmark: 'تلخيص', edmarkT: 'لا يتضمن الملحق الأول عمود الغرض، فهذا التلخيص ليس من نص الملحق.'
   }
 };
@@ -329,7 +333,8 @@ function controlDetail(row) {
   const checks = cx(control, 'checks')
     .map(
       (text, i) => `<li><span class="i">${String(i + 1).padStart(2, '0')}</span>
-      <span>${esc(text)}</span>${statusPill(row.statuses[i], L.dir === 'rtl' ? 'ar' : 'en')}</li>`
+      <span>${esc(text)}${(control.beyondAnnex || []).includes(i)
+        ? ` <span class="edmark" title="${esc(tr('beyondNote'))}">${esc(tr('beyond'))}</span>` : ''}</span>${statusPill(row.statuses[i], L.dir === 'rtl' ? 'ar' : 'en')}</li>`
     )
     .join('');
   const evidence = cx(control, 'evidence').map((e) => `<li>${esc(e)}</li>`).join('');

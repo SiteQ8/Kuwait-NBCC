@@ -508,6 +508,39 @@ test('text colours meet the contrast the interface promises', () => {
   }
 });
 
+test('a check that goes past the Annex is marked as such', () => {
+  // The decomposition is this project's work, but a check that demands more
+  // than the requirement states has to be distinguishable from one that
+  // restates it, or the tool quietly widens the regulation.
+  const marked = CONTROLS.filter((c) => c.beyondAnnex && c.beyondAnnex.length);
+  assert.equal(marked.length, 9);
+  assert.equal(CATALOG_STATS.checksBeyondAnnex, 9);
+  for (const c of marked) {
+    for (const i of c.beyondAnnex) {
+      assert.ok(Number.isInteger(i) && i >= 0 && i < c.checks.length,
+        `${c.id} marks a check index that does not exist`);
+    }
+  }
+  // Known cases, so a future edit cannot quietly drop the marker.
+  assert.ok(getControl('CLD-6').beyondAnnex.includes(2),
+    'measuring achieved availability is not stated in CLD-6');
+  assert.ok(getControl('GOV-1').beyondAnnex.includes(1),
+    'a signed appointment is an evidentiary standard GOV-1 does not state');
+});
+
+test('the marker reaches every surface that shows a check', () => {
+  const site = buildSite();
+  assert.ok(site.includes('beyondAnnex'), 'the payload must carry the flag');
+  assert.ok(site.includes('beyondMark'), 'the workbench must render it');
+  const report = renderReport(JSON.parse(readFileSync(EXAMPLE, 'utf8')), { today: SEP });
+  assert.equal((report.match(/beyond the Annex/g) || []).length, 9);
+  const shown = execFileSync(process.execPath, [CLI, 'show', 'CLD-6'], { encoding: 'utf8' });
+  assert.ok(shown.includes('beyond the Annex'));
+  assert.ok(shown.includes('The Annex does not state them'));
+  const ar = execFileSync(process.execPath, [CLI, 'show', 'CLD-6', '--ar'], { encoding: 'utf8' });
+  assert.ok(ar.includes('زائد على الملحق'));
+});
+
 /* -------------------------------------------------------------- scoping */
 
 test('cloud controls drop out when the entity uses no cloud', () => {

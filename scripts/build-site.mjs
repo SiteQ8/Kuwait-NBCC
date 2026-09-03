@@ -32,6 +32,7 @@ export function buildPayload() {
       requirement: c.requirement,
       requirementAr: c.requirementAr,
       checks: c.checks,
+      beyondAnnex: c.beyondAnnex || [],
       checksAr: c.checksAr,
       evidence: c.evidence,
       evidenceAr: c.evidenceAr,

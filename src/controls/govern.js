@@ -35,6 +35,7 @@ export const GOVERN = [
       'The entity MUST designate an employee at manager level or above with overall responsibility for cybersecurity. Define and document roles and responsibilities for information security, IT operations, risk management, data classification, and incident response. Review and update this structure at least annually or when major organizational changes occur.',
         requirementAr:
       'على الجهة أن تعين موظفا بدرجة مدير فما فوق يتولى المسؤولية الشاملة عن الأمن السيبراني، وأن تحدد وتوثق الأدوار والمسؤوليات الخاصة بأمن المعلومات وعمليات تقنية المعلومات وإدارة المخاطر وتصنيف البيانات والاستجابة للحوادث، ثم تراجع هذا الهيكل وتحدثه سنويا على الأقل أو عند وقوع تغييرات تنظيمية جوهرية.',
+beyondAnnex: [1],
 checks: [
       'An employee at manager level or above is formally designated with overall responsibility for cybersecurity.',
       'The designation is documented and traceable to a signed appointment or equivalent record.',

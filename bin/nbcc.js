@@ -266,11 +266,14 @@ function cmdShow(positional, flags) {
   }
   out('');
   out(`${C.cyan}${m('checksHead')}${C.reset} ${C.dim}(${c.checks.length})${C.reset}`);
+  const beyond = new Set(c.beyondAnnex || []);
   (ar ? c.checksAr : c.checks).forEach((t, i) => {
     const lines = wrap(t, 72);
-    out(`  ${C.dim}${padStart(i + 1, 2)}${C.reset}  ${lines[0]}`);
-    for (const l of lines.slice(1)) out(`      ${l}`);
+    const mark = beyond.has(i) ? `  ${C.yellow}[${m('beyond')}]${C.reset}` : '';
+    out(`  ${C.dim}${padStart(i + 1, 2)}${C.reset}  ${lines[0]}${lines.length === 1 ? mark : ''}`);
+    lines.slice(1).forEach((l, j) => out(`      ${l}${j === lines.length - 2 ? mark : ''}`));
   });
+  if (beyond.size) out(`  ${C.dim}${m('beyondNote')}${C.reset}`);
   out('');
   out(`${C.cyan}${m('evidenceHead')}${C.reset}`);
   for (const e of (ar ? c.evidenceAr : c.evidence)) out(`  \u00b7 ${e}`);

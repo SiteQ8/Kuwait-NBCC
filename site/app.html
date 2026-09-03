@@ -716,6 +716,8 @@ const STR = {
     impl:'Implementation', post:'Defensible posture', cov:'Coverage', bandL:'Band',
     metL:'met', gapL:'no coverage', evL:'evidenced',
     reqL:'Minimum requirement', checksL:'Checks', evidenceL:'Evidence to retain',
+    beyond:'beyond the Annex',
+    beyondNote:'Sound practice this toolkit adds. The Annex does not state it.',
     edmark:'summary', edmarkT:'Appendix A prints no Purpose column, so this summary is not Annex text.',
     workingAr:'working translation', showOfficial:'Official English text',
     owner:'Owner', cadence:'Cadence', effort:'Effort', phase:'Phase', unassigned:'unassigned',
@@ -762,6 +764,8 @@ const STR = {
     impl:'نسبة التطبيق', post:'الوضع القابل للإثبات', cov:'نسبة التقييم', bandL:'المستوى',
     metL:'مستوفى', gapL:'دون تغطية', evL:'موثق بالأدلة',
     reqL:'الحد الأدنى المطلوب', checksL:'بنود التحقق', evidenceL:'الأدلة الواجب حفظها',
+    beyond:'زائد على الملحق',
+    beyondNote:'ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
     edmark:'تلخيص', edmarkT:'لا يتضمن الملحق الأول عمود الغرض، لذا فهذا التلخيص ليس من نص الملحق.',
     workingAr:'ترجمة عاملة', showOfficial:'عرض النص الرسمي بالإنجليزية',
     owner:'المسؤول', cadence:'الدورية', effort:'الجهد', phase:'المرحلة', unassigned:'غير محدد',
@@ -901,6 +905,16 @@ function kchecks(c){ return lang === 'ar' && c.checksAr ? c.checksAr : c.checks;
 function kevidence(c){ return lang === 'ar' && c.evidenceAr ? c.evidenceAr : c.evidence; }
 function ltx(){ return lang === 'ar' ? '' : ' ltx'; }
 
+/*
+ * A check that goes past what the Annex states is sound practice this toolkit
+ * adds, and an assessor arguing a position with NCSC has to be able to tell it
+ * from a check that restates the requirement.
+ */
+function beyondMark(c, i){
+  return (c.beyondAnnex || []).includes(i)
+    ? ` <span class="edmark" title="${esc(t('beyondNote'))}">${esc(t('beyond'))}</span>` : '';
+}
+
 function purposeHTML(c){
   const mark = c.purposeSource === 'editorial'
     ? ` <span class="edmark" title="${esc(t('edmarkT'))}">${esc(t('edmark'))}</span>` : '';
@@ -965,7 +979,7 @@ function controlCard(c, open){
       <p class="muted" style="margin:0 0 13px">${purposeHTML(c)}</p>
       <div class="req">${reqHTML(c)}</div>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('checksL')}</h3>
-      <ul class="klist${ltx()}">${kchecks(c).map((k,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(k)}</span></li>`).join('')}</ul>
+      <ul class="klist${ltx()}">${kchecks(c).map((k,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(k)}${beyondMark(c,i)}</span></li>`).join('')}</ul>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('evidenceL')}</h3>
       <ul class="evd${ltx()}">${kevidence(c).map(e=>`<li>${esc(e)}</li>`).join('')}</ul>
       <dl class="rec">
@@ -1050,7 +1064,7 @@ function renderMain(s){
   const segs = [['met','Met','مستوفى'],['partial','Partial','جزئي'],['gap','Gap','فجوة'],['exception','Exc','استثناء'],['na','N/A','لا ينطبق']];
   const checks = kchecks(c).map((k,i) => `<div class="check${r.statuses[i] && r.statuses[i] !== 'unknown' ? ' answered' : ''}">
     <span class="n">${String(i + 1).padStart(2, '0')}</span>
-    <div class="txt${ltx()}">${esc(k)}</div>
+    <div class="txt${ltx()}">${esc(k)}${beyondMark(c,i)}</div>
     <div class="seg" role="group" aria-label="${esc(k)}">
       ${segs.map(([v,en,ar]) => `<button data-set="${i}" data-v="${v}" aria-pressed="${r.statuses[i]===v}">${lang==='ar'?ar:en}</button>`).join('')}
     </div>

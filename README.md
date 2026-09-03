@@ -36,6 +36,8 @@ The Annex is prose. Prose cannot be measured, tracked, or handed to an auditor a
 
 So every control here keeps its **official minimum requirement word for word**, and alongside it sits a decomposition into the individual statements an assessor ticks off one at a time. 44 controls become **329 checks** and **164 evidence artifacts**. That decomposition is this project's contribution and carries no official standing, but it is what turns a paragraph of regulation into something you can score, sequence and prove.
 
+**Nine of the 329 checks ask for more than the Annex states.** They are sound practice, so they stay, but they are marked `beyond the Annex` wherever a check is displayed. Measuring achieved availability against an SLA, or requiring a signed appointment letter, are things a good assessor does and the regulation does not demand. Without the marker the tool would quietly widen the regulation, and an entity could be scored down for skipping something NCSC never asked for.
+
 **All of it exists in Arabic as well as English**, including a working Arabic translation of all 44 minimum requirements. Pick a language and the whole instrument is in that language. No English labels inside the Arabic interface, no Arabic subtitles inside the English one.
 
 Meaning is checked, not only style. Every numeral and every qualifier in an English check ("at least", "annually", "where feasible", "unless", "only") has to be present in the Arabic, and every bilingual template has to carry the same values through both renderings. A qualifier dropped from a check changes the control however well the sentence reads.
@@ -256,7 +258,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 135 tests
+node --test test/*.test.js     # 137 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 
