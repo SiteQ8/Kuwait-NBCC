@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -15,6 +15,7 @@ import { crosswalkTable, reverseIndex, mappingsFor, coverageSummary, validateCro
 import { renderReport, renderMarkdown, renderCSV } from '../src/report.js';
 import { diffAssessments } from '../src/diff.js';
 import { evidenceRegister, unevidencedClaims, renderRegisterCSV, readEvidenceRecords, REFRESH_DAYS } from '../src/evidence.js';
+import { forecast, buildSeries } from '../src/trend.js';
 import { buildSite, buildPayload } from '../scripts/build-site.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -634,6 +635,152 @@ test('the report carries the register and names unevidenced claims', () => {
   assert.ok(html.includes('Controls claimed with nothing to show'));
   assert.ok(html.includes('Evidence that has gone stale'));
   assert.ok(!html.includes('undefined'));
+});
+
+/* ------------------------------------------------------ trend and forecast */
+
+function snapshot(date, share) {
+  const doc = scaffold();
+  doc.assessmentDate = date;
+  doc.entity = { name: 'Series entity' };
+  for (const c of CONTROLS) {
+    const n = c.checks.length;
+    const target = Math.round(n * share);
+    doc.controls[c.id].checks = c.checks.map((_, i) => (i < target ? 'met' : 'unknown'));
+    doc.controls[c.id].owner = 'Owner';
+  }
+  return doc;
+}
+
+test('a trend needs at least two snapshots on different dates', () => {
+  assert.equal(forecast([]).ok, false);
+  assert.equal(forecast([snapshot('2026-01-01', 0.2)]).ok, false);
+  const same = forecast([snapshot('2026-01-01', 0.2), snapshot('2026-01-01', 0.4)]);
+  assert.equal(same.ok, false);
+  assert.match(same.reason, /same date/);
+});
+
+test('snapshots are ordered by date regardless of how they arrive', () => {
+  const { points } = buildSeries([
+    snapshot('2026-06-01', 0.5), snapshot('2026-01-01', 0.2), snapshot('2026-03-01', 0.35)
+  ]);
+  assert.deepEqual(points.map((p) => p.date), ['2026-01-01', '2026-03-01', '2026-06-01']);
+});
+
+test('a snapshot with no usable date is reported rather than dropped silently', () => {
+  const bad = snapshot('2026-01-01', 0.2);
+  delete bad.assessmentDate;
+  const { points, rejected } = buildSeries([bad, snapshot('2026-03-01', 0.4)]);
+  assert.equal(points.length, 1);
+  assert.equal(rejected.length, 1);
+  assert.match(rejected[0].reason, /assessmentDate/);
+});
+
+test('a steady climb that reaches the baseline in time reads as on track', () => {
+  const f = forecast([
+    snapshot('2025-12-01', 0.15), snapshot('2026-03-01', 0.4),
+    snapshot('2026-06-01', 0.65), snapshot('2026-09-01', 0.9)
+  ], { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.equal(f.ok, true);
+  assert.equal(f.implementation.verdict, 'on track');
+  assert.equal(f.implementation.projectedAtDeadline, 100);
+  assert.ok(f.implementation.completionDate < REGULATION.deadline);
+  assert.ok(f.implementation.perMonth > 0);
+});
+
+test('a slow climb is called behind and says what rate would be needed', () => {
+  const f = forecast([
+    snapshot('2025-12-01', 0.10), snapshot('2026-03-01', 0.14),
+    snapshot('2026-06-01', 0.17), snapshot('2026-09-01', 0.20)
+  ], { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.equal(f.implementation.verdict, 'behind');
+  assert.ok(f.implementation.projectedAtDeadline < 100);
+  assert.ok(f.implementation.shortfall > 0);
+  assert.ok(f.implementation.neededPerMonth > f.implementation.perMonth);
+});
+
+test('a series that goes backwards is called regressing, not behind', () => {
+  const f = forecast([
+    snapshot('2026-01-01', 0.5), snapshot('2026-04-01', 0.4), snapshot('2026-07-01', 0.3)
+  ], { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.equal(f.implementation.verdict, 'regressing');
+  assert.equal(f.implementation.completionDate, null);
+  assert.ok(f.implementation.changeTotal < 0);
+});
+
+test('a flat series is stalled and offers no completion date', () => {
+  const f = forecast([
+    snapshot('2026-01-01', 0.4), snapshot('2026-04-01', 0.4), snapshot('2026-07-01', 0.4)
+  ], { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.ok(['stalled', 'regressing'].includes(f.implementation.verdict));
+  assert.equal(f.implementation.perMonth, 0);
+  assert.equal(f.implementation.completionDate, null);
+});
+
+test('a sharp change in recent pace is flagged so the line is not trusted blindly', () => {
+  const f = forecast([
+    snapshot('2026-01-01', 0.10), snapshot('2026-04-01', 0.50), snapshot('2026-07-01', 0.52)
+  ], { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.ok(Math.abs(f.recentRateDriftPercent) >= 25,
+    'a programme that stopped after a fast start should be flagged');
+});
+
+test('functions are ranked worst projection first so laggards surface', () => {
+  const docs = ['2025-12-01', '2026-03-01', '2026-06-01'].map((d, i) => {
+    const doc = snapshot(d, 0.2 + i * 0.2);
+    // Hold the cloud function back while everything else advances.
+    for (const c of CONTROLS.filter((x) => x.fn === 'CLD')) {
+      doc.controls[c.id].checks = c.checks.map(() => 'unknown');
+    }
+    return doc;
+  });
+  const f = forecast(docs, { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.equal(f.byFunction[0].fn, 'CLD');
+  assert.ok(f.byFunction[0].projectedAtDeadline < f.byFunction[f.byFunction.length - 1].projectedAtDeadline);
+  assert.ok(f.laggards.some((l) => l.fn === 'CLD'));
+});
+
+test('evidence is projected alongside implementation', () => {
+  const f = forecast([snapshot('2026-01-01', 0.3), snapshot('2026-06-01', 0.6)],
+    { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.ok(f.evidence);
+  assert.equal(typeof f.evidence.projectedAtDeadline, 'number');
+  assert.equal(f.evidence.current, 0, 'these snapshots record no evidence at all');
+});
+
+test('the shipped snapshots form a usable series', () => {
+  const dir = resolve(root, 'templates/snapshots');
+  const files = readdirSync(dir).filter((f) => f.endsWith('.json')).sort();
+  assert.ok(files.length >= 3, 'expected several example snapshots');
+  const docs = files.map((f) => JSON.parse(readFileSync(resolve(dir, f), 'utf8')));
+  for (const d of docs) assert.deepEqual(validateAssessment(d), []);
+  const f = forecast(docs, { asOf: new Date('2026-09-03T00:00:00Z') });
+  assert.equal(f.ok, true);
+  assert.equal(f.snapshots, files.length);
+  assert.ok(f.implementation.perMonth > 0, 'the example series should show progress');
+  assert.ok(f.laggards.length > 0, 'the example should leave one function behind');
+});
+
+test('cli trend refuses a single file and reports on a series', () => {
+  assert.throws(() => cli(['trend', EXAMPLE]), (e) => /at least two/.test(String(e.stderr)));
+  const dir = resolve(root, 'templates/snapshots');
+  const files = readdirSync(dir).filter((f) => f.endsWith('.json')).sort()
+    .map((f) => resolve(dir, f));
+  const outText = cli(['trend', ...files, '--date', '2026-09-03']);
+  assert.ok(outText.includes('The series'));
+  assert.ok(outText.includes('Forecast'));
+  assert.ok(outText.includes('By function'));
+  assert.doesNotThrow(() => JSON.parse(cli(['trend', ...files, '--json', '--date', '2026-09-03'])));
+});
+
+test('asOf overrides the assessment date so a lapsed exception is caught', () => {
+  const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
+  const asRecorded = assess(doc);
+  const later = assess(doc, { asOf: new Date('2027-08-01T00:00:00Z') });
+  const expired = (r) => r.findings.filter((f) => f.issue.includes('expired')).length;
+  assert.ok(expired(later) > expired(asRecorded),
+    'exceptions valid on the assessment date should lapse when judged later');
+  assert.ok(later.scores.posture < asRecorded.scores.posture);
 });
 
 /* ---------------------------------------------------------- crosswalk */

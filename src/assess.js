@@ -106,8 +106,11 @@ function pct(numerator, denominator) {
  * Scores one assessment. Returns per control results, per function rollups,
  * headline scores, and a findings list that explains every deduction.
  */
-export function assess(assessment = {}) {
-  const asOf = isoDate(assessment.assessmentDate) || new Date();
+export function assess(assessment = {}, options = {}) {
+  // The assessment date is the natural anchor, but a caller can ask what the
+  // same file looks like on another day, which is how an exception that has
+  // since expired gets caught without editing the file.
+  const asOf = options.asOf || isoDate(assessment.assessmentDate) || new Date();
   const profile = normalizeProfile(assessment.profile);
   const entries = assessment.controls && typeof assessment.controls === 'object' ? assessment.controls : {};
   const findings = [];

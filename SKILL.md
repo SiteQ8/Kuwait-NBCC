@@ -45,6 +45,7 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 | Only what has gone stale | `nbcc evidence entity.json --stale` |
 | HTML report | `nbcc report entity.json --out report.html` |
 | Compare two points in time | `nbcc diff q1.json q3.json` |
+| Will we make the deadline | `nbcc trend snapshots/*.json` |
 
 Add `--json` to any read command for machine readable output. Add `--no-cloud` to `init` for an entity that runs no cloud, which drops the 16 Appendix A controls from scope.
 
@@ -95,6 +96,12 @@ Check statuses: `met`, `partial`, `gap`, `exception`, `na`, `unknown`. A control
 The register tracks what the entity actually holds, not just what it needs. Freshness follows each control's own cadence, so evidence for a weekly control ages out in 45 days while a biennial one has 790. Event driven controls never go stale.
 
 Report the **claimed but unevidenced** count alongside the score. Controls scored met or partial with nothing recorded to show for them are the gap an audit finds first, and a high implementation percentage with a low producible percentage is a weaker position than it looks.
+
+## Reading a forecast
+
+`trend` needs at least two snapshots on different dates. It reports a verdict of on track, close, behind, stalled or regressing, and when behind it gives both the current rate and the rate required, so the gap is expressed as a multiple of present pace.
+
+Treat it as a direction rather than a date. It fits a straight line, and compliance work rarely moves in one. Two qualifiers matter when reporting it: whether the recent pace diverges from the average, which the tool flags, and the separate evidence projection, since implementation can be on track while the ability to prove it is not.
 
 ## Cautions
 

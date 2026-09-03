@@ -23,6 +23,7 @@ import { crosswalkTable, reverseIndex, mappingsFor, coverageSummary, FRAMEWORKS 
 import { renderReport, renderMarkdown, renderCSV } from '../src/report.js';
 import { diffAssessments } from '../src/diff.js';
 import { evidenceRegister, unevidencedClaims, renderRegisterCSV } from '../src/evidence.js';
+import { forecast } from '../src/trend.js';
 
 // Read from the manifest so the reported version can never drift from the
 // package that was actually published.
@@ -98,15 +99,19 @@ function readJSON(path) {
   }
 }
 
-function loadAssessment(path) {
+function loadAssessment(path, options = {}) {
   if (!path) fail('an assessment file is required. Run "nbcc init" to create one.');
   const data = readJSON(path);
   const problems = validateAssessment(data);
-  if (problems.length) {
+  // A trend reads many files at once, so it summarises rather than repeating
+  // the same warning block for each of them.
+  if (problems.length && !options.quiet) {
     process.stderr.write(`${C.yellow}warning${C.reset} the assessment file has ${problems.length} issue(s):\n`);
     for (const p of problems.slice(0, 12)) process.stderr.write(`  ${p}\n`);
     if (problems.length > 12) process.stderr.write(`  and ${problems.length - 12} more\n`);
     process.stderr.write('\n');
+  } else if (problems.length) {
+    process.stderr.write(`${C.yellow}warning${C.reset} ${path} has ${problems.length} validation issue(s)\n`);
   }
   return data;
 }
@@ -159,6 +164,7 @@ ${C.bold}Measure an entity${C.reset}
   plan <file>                 Sequenced readiness plan to the deadline
   evidence <file>             Evidence register: what is held, where, how old
   diff <before> <after>       Posture change between two assessments
+  trend <file...>             Project a series of assessments at the deadline
 
 ${C.bold}Produce a record${C.reset}
   report <file> [--out f]     Self contained HTML report
@@ -482,6 +488,79 @@ function cmdEvidence(positional, flags) {
   out(`\n${C.dim}Add --csv to export the register, --missing or --stale to narrow it.${C.reset}`);
 }
 
+function cmdTrend(positional, flags) {
+  if (positional.length < 2) {
+    fail('at least two assessment files are required: nbcc trend q1.json q2.json q3.json');
+  }
+  const docs = positional.map((p) => loadAssessment(p, { quiet: true }));
+  const asOf = flags.date ? new Date(`${flags.date}T00:00:00Z`) : new Date();
+  const f = forecast(docs, { asOf });
+
+  if (flags.json) return out(JSON.stringify(f, null, 2));
+  if (!f.ok) {
+    for (const r of f.rejected) out(`${C.yellow}skipped${C.reset} ${r.label}: ${r.reason}`);
+    return fail(f.reason);
+  }
+
+  const VERDICT = {
+    'on track': [C.green, 'on track'],
+    close: [C.yellow, 'close, but short'],
+    behind: [C.red, 'behind'],
+    stalled: [C.red, 'stalled'],
+    regressing: [C.red, 'going backwards'],
+    complete: [C.green, 'complete']
+  };
+
+  out(`${C.bold}Trend${C.reset} ${C.dim}${f.entity}${C.reset}`);
+  out(`${C.dim}${f.snapshots} snapshots from ${f.from} to ${f.to}, ${f.spanDays} days${C.reset}\n`);
+
+  out(`${C.cyan}The series${C.reset}`);
+  for (const p of f.points) {
+    out(`  ${C.dim}${p.date}${C.reset}  ${bar(p.implementation, 20)} ${padStart(`${p.implementation}%`, 6)}` +
+        `  ${C.dim}${pad(p.bandName, 14)} evidence ${padStart(`${p.evidenceProducible}%`, 6)}${C.reset}`);
+  }
+
+  const i = f.implementation;
+  const [col, word] = VERDICT[i.verdict] || [C.dim, i.verdict];
+  out(`\n${C.cyan}Rate${C.reset}`);
+  out(`  Implementation moved ${i.changeTotal > 0 ? '+' : ''}${i.changeTotal} points, ${i.perMonth} per month`);
+  if (Math.abs(f.recentRateDriftPercent) >= 25) {
+    const dir = f.recentRateDriftPercent > 0 ? 'faster' : 'slower';
+    out(`  ${C.yellow}The most recent interval ran ${Math.abs(f.recentRateDriftPercent)}% ${dir} at ${i.recentPerMonth} per month, so the straight line flatters or understates it${C.reset}`);
+  }
+  out(`  Evidence moved ${f.evidence.changeTotal > 0 ? '+' : ''}${f.evidence.changeTotal} points, ${f.evidence.perMonth} per month`);
+
+  out(`\n${C.cyan}Forecast${C.reset} ${C.dim}straight line to ${f.deadline}, ${f.daysToDeadline} days away${C.reset}`);
+  out(`  ${col}${C.bold}${word.toUpperCase()}${C.reset}`);
+  if (i.verdict === 'on track' || i.verdict === 'complete') {
+    out(`  Implementation reaches 100% around ${C.green}${i.completionDate}${C.reset}, ` +
+        `${Math.round((new Date(f.deadline) - new Date(i.completionDate)) / 86400000)} days before the deadline.`);
+  } else if (i.verdict === 'stalled' || i.verdict === 'regressing') {
+    out(`  No forward rate to project from. At ${i.current}% today, closing the gap needs ${C.yellow}${i.neededPerMonth} points per month${C.reset}.`);
+  } else {
+    out(`  Projected ${col}${i.projectedAtDeadline}%${C.reset} at the deadline, short by ${col}${i.shortfall} points${C.reset}.`);
+    out(`  Current pace is ${i.perMonth} per month. Landing on time needs ${C.yellow}${i.neededPerMonth} per month${C.reset}` +
+        `, about ${Math.round((i.neededPerMonth / (i.perMonth || 0.01)) * 10) / 10} times the present rate.`);
+  }
+  if (f.evidence.projectedAtDeadline < 100) {
+    out(`  ${C.dim}Evidence projects to ${f.evidence.projectedAtDeadline}%. A control you cannot show is a control you cannot defend.${C.reset}`);
+  }
+
+  out(`\n${C.cyan}By function${C.reset} ${C.dim}worst projection first${C.reset}`);
+  for (const fn of f.byFunction) {
+    const c2 = fn.projectedAtDeadline >= 100 ? C.green : fn.projectedAtDeadline >= 90 ? C.yellow : C.red;
+    out(`  ${pad(fn.name, 10)} ${bar(fn.current, 18)} ${padStart(`${fn.current}%`, 6)} now` +
+        `  ${C.dim}${padStart(`${fn.perMonth > 0 ? '+' : ''}${fn.perMonth}`, 6)}/mo${C.reset}` +
+        `  ${c2}${padStart(`${fn.projectedAtDeadline}%`, 6)}${C.reset} ${C.dim}projected${C.reset}`);
+  }
+
+  if (f.duplicates.length > 0) {
+    out(`\n${C.yellow}warning${C.reset} repeated snapshot date(s): ${f.duplicates.join(', ')}`);
+  }
+  for (const r of f.rejected) out(`${C.yellow}skipped${C.reset} ${r.label}: ${r.reason}`);
+  out(`\n${C.dim}A straight line through the snapshots. Compliance work rarely moves in one, so treat this as a direction, not a date.${C.reset}`);
+}
+
 function cmdCrosswalk(flags) {
   const to = flags.to ? String(flags.to).toLowerCase() : null;
   if (to && !FRAMEWORKS[to]) fail(`unknown framework "${to}". Use csf, cis or iso.`);
@@ -632,6 +711,9 @@ function main() {
       return cmdReport(positional, flags);
     case 'export':
       return cmdExport(positional, flags);
+    case 'trend':
+    case 'forecast':
+      return cmdTrend(positional, flags);
     case 'diff':
       return cmdDiff(positional, flags);
     case 'doctor':

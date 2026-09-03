@@ -113,6 +113,7 @@ Measure an entity
   plan <file>                   Sequenced readiness plan to the deadline
   evidence <file>               Evidence register: what is held, where, how old
   diff <before> <after>         Posture change between two assessments
+  trend <file...>               Project a series of snapshots at the deadline
 
 Produce artifacts
   report <file> --out x.html    Self contained HTML report
@@ -144,6 +145,27 @@ import { CONTROLS, assess, buildPlan, renderReport } from 'kuwait-nbcc';
 const result = assess(JSON.parse(readFileSync('nbcc-assessment.json', 'utf8')));
 console.log(result.scores.implementation, result.findings.length);
 ```
+
+## Will you make the deadline
+
+`diff` compares two points. Given a series of snapshots, `trend` answers the question a board actually asks.
+
+```bash
+nbcc trend snapshots/*.json
+```
+
+It fits a straight line through the snapshots and extends it to 5 October 2027, then says one of: **on track**, **close**, **behind**, **stalled** or **regressing**. When you are behind it gives the shortfall in points, the rate you are running at, and the rate you would need, so the conversation is about a multiple rather than a mood.
+
+Two things it deliberately does:
+
+- **Flags when the recent pace diverges from the average.** A programme that sprinted then stopped looks healthy on a line fitted to the whole series, so a change of 25% or more in the latest interval is called out and the projection is qualified.
+- **Projects evidence separately.** Implementation can be on track while the ability to prove it is not, and a control you cannot show is a control you cannot defend.
+
+Functions are ranked worst projection first, which is usually how the real problem surfaces. In the shipped example series the programme lands comfortably while Cloud alone projects to 82%.
+
+The example snapshots live in `templates/snapshots/`.
+
+The projection is a straight line and says so. Compliance work rarely moves in one, so it is a direction, not a date.
 
 ## The plan knows what blocks what
 
@@ -197,7 +219,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 86 tests
+node --test test/*.test.js     # 99 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

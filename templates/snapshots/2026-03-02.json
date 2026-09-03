@@ -1,0 +1,837 @@
+{
+  "nbcc": "1",
+  "entity": {
+    "name": "Bayan Holding Group",
+    "sector": "Financial services",
+    "contact": "grc@example.kw"
+  },
+  "assessor": "Internal audit and GRC",
+  "assessmentDate": "2026-03-02",
+  "profile": {
+    "usesCloud": true,
+    "hasPublicAccounts": true
+  },
+  "controls": {
+    "GOV-1": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "DMS/SEC/2026/014",
+          "collected": "2026-08-12",
+          "collectedBy": "Internal audit"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "DMS/SEC/2026/015",
+          "collected": "2026-08-12",
+          "collectedBy": "Internal audit"
+        }
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "GOV-2": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "partial",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "DMS/POL/2026/001",
+          "collected": "2026-06-15",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "DMS/POL/2026/002",
+          "collected": "2026-06-15",
+          "collectedBy": "GRC"
+        }
+      ],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "GOV-3": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "DMS/POL/2026/007",
+          "collected": "2026-05-04",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "NCSC/SUB/2026/112",
+          "collected": "2026-05-19",
+          "collectedBy": "GRC"
+        }
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "GOV-4": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "exception",
+        "exception",
+        "exception",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2026-12-31",
+      "notes": "",
+      "exception": {
+        "reason": "Vetting provider contract under renewal.",
+        "riskAccepted": true,
+        "expiry": "2026-06-30"
+      }
+    },
+    "GOV-5": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "GRC/SA/2026",
+          "collected": "2026-08-30",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "GRC/SA/2026/GAPS",
+          "collected": "2026-08-30",
+          "collectedBy": "GRC"
+        }
+      ],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "GOV-6": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "partial",
+        "met",
+        "partial",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "PROC/VEND/REGISTER",
+          "collected": "2024-11-02",
+          "collectedBy": "Procurement"
+        }
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "ID-1": {
+      "owner": "IT Asset Manager",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "ITAM/EXPORT/2026-08",
+          "collected": "2026-08-25",
+          "collectedBy": "IT operations"
+        }
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "ID-2": {
+      "owner": "IT Asset Manager",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "ITAM/SW/APPROVED",
+          "collected": "2026-08-01",
+          "collectedBy": "IT operations"
+        }
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "ID-3": {
+      "owner": "IT Asset Manager",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "partial",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "",
+          "collected": "2026-07-19",
+          "collectedBy": "IT operations"
+        }
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "PR-1.1": {
+      "owner": "",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-1.2": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "SEC/VM/PROC/2026",
+          "collected": "2026-04-10",
+          "collectedBy": "Security"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "SEC/VM/SCANS/2026",
+          "collected": "2026-08-31",
+          "collectedBy": "Security"
+        }
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "PR-2": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-2.1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-2.2": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-3": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "partial",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "PR-3.1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "na",
+        "na",
+        "na",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-4": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "partial",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-4.1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "partial",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "PR-4.2": {
+      "owner": "",
+      "checks": [
+        "exception",
+        "exception",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": "",
+      "exception": {
+        "reason": "Engineering laboratory requires removable media for air gapped instrument transfer.",
+        "riskAccepted": true,
+        "expiry": "2027-06-30",
+        "compensating": "Dedicated scanning kiosk and quarterly media audit."
+      }
+    },
+    "PR-5": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "PR-6": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "DE-1": {
+      "owner": "Security Operations Lead",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "partial",
+        "partial",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "SIEM/CONFIG/2026-04",
+          "collected": "2026-04-02",
+          "collectedBy": "Security"
+        }
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "DE-2": {
+      "owner": "Security Operations Lead",
+      "checks": [
+        "partial",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "RS-1": {
+      "owner": "Incident Response Lead",
+      "checks": [
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "IR/PROC/PUBLISHED",
+          "collected": "2026-07-07",
+          "collectedBy": "Security"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "IR/APPOINT/2026",
+          "collected": "2026-07-07",
+          "collectedBy": "Security"
+        }
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "RS-2": {
+      "owner": "Incident Response Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "RC-1": {
+      "owner": "Business Continuity Manager",
+      "checks": [
+        "partial",
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "BCP/PLAN/v3",
+          "collected": "2026-06-20",
+          "collectedBy": "IT operations"
+        }
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "RC-2": {
+      "owner": "Business Continuity Manager",
+      "checks": [
+        "met",
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "CLD-1": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-2": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "PROC/CSP/CERTS",
+          "collected": "2026-03-12",
+          "collectedBy": "Procurement"
+        }
+      ],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "CLD-3": {
+      "owner": "",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-4": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-5": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-6": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": "",
+      "exception": {
+        "reason": "SLA schedule pending legal review.",
+        "expiry": "2027-01-31"
+      }
+    },
+    "CLD-7": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-8": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-9": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-10": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-11": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-12": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "CLD-13": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-14": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "partial",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "CLOUD/ORGPOL/PAB",
+          "collected": "2026-08-18",
+          "collectedBy": "Cloud team"
+        }
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-15": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-16": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "unknown",
+        "unknown"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    }
+  },
+  "label": "Bayan Holding Group 2026-03-02"
+}
