@@ -97,8 +97,8 @@ tbody tr:last-child td{border-bottom:none}
 export function windowScaleSVG(status, opts = {}) {
   const w = opts.width || 900;
   const h = 82;
-  const padL = 42;
-  const padR = 46;
+  const padL = 0;
+  const padR = 0;
   const track = w - padL - padR;
   const y = 40;
   const clamp = (v) => Math.max(0, Math.min(1, v));
@@ -108,21 +108,27 @@ export function windowScaleSVG(status, opts = {}) {
   // A milestone sits at its own share of the window, which is fixed by the
   // Decision rather than by today. elapsedDays + daysRemaining is the milestone
   // measured from publication, whichever side of today it falls on.
-  const ticks = status.milestones.map((m) => ({
-    ...m,
-    x: padL + track * clamp((status.elapsedDays + m.daysRemaining) / status.totalDays)
-  }));
+  const ticks = status.milestones.map((m) => {
+    const frac = clamp((status.elapsedDays + m.daysRemaining) / status.totalDays);
+    return {
+      ...m,
+      x: padL + track * frac,
+      // The track runs edge to edge, so the end labels anchor inward or they
+      // would be drawn outside the drawing itself.
+      anchor: frac > 0.95 ? 'end' : frac < 0.05 ? 'start' : 'middle'
+    };
+  });
 
   const tickMarkup = ticks
     .map(
       (t) => `
     <line x1="${t.x.toFixed(1)}" y1="${y - 11}" x2="${t.x.toFixed(1)}" y2="${y + 11}" stroke="${TOKENS.line}" stroke-width="1.5"/>
-    <text x="${t.x.toFixed(1)}" y="${y + 30}" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="${TOKENS.slate}">${opts.lang === 'ar' ? (t.nameAr || t.name) : t.name}</text>
-    <text x="${t.x.toFixed(1)}" y="${y - 18}" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="${TOKENS.slateSoft}">${t.due}</text>`
+    <text x="${t.x.toFixed(1)}" y="${y + 30}" text-anchor="${t.anchor}" font-family="var(--sans)" font-size="11.5" fill="${TOKENS.slate}">${opts.lang === 'ar' ? (t.nameAr || t.name) : t.name}</text>
+    <text x="${t.x.toFixed(1)}" y="${y - 18}" text-anchor="${t.anchor}" font-family="var(--mono)" font-size="10.5" fill="${TOKENS.slateSoft}">${t.due}</text>`
     )
     .join('');
 
-  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block" role="img"
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" direction="ltr" style="width:100%;height:auto;display:block;direction:ltr" role="img"
   aria-label="Compliance window from ${status.publishedOn} to ${status.deadline}, ${status.elapsedPercent} percent elapsed">
   <line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="${TOKENS.line}" stroke-width="3.5" stroke-linecap="round"/>
   <line x1="${padL}" y1="${y}" x2="${x.toFixed(1)}" y2="${y}" stroke="${TOKENS.green}" stroke-width="3.5" stroke-linecap="round"/>

@@ -452,6 +452,35 @@ test('the shipped page carries both requirement languages', () => {
   assert.ok(site.includes('showOfficial'), 'the official text must remain reachable');
 });
 
+test('the compliance measure draws inside its own canvas in both languages', () => {
+  // text-anchor resolves against the inherited direction, so an end anchored
+  // label was drawn outside the viewBox once the page went right to left and
+  // the last milestone simply vanished.
+  for (const lang of ['en', 'ar']) {
+    const html = renderReport(scaffold(), { today: SEP, lang });
+    const svg = html.slice(html.indexOf('<svg'), html.indexOf('</svg>'));
+    assert.ok(svg.includes('direction="ltr"'),
+      'the measure has to be pinned to ltr or its labels flip out of frame');
+    // The end labels must anchor inward now that the track runs edge to edge.
+    assert.ok(svg.includes('text-anchor="end"'), `${lang} has no end anchored label`);
+    assert.ok(svg.includes('text-anchor="middle"'), `${lang} has no middle anchored label`);
+    for (const m of svg.matchAll(/<text x="([\d.]+)"/g)) {
+      assert.ok(Number(m[1]) <= 900, `a label sits past the right edge at x=${m[1]}`);
+      assert.ok(Number(m[1]) >= 0, `a label sits past the left edge at x=${m[1]}`);
+    }
+  }
+});
+
+test('the hero tally cells cannot push into each other', () => {
+  // As flex items without a minimum width, a long label grew its own cell and
+  // printed on the same line as the next one.
+  const css = buildSite();
+  assert.ok(css.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),
+    'the tally must be a grid with shrinkable columns');
+  assert.ok(css.includes('.tally div{min-width:0'),
+    'a tally cell must be allowed to shrink below its content');
+});
+
 /* ------------------------------------------------------- accessibility */
 
 test('the shipped page carries the landmarks and links its tabs to its panels', () => {
