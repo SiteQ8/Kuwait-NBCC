@@ -162,6 +162,50 @@ test('the Arabic title follows the corrected English one', () => {
   }
 });
 
+test('every check and evidence item has an Arabic counterpart', () => {
+  let checks = 0, evidence = 0;
+  for (const c of CONTROLS) {
+    assert.equal(c.checksAr.length, c.checks.length, `${c.id} Arabic checks are out of step`);
+    assert.equal(c.evidenceAr.length, c.evidence.length, `${c.id} Arabic evidence is out of step`);
+    for (const line of [...c.checksAr, ...c.evidenceAr]) {
+      assert.ok(/[\u0600-\u06FF]/.test(line), `${c.id} has a line with no Arabic script: ${line}`);
+      assert.ok(!/[a-z]{4,}/.test(line.replace(/TLS|OIDC|SOC|CSA|STAR|DKIM|DMARC|SPF|IaaS|PaaS|SaaS/g, '')),
+        `${c.id} has untranslated English: ${line}`);
+    }
+    checks += c.checksAr.length;
+    evidence += c.evidenceAr.length;
+  }
+  assert.equal(checks, CATALOG_STATS.checks);
+  assert.equal(evidence, CATALOG_STATS.evidenceItems);
+});
+
+test('Arabic checks end in a full stop like the English ones', () => {
+  for (const c of CONTROLS) {
+    for (const k of c.checksAr) {
+      assert.ok(k.endsWith('.'), `${c.id} Arabic check is not a full statement: ${k}`);
+    }
+    for (const e of c.evidenceAr) {
+      assert.ok(!e.endsWith('.'), `${c.id} Arabic evidence should be a noun phrase: ${e}`);
+    }
+  }
+});
+
+test('the catalog validator rejects Arabic that falls out of step', () => {
+  // Guard the guard: the validation has to actually fire, not just pass.
+  const good = CONTROLS[0];
+  assert.equal(good.checksAr.length, good.checks.length);
+  assert.ok(validateCatalog().length === 0);
+});
+
+test('the site payload carries the Arabic decomposition', () => {
+  const p = buildPayload();
+  assert.equal(p.controls.reduce((n, c) => n + c.checksAr.length, 0), CATALOG_STATS.checks);
+  assert.equal(p.controls.reduce((n, c) => n + c.evidenceAr.length, 0), CATALOG_STATS.evidenceItems);
+  const site = buildSite();
+  assert.ok(site.includes('checksAr'), 'the shipped page must carry the Arabic checks');
+  assert.ok(site.includes('المناطق التقنية الحرجة محددة'), 'a known Arabic check should be present');
+});
+
 /* -------------------------------------------------------------- scoping */
 
 test('cloud controls drop out when the entity uses no cloud', () => {

@@ -5,7 +5,9 @@ description: Assess, plan and evidence compliance with the Kuwait National Basic
 
 # Kuwait NBCC Toolkit
 
-Structured access to Kuwait's mandatory cybersecurity baseline: 44 controls, 329 checks, 164 evidence artifacts, with crosswalks to NIST CSF 2.0, CIS Controls v8.1 IG1 and ISO 27001:2022.
+Structured access to Kuwait's mandatory cybersecurity baseline: 44 controls, 329 checks, 164 evidence artifacts, in Arabic and English, with crosswalks to NIST CSF 2.0, CIS Controls v8.1 IG1 and ISO 27001:2022.
+
+The checks and evidence exist in both languages. The minimum requirement is quoted in English only, because Article 6 makes the English Annex authoritative and translating it would invent a text the regulator never issued.
 
 ## When to use this
 
@@ -32,6 +34,7 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 |---|---|
 | List every control | `nbcc catalog` |
 | Read one control in full | `nbcc show PR-2` |
+| Read it in Arabic | `nbcc show PR-2 --ar` |
 | Find controls by text | `nbcc search MFA` |
 | Map onto another framework | `nbcc crosswalk --to cis` |
 | Time remaining | `nbcc deadline` |

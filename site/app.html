@@ -561,6 +561,7 @@ const STR = {
     reqL:'Minimum requirement', checksL:'Checks', evidenceL:'Evidence to retain',
     edmark:'summary', edmarkT:'Appendix A prints no Purpose column, so this summary is not Annex text.',
     owner:'Owner', cadence:'Cadence', effort:'Effort', phase:'Phase', unassigned:'unassigned',
+    cadences:{}, efforts:{},
     all:'All', showing:(a,b)=>`${a} of ${b} controls`, openAll:'Open all', closeAll:'Close all',
     markAll:'Mark every check', reset:'Clear this control',
     saved:'Saved to this browser', exported:'Assessment file downloaded',
@@ -600,6 +601,10 @@ const STR = {
     metL:'مستوفى', gapL:'دون تغطية',
     reqL:'الحد الأدنى المطلوب', checksL:'بنود التحقق', evidenceL:'الأدلة الواجب حفظها',
     owner:'المسؤول', cadence:'الدورية', effort:'الجهد', phase:'المرحلة', unassigned:'غير محدد',
+    cadences:{ 'annual':'سنويا', 'biennial':'كل سنتين', 'per hire':'عند كل تعيين', 'weekly':'أسبوعيا',
+      'monthly':'شهريا', 'quarterly':'ربع سنوي', 'continuous':'مستمر', 'per incident':'عند كل حادث',
+      'per engagement':'عند كل تعاقد' },
+    efforts:{ 'low':'منخفض', 'medium':'متوسط', 'high':'مرتفع' },
     all:'الكل', showing:(a,b)=>`${a} من ${b} ضابطا`, openAll:'فتح الكل', closeAll:'إغلاق الكل',
     markAll:'تعيين كل البنود', reset:'مسح هذا الضابط',
     saved:'حفظ في هذا المتصفح', exported:'تم تنزيل ملف التقييم',
@@ -652,6 +657,18 @@ function reqHTML(c){
   return open ? html + '</ul>' : html;
 }
 
+// The checks and the evidence list are this project's own writing, unlike the
+// minimum requirement, so both follow the chosen language.
+// Cadence and effort are this project's own labels, so they translate too.
+function term(kind, value){
+  const map = STR[lang][kind] || {};
+  return map[value] || value;
+}
+
+function kchecks(c){ return lang === 'ar' && c.checksAr ? c.checksAr : c.checks; }
+function kevidence(c){ return lang === 'ar' && c.evidenceAr ? c.evidenceAr : c.evidence; }
+function ltx(){ return lang === 'ar' ? '' : ' ltx'; }
+
 function purposeHTML(c){
   const mark = c.purposeSource === 'editorial'
     ? ` <span class="edmark" title="${esc(t('edmarkT'))}">${esc(t('edmark'))}</span>` : '';
@@ -695,7 +712,8 @@ function matches(c){
   if (filters.fn && c.fn !== filters.fn) return false;
   if (filters.phase && c.phase !== filters.phase) return false;
   if (filters.q) {
-    const hay = [c.id, c.title, c.titleAr, c.purpose, c.purposeAr, c.requirement, ...c.checks].join(' ').toLowerCase();
+    const hay = [c.id, c.title, c.titleAr, c.purpose, c.purposeAr, c.requirement,
+      ...c.checks, ...(c.checksAr || []), ...c.evidence, ...(c.evidenceAr || [])].join(' ').toLowerCase();
     if (!hay.includes(filters.q.toLowerCase())) return false;
   }
   return true;
@@ -714,12 +732,12 @@ function controlCard(c, open){
       <p class="muted" style="margin:0 0 13px">${purposeHTML(c)}</p>
       <div class="req">${reqHTML(c)}</div>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('checksL')}</h3>
-      <ul class="klist ltx">${c.checks.map((k,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(k)}</span></li>`).join('')}</ul>
+      <ul class="klist${ltx()}">${kchecks(c).map((k,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(k)}</span></li>`).join('')}</ul>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('evidenceL')}</h3>
-      <ul class="evd ltx">${c.evidence.map(e=>`<li>${esc(e)}</li>`).join('')}</ul>
+      <ul class="evd${ltx()}">${kevidence(c).map(e=>`<li>${esc(e)}</li>`).join('')}</ul>
       <div class="meta">
-        <span>${t('cadence')} <b>${esc(c.cadence)}</b></span>
-        <span>${t('effort')} <b>${esc(c.effort)}</b></span>
+        <span>${t('cadence')} <b>${esc(term('cadences', c.cadence))}</b></span>
+        <span>${t('effort')} <b>${esc(term('efforts', c.effort))}</b></span>
         <span>${t('phase')} <b>${c.phase}</b></span>
         <span class="ltx">NIST CSF <b>${c.crosswalk.csf.join(', ')}</b></span>
         <span class="ltx">CIS v8.1 <b>${c.crosswalk.cis.join(', ')}</b></span>
@@ -798,8 +816,8 @@ function renderMain(s){
   const c = r.c, e = state.controls[c.id];
   const f = FN.get(c.fn);
   const segs = [['met','Met','مستوفى'],['partial','Partial','جزئي'],['gap','Gap','فجوة'],['exception','Exc','استثناء'],['na','N/A','لا ينطبق']];
-  const checks = c.checks.map((k,i) => `<div class="check">
-    <div class="txt ltx"><span class="mono muted" style="font-size:.76rem">${String(i+1).padStart(2,'0')}</span> ${esc(k)}</div>
+  const checks = kchecks(c).map((k,i) => `<div class="check">
+    <div class="txt${ltx()}"><span class="mono muted" style="font-size:.76rem">${String(i+1).padStart(2,'0')}</span> ${esc(k)}</div>
     <div class="seg" role="group" aria-label="${esc(k)}">
       ${segs.map(([v,en,ar]) => `<button data-set="${i}" data-v="${v}" aria-pressed="${r.statuses[i]===v}">${lang==='ar'?ar:en}</button>`).join('')}
     </div>
@@ -832,15 +850,15 @@ function renderMain(s){
         <label class="fld"><span>${t('notes')}</span><textarea id="f-notes">${esc(e.notes||'')}</textarea></label>
       </div>
       <div class="meta">
-        <span>${t('cadence')} <b>${esc(c.cadence)}</b></span>
-        <span>${t('effort')} <b>${esc(c.effort)}</b></span>
+        <span>${t('cadence')} <b>${esc(term('cadences', c.cadence))}</b></span>
+        <span>${t('effort')} <b>${esc(term('efforts', c.effort))}</b></span>
         <span>${t('phase')} <b>${c.phase}</b></span>
         <span class="ltx">NIST CSF <b>${c.crosswalk.csf.join(', ')}</b></span>
         <span class="ltx">CIS v8.1 <b>${c.crosswalk.cis.join(', ')}</b></span>
         <span class="ltx">ISO 27001 <b>${(ISO[c.id]||[]).join(', ')}</b></span>
       </div>
       <details style="margin-top:14px"><summary class="muted" style="cursor:pointer; font-size:.88rem">${t('evidenceL')}</summary>
-        <ul class="evd ltx" style="margin-top:9px">${c.evidence.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>
+        <ul class="evd${ltx()}" style="margin-top:9px">${kevidence(c).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>
     </div>
   </div>`;
 

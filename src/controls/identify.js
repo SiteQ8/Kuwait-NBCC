@@ -24,11 +24,30 @@ export const IDENTIFY = [
       'Network discovery output is reviewed at least weekly.',
       'Unauthorized devices found are removed, blocked or formally approved.'
     ],
+    checksAr: [
+      'يحفظ حصر إلكتروني مركزي لأصول العتاد.',
+      'الحصر يشمل الخوادم ومحطات العمل والحواسيب المحمولة ومعدات الشبكة وأجهزة إنترنت الأشياء أو التقنيات التشغيلية.',
+      'الخدمات الرئيسية داخل المقر مسجلة في الحصر.',
+      'كل سجل أصل يحمل مالكا.',
+      'كل سجل أصل يحمل موقعا.',
+      'كل سجل أصل يحمل غرضا.',
+      'كل سجل أصل يحمل درجة حرجية.',
+      'كل سجل أصل يحمل حالة دورة حياة قيد الاستخدام أو احتياطي أو مسحوب.',
+      'الأصول المادية تحمل ملصقات فريدة قابلة للقراءة آليا.',
+      'مخرجات اكتشاف الشبكة تراجع أسبوعيا على الأقل.',
+      'الأجهزة غير المصرح بها التي تكتشف تزال أو تحجب أو تعتمد رسميا.'
+    ],
     evidence: [
       'Export of the asset inventory showing all mandatory fields',
       'Photographs or samples of asset labels',
       'Weekly discovery review log with disposition per finding',
       'Approval records for devices retained by exception'
+    ],
+    evidenceAr: [
+      'تصدير لحصر الأصول يبين جميع الحقول الإلزامية',
+      'صور أو عينات من ملصقات الأصول',
+      'سجل المراجعة الأسبوعية للاكتشاف مع الإجراء المتخذ لكل نتيجة',
+      'سجلات اعتماد الأجهزة المبقاة على سبيل الاستثناء'
     ],
     cadence: 'weekly',
     effort: 'high',
@@ -59,11 +78,30 @@ export const IDENTIFY = [
       'The register records which data classifications are processed.',
       'Provider information is reviewed at least annually.'
     ],
+    checksAr: [
+      'تحفظ قائمة بالبرمجيات المصرح بها.',
+      'قائمة البرمجيات تسجل عائلات الإصدارات.',
+      'تحفظ قائمة بمزودي الخدمة تشمل الخدمات السحابية والبرمجيات كخدمة.',
+      'الأنظمة تراجع شهريا على الأقل بحثا عن برمجيات غير مصرح بها.',
+      'البرمجيات غير المصرح بها التي تكتشف تزال أو يغطيها استثناء موثق.',
+      'السجل يبين مالكا لكل مدخل.',
+      'السجل يبين بيانات اتصال لكل مدخل.',
+      'السجل يبين وصفا للخدمة لكل مدخل.',
+      'السجل يبين درجة الحرجية لكل مدخل.',
+      'السجل يبين تصنيفات البيانات التي تعالج.',
+      'معلومات المزودين تراجع سنويا على الأقل.'
+    ],
     evidence: [
       'Authorized software list with version families',
       'Monthly unauthorized software scan reports and dispositions',
       'Provider register with the five register fields populated',
       'Dated annual provider review record'
+    ],
+    evidenceAr: [
+      'قائمة البرمجيات المصرح بها مع عائلات الإصدارات',
+      'تقارير الفحص الشهري للبرمجيات غير المصرح بها والإجراءات المتخذة',
+      'سجل المزودين مستوفيا الحقول الخمسة',
+      'محضر مؤرخ للمراجعة السنوية للمزودين'
     ],
     cadence: 'monthly',
     effort: 'medium',
@@ -94,11 +132,30 @@ export const IDENTIFY = [
       'Service accounts are reviewed at least quarterly to validate continued business need.',
       'High risk and privileged accounts are clearly identified.'
     ],
+    checksAr: [
+      'يحفظ حصر لمجموعات البيانات الحرجة والحساسة.',
+      'كل سجل مجموعة بيانات يحمل تصنيفا.',
+      'كل سجل مجموعة بيانات يحمل موقعا.',
+      'كل سجل مجموعة بيانات يحمل مالكا من جهة الأعمال.',
+      'يحفظ حصر لحسابات المستخدمين وحسابات الخدمة.',
+      'سجلات الحسابات تبين الصلاحيات.',
+      'سجلات الحسابات تبين آخر نشاط.',
+      'الحسابات تراجع ربع سنويا على الأقل.',
+      'حسابات المستخدمين التفاعلية الخاملة تسعين يوما تعطل أو تزال حيثما أمكن.',
+      'حسابات الخدمة تراجع ربع سنويا على الأقل للتحقق من استمرار الحاجة إليها.',
+      'الحسابات عالية الخطورة وذات الصلاحيات محددة بوضوح.'
+    ],
     evidence: [
       'Data set inventory export with classification, location and owner',
       'Account inventory export with privilege and last logon columns',
       'Quarterly account review sign off',
       'Report of accounts disabled under the 90 day dormancy rule'
+    ],
+    evidenceAr: [
+      'تصدير حصر مجموعات البيانات مع التصنيف والموقع والمالك',
+      'تصدير حصر الحسابات مع أعمدة الصلاحيات وآخر دخول',
+      'اعتماد المراجعة ربع السنوية للحسابات',
+      'تقرير الحسابات المعطلة وفق قاعدة الخمول تسعين يوما'
     ],
     cadence: 'quarterly',
     effort: 'medium',

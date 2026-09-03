@@ -125,6 +125,18 @@ export function validateCatalog() {
     if (!Array.isArray(c.evidence) || c.evidence.length === 0) {
       problems.push(`${where} has no evidence items.`);
     }
+    // The Arabic is this project's own rendering, so it has to stay in step
+    // with the English one for one. A missing line would silently drop a
+    // check from the Arabic interface while still counting toward the score.
+    for (const [en, ar] of [['checks', 'checksAr'], ['evidence', 'evidenceAr']]) {
+      if (!Array.isArray(c[ar])) {
+        problems.push(`${where} is missing ${ar}.`);
+      } else if (c[ar].length !== (c[en] || []).length) {
+        problems.push(`${where} has ${c[ar].length} ${ar} entries but ${(c[en] || []).length} ${en}.`);
+      } else if (c[ar].some((v) => !v || !/[\u0600-\u06FF]/.test(v))) {
+        problems.push(`${where} has an ${ar} entry with no Arabic script.`);
+      }
+    }
     if (!validEffort.has(c.effort)) problems.push(`${where} has invalid effort ${c.effort}.`);
     if (![1, 2, 3].includes(c.phase)) problems.push(`${where} has invalid phase ${c.phase}.`);
     for (const flag of c.appliesWhen || []) {
@@ -141,6 +153,9 @@ export function validateCatalog() {
 export const CATALOG_STATS = Object.freeze({
   controls: CONTROLS.length,
   checks: CONTROLS.reduce((n, c) => n + c.checks.length, 0),
+  translatedStrings: CONTROLS.reduce(
+    (n, c) => n + c.checksAr.length + c.evidenceAr.length + 2, 0
+  ),
   evidenceItems: CONTROLS.reduce((n, c) => n + c.evidence.length, 0),
   functions: FUNCTIONS.length
 });

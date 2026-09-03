@@ -36,6 +36,8 @@ The Annex is prose. Prose cannot be measured, tracked, or handed to an auditor a
 
 So every control here keeps its **official minimum requirement word for word**, and alongside it sits a decomposition into the individual statements an assessor ticks off one at a time. 44 controls become **329 checks** and **164 evidence artifacts**. That decomposition is this project's contribution and carries no official standing, but it is what turns a paragraph of regulation into something you can score, sequence and prove.
 
+**All of it exists in Arabic as well as English.** Every check, every evidence artifact, every control title and purpose. Article 6 makes the English Annex authoritative, so the minimum requirement is quoted rather than translated and stays in English wherever it appears. Everything this project wrote itself follows whichever language you are working in.
+
 | Function | Controls | Checks |
 |---|---|---|
 | Govern | 6 | 59 |
@@ -70,7 +72,9 @@ The scorer is deliberately unforgiving about the paper:
 
 ### In a browser
 
-The [workbench](https://siteq8.github.io/Kuwait-NBCC/) is a single HTML file. Browse the baseline, click through the assessment, read the plan, export your work as JSON. Everything stays in local storage on your machine, which for an entity recording its own control gaps is the point rather than a limitation. Full Arabic interface with right to left layout.
+The [workbench](https://siteq8.github.io/Kuwait-NBCC/) is a single HTML file. Browse the baseline, click through the assessment, read the plan, export your work as JSON. Everything stays in local storage on your machine, which for an entity recording its own control gaps is the point rather than a limitation.
+
+Switch to Arabic and the whole instrument switches with it: right to left layout, translated checks and evidence, translated cadence and effort labels. The quoted requirement stays in English and is direction isolated so its punctuation typesets correctly inside the Arabic page.
 
 ### On the command line
 
@@ -79,7 +83,7 @@ nbcc <command> [options]
 
 Understand the baseline
   catalog                       List all 44 controls
-  show <id>                     Full detail of one control, e.g. nbcc show PR-2
+  show <id> [--ar]              Full detail of one control, e.g. nbcc show PR-2
   search <term>                 Find controls whose text matches a term
   crosswalk [--to csf|cis|iso]  Map the baseline onto other frameworks
   deadline                      Where today sits in the 18 month window
@@ -97,7 +101,7 @@ Produce artifacts
   doctor                        Verify catalog integrity
 ```
 
-Flags: `--fn <GOV|ID|PR|DE|RS|RC|CLD>`, `--phase <1|2|3>`, `--gaps`, `--json`, `--no-cloud`, `--out <file>`, `--date <YYYY-MM-DD>`.
+Flags: `--fn <GOV|ID|PR|DE|RS|RC|CLD>`, `--phase <1|2|3>`, `--gaps`, `--json`, `--no-cloud`, `--out <file>`, `--date <YYYY-MM-DD>`, `--ar`.
 
 A worked example ships in `templates/example-assessment.json`:
 
@@ -174,7 +178,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 61 tests
+node --test test/*.test.js     # 67 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

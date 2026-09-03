@@ -33,10 +33,20 @@ export const CLOUD = [
       'Authorization is verified against regulations issued by the relevant national authorities.',
       'Verification is recorded before the provider is engaged.'
     ],
+    checksAr: [
+      'كل مزود خدمة سحابية مستخدم مرخص له بالعمل في دولة الكويت.',
+      'الترخيص يتحقق منه مقابل اللوائح الصادرة عن الجهات الوطنية المختصة.',
+      'التحقق يوثق قبل التعاقد مع المزود.'
+    ],
     evidence: [
       'Copy of the provider authorization or licence',
       'Verification note in the procurement file',
       'Provider register entry linking to the authorization record'
+    ],
+    evidenceAr: [
+      'نسخة من ترخيص المزود أو تصريحه',
+      'مذكرة التحقق ضمن ملف المشتريات',
+      'مدخل في سجل المزودين يربط بوثيقة الترخيص'
     ],
     cadence: 'per engagement',
     effort: 'low',
@@ -59,10 +69,20 @@ export const CLOUD = [
       'The evaluation reviews valid independent international security certifications.',
       'Certification validity dates are checked and recorded.'
     ],
+    checksAr: [
+      'الوضع الأمني للمزود يقيم قبل اختياره.',
+      'التقييم يراجع الشهادات الأمنية الدولية المستقلة السارية.',
+      'تواريخ سريان الشهادات تفحص وتوثق.'
+    ],
     evidence: [
       'Certification copies such as ISO 27001, SOC 2 Type II or CSA STAR Level 2',
       'Due diligence assessment record with reviewer and date',
       'Diary entry for the next certification expiry'
+    ],
+    evidenceAr: [
+      'نسخ الشهادات مثل الأيزو 27001 أو SOC 2 Type II أو CSA STAR المستوى الثاني',
+      'محضر تقييم العناية الواجبة مع اسم المراجع والتاريخ',
+      'قيد في التقويم بموعد انتهاء الشهادة التالي'
     ],
     cadence: 'per engagement',
     effort: 'low',
@@ -85,10 +105,20 @@ export const CLOUD = [
       'The right is exercised by reviewing independent third party audit reports.',
       'Reports are obtained and reviewed rather than physical data center visits being sought.'
     ],
+    checksAr: [
+      'كل عقد سحابي يتضمن بندا بحق التدقيق.',
+      'الحق يمارس عبر مراجعة تقارير تدقيق مستقلة من طرف ثالث.',
+      'التقارير تطلب وتراجع بدلا من السعي لزيارة مراكز البيانات ماديا.'
+    ],
     evidence: [
       'Contract clause reference for each cloud agreement',
       'Latest third party audit report on file such as SOC 2 or C5',
       'Review note recording exceptions and their treatment'
+    ],
+    evidenceAr: [
+      'مرجع البند التعاقدي لكل اتفاقية سحابية',
+      'أحدث تقرير تدقيق من طرف ثالث محفوظ مثل SOC 2 أو C5',
+      'مذكرة مراجعة تسجل الملاحظات وكيفية معالجتها'
     ],
     cadence: 'annual',
     effort: 'low',
@@ -111,10 +141,20 @@ export const CLOUD = [
       'The commitment requires notification without undue delay.',
       'The notification path feeds the entity incident process under RS-1.'
     ],
+    checksAr: [
+      'كل عقد سحابي يلزم المزود بإخطار الجهة عند تأكد وقوع حادث يمس البيانات.',
+      'الالتزام يشترط الإخطار دون تأخير غير مبرر.',
+      'مسار الإخطار يغذي آلية الحوادث لدى الجهة وفق الضابط RS-1.'
+    ],
     evidence: [
       'Contract clause reference for each cloud agreement',
       'Provider notification contact recorded in the incident contact list',
       'Any notification received and its handling record'
+    ],
+    evidenceAr: [
+      'مرجع البند التعاقدي لكل اتفاقية سحابية',
+      'جهة اتصال الإخطار لدى المزود مدرجة في قائمة اتصال الحوادث',
+      'أي إخطار ورد ومحضر التعامل معه'
     ],
     cadence: 'per engagement',
     effort: 'low',
@@ -137,10 +177,20 @@ export const CLOUD = [
       'The provider offers tools or standard APIs for data retrieval on termination.',
       'The retrieval route is identified and understood before it is needed.'
     ],
+    checksAr: [
+      'العقد ينص صراحة على احتفاظ الجهة بالملكية الحصرية لبياناتها.',
+      'المزود يوفر أدوات أو واجهات برمجية قياسية لاسترجاع البيانات عند الإنهاء.',
+      'مسار الاسترجاع محدد ومفهوم قبل الحاجة إليه.'
+    ],
     evidence: [
       'Ownership clause reference for each cloud agreement',
       'Documented export path or API for the data held',
       'Exit plan note in the provider register'
+    ],
+    evidenceAr: [
+      'مرجع بند الملكية لكل اتفاقية سحابية',
+      'مسار تصدير موثق أو واجهة برمجية للبيانات المحفوظة',
+      'مذكرة خطة الخروج ضمن سجل المزودين'
     ],
     cadence: 'per engagement',
     effort: 'low',
@@ -163,10 +213,20 @@ export const CLOUD = [
       'The agreement includes financial remedies such as service credits.',
       'Achieved availability is compared against the agreed level.'
     ],
+    checksAr: [
+      'كل عقد سحابي يحدد اتفاقية مستوى خدمة للإتاحة.',
+      'الاتفاقية تتضمن تعويضات مالية مثل أرصدة الخدمة.',
+      'الإتاحة المتحققة تقارن بالمستوى المتفق عليه.'
+    ],
     evidence: [
       'SLA schedule for each cloud agreement',
       'Service credit terms',
       'Availability reports for the reporting period'
+    ],
+    evidenceAr: [
+      'جدول اتفاقية مستوى الخدمة لكل اتفاقية سحابية',
+      'شروط أرصدة الخدمة',
+      'تقارير الإتاحة عن فترة التقرير'
     ],
     cadence: 'annual',
     effort: 'low',
@@ -191,10 +251,22 @@ export const CLOUD = [
       'The entity accepts accountability for identity and access management regardless of model.',
       'The entity accepts accountability for resource configuration regardless of model.'
     ],
+    checksAr: [
+      'نموذج الخدمة السحابية موثق لكل خدمة بوصفه بنية تحتية أو منصة أو برمجية كخدمة.',
+      'توزيع المسؤوليات الأمنية المترتب على ذلك موثق.',
+      'الجهة تقر بمسؤوليتها عن تصنيف البيانات أيا كان النموذج.',
+      'الجهة تقر بمسؤوليتها عن إدارة الهوية والوصول أيا كان النموذج.',
+      'الجهة تقر بمسؤوليتها عن تهيئة الموارد أيا كان النموذج.'
+    ],
     evidence: [
       'Shared responsibility matrix per cloud service',
       'Service model field populated in the provider register',
       'Owner named for classification, IAM and configuration in each environment'
+    ],
+    evidenceAr: [
+      'مصفوفة المسؤولية المشتركة لكل خدمة سحابية',
+      'حقل نموذج الخدمة مستوفى في سجل المزودين',
+      'تسمية مالك للتصنيف وإدارة الهوية والتهيئة في كل بيئة'
     ],
     cadence: 'annual',
     effort: 'medium',
@@ -218,10 +290,21 @@ export const CLOUD = [
       'Tags identify the data classification of each resource as Public, Restricted or Sensitive.',
       'Tags identify the business owner of each resource.'
     ],
+    checksAr: [
+      'يحفظ حصر آني لموارد السحابة.',
+      'الوسم البرمجي للموارد مستخدم.',
+      'الوسوم تبين تصنيف بيانات كل مورد بوصفه عاما أو مقيدا أو حساسا.',
+      'الوسوم تبين مالك المورد من جهة الأعمال.'
+    ],
     evidence: [
       'Inventory export from the cloud provider or a cloud posture tool',
       'Tagging standard document',
       'Report of untagged or non compliant resources and their remediation'
+    ],
+    evidenceAr: [
+      'تصدير الحصر من مزود السحابة أو من أداة لمتابعة الوضع السحابي',
+      'وثيقة معيار الوسم',
+      'تقرير الموارد غير الموسومة أو غير الممتثلة وما اتخذ لمعالجتها'
     ],
     cadence: 'continuous',
     effort: 'medium',
@@ -244,10 +327,20 @@ export const CLOUD = [
       'MFA is enforced on root accounts.',
       'Enforcement is technical rather than advisory.'
     ],
+    checksAr: [
+      'المصادقة متعددة العوامل مفروضة على كل مستخدم له وصول إداري إلى وحدة الإدارة السحابية.',
+      'المصادقة متعددة العوامل مفروضة على الحسابات الجذرية.',
+      'الفرض تقني لا توجيهي.'
+    ],
     evidence: [
       'MFA enforcement policy from the cloud identity provider',
       'Report listing every console administrator and MFA status',
       'Root account protection evidence including any break glass procedure'
+    ],
+    evidenceAr: [
+      'سياسة فرض المصادقة متعددة العوامل من مزود الهوية السحابي',
+      'تقرير يعدد كل مدير لوحدة الإدارة وحالة المصادقة متعددة العوامل لديه',
+      'ما يثبت حماية الحساب الجذري بما في ذلك أي إجراء للوصول الطارئ'
     ],
     cadence: 'continuous',
     effort: 'low',
@@ -270,10 +363,20 @@ export const CLOUD = [
       'Service account keys are rotated periodically based on risk, or federation removes the need for static keys.',
       'Automated identity federation such as OIDC is used where available.'
     ],
+    checksAr: [
+      'حسابات الخدمة لا تستخدم للدخول التفاعلي البشري.',
+      'مفاتيح حسابات الخدمة تدور دوريا بحسب المخاطر أو يغني الاتحاد عن المفاتيح الثابتة.',
+      'اتحاد الهوية الآلي مثل OIDC مستخدم حيثما توفر.'
+    ],
     evidence: [
       'Service account register with key age or federation status',
       'Policy statement prohibiting interactive use of service accounts',
       'Key rotation records or federation configuration'
+    ],
+    evidenceAr: [
+      'سجل حسابات الخدمة مع عمر المفاتيح أو حالة الاتحاد',
+      'نص السياسة الذي يحظر الاستخدام التفاعلي لحسابات الخدمة',
+      'سجلات تدوير المفاتيح أو إعداد الاتحاد'
     ],
     cadence: 'quarterly',
     effort: 'medium',
@@ -297,10 +400,21 @@ export const CLOUD = [
       'Use of customer managed encryption keys for Sensitive data is decided on a risk assessment.',
       'The approach aligns with Decision No. 1 of 2025.'
     ],
+    checksAr: [
+      'كل البيانات المحفوظة في السحابة مشفرة.',
+      'المفاتيح المدارة من المنصة مستخدمة كحد أدنى.',
+      'استخدام مفاتيح تشفير يديرها العميل للبيانات الحساسة يقرر بناء على تقييم للمخاطر.',
+      'النهج متوائم مع القرار رقم 1 لسنة 2025.'
+    ],
     evidence: [
       'Encryption status report across storage, database and backup services',
       'Key management approach note per environment',
       'Risk assessment supporting the CMEK decision for Sensitive data'
+    ],
+    evidenceAr: [
+      'تقرير حالة التشفير عبر خدمات التخزين وقواعد البيانات والنسخ الاحتياطي',
+      'مذكرة نهج إدارة المفاتيح لكل بيئة',
+      'تقييم المخاطر الداعم لقرار المفاتيح المدارة من العميل للبيانات الحساسة'
     ],
     cadence: 'continuous',
     effort: 'low',
@@ -324,10 +438,21 @@ export const CLOUD = [
       'Related contracts carry the same residency commitment.',
       'Customer Content is understood to mean files, databases and application data.'
     ],
+    checksAr: [
+      'الخدمات السحابية مهيأة لحفظ محتوى العميل بما يتفق مع الإطار الوطني لتصنيف البيانات.',
+      'الخدمات السحابية مهيأة لمعالجة محتوى العميل بما يتفق مع ذلك الإطار.',
+      'العقود ذات الصلة تحمل الالتزام نفسه بموطن حفظ البيانات.',
+      'محتوى العميل مفهوم بأنه الملفات وقواعد البيانات وبيانات التطبيقات.'
+    ],
     evidence: [
       'Region configuration per service holding Customer Content',
       'Contract clause on data location',
       'Mapping of data sets to regions with their classification'
+    ],
+    evidenceAr: [
+      'إعداد المنطقة الجغرافية لكل خدمة تحتفظ بمحتوى العميل',
+      'البند التعاقدي الخاص بموقع البيانات',
+      'مواءمة بين مجموعات البيانات والمناطق مع تصنيف كل منها'
     ],
     cadence: 'annual',
     effort: 'medium',
@@ -352,10 +477,22 @@ export const CLOUD = [
       'Labels remain non sensitive.',
       'Naming guidance is issued so metadata does not leak sensitive information.'
     ],
+    checksAr: [
+      'الجهة تميز محتوى العميل عن البيانات الوصفية التشغيلية في سجلاتها.',
+      'معرفات المشاريع تبقى غير حساسة.',
+      'أسماء المجلدات تبقى غير حساسة.',
+      'الوسوم تبقى غير حساسة.',
+      'تصدر إرشادات للتسمية حتى لا تسرب البيانات الوصفية معلومات حساسة.'
+    ],
     evidence: [
       'Naming and tagging convention prohibiting sensitive strings',
       'Review of existing project names, folders and labels',
       'Remediation record for identifiers that had to be renamed'
+    ],
+    evidenceAr: [
+      'عرف التسمية والوسم الذي يحظر النصوص الحساسة',
+      'مراجعة لأسماء المشاريع والمجلدات والوسوم القائمة',
+      'محضر معالجة المعرفات التي لزم تغيير أسمائها'
     ],
     cadence: 'annual',
     effort: 'low',
@@ -379,10 +516,21 @@ export const CLOUD = [
       'Any public exposure exists as an explicit documented exception.',
       'Each exception is approved by the data owner.'
     ],
+    checksAr: [
+      'موارد التخزين السحابي تحجب الوصول العام افتراضيا.',
+      'الإعداد الافتراضي مطبق على مستوى المؤسسة أو الحساب لا على مستوى المورد وحده.',
+      'أي كشف للعموم قائم بوصفه استثناء صريحا وموثقا.',
+      'كل استثناء معتمد من مالك البيانات.'
+    ],
     evidence: [
       'Organization policy or account setting enforcing public access block',
       'Scan report listing any publicly reachable storage',
       'Approved exception records naming the data owner'
+    ],
+    evidenceAr: [
+      'سياسة المؤسسة أو إعداد الحساب الذي يفرض حجب الوصول العام',
+      'تقرير فحص يعدد أي تخزين يمكن بلوغه من العموم',
+      'سجلات الاستثناءات المعتمدة مع تسمية مالك البيانات'
     ],
     cadence: 'continuous',
     effort: 'low',
@@ -406,10 +554,21 @@ export const CLOUD = [
       'Logs capture data access for sensitive workloads.',
       'Cloud logs are retained for a minimum of 12 months.'
     ],
+    checksAr: [
+      'تسجيل التدقيق مفعل لمشاريع السحابة.',
+      'السجلات تلتقط النشاط الإداري شاملا تغييرات التهيئة.',
+      'السجلات تلتقط الوصول إلى البيانات في أحمال العمل الحساسة.',
+      'سجلات السحابة تحفظ اثني عشر شهرا كحد أدنى.'
+    ],
     evidence: [
       'Audit log configuration per project or subscription',
       'Retention setting proof showing at least 12 months',
       'Sample query demonstrating admin activity and data access capture'
+    ],
+    evidenceAr: [
+      'إعداد سجل التدقيق لكل مشروع أو اشتراك',
+      'ما يثبت إعداد الحفظ لاثني عشر شهرا على الأقل',
+      'استعلام نموذجي يبين التقاط النشاط الإداري والوصول إلى البيانات'
     ],
     cadence: 'continuous',
     effort: 'medium',
@@ -433,11 +592,23 @@ export const CLOUD = [
       'Management interfaces are not exposed directly to the public internet.',
       'Access to management interfaces runs through a bastion, VPN or identity aware proxy.'
     ],
+    checksAr: [
+      'كل حركة البيانات بين الجهة ومزود السحابة مشفرة أثناء النقل.',
+      'التشفير يستخدم بروتوكولات قياسية في الصناعة مثل TLS 1.2 فأعلى.',
+      'واجهات الإدارة غير مكشوفة مباشرة على الإنترنت العام.',
+      'الوصول إلى واجهات الإدارة يمر عبر مضيف وسيط أو شبكة خاصة افتراضية أو وكيل واع بالهوية.'
+    ],
     evidence: [
       'TLS configuration and version report for entity to cloud paths',
       'Network policy showing management interfaces restricted',
       'Bastion, VPN or identity aware proxy configuration',
       'External scan confirming no exposed management endpoints'
+    ],
+    evidenceAr: [
+      'تقرير إعداد وإصدار TLS لمسارات الاتصال بين الجهة والسحابة',
+      'سياسة الشبكة التي تبين تقييد واجهات الإدارة',
+      'إعداد المضيف الوسيط أو الشبكة الخاصة الافتراضية أو الوكيل الواعي بالهوية',
+      'فحص خارجي يؤكد عدم وجود نقاط إدارة مكشوفة'
     ],
     cadence: 'continuous',
     effort: 'medium',

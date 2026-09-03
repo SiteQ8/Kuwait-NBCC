@@ -1,6 +1,6 @@
 {
   "name": "kuwait-nbcc",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Kuwait NBCC compliance toolkit. Assess, plan and evidence the National Basic Cybersecurity Controls of NCSC Decision No. 2 of 2026.",
   "type": "module",
   "bin": { "nbcc": "./bin/nbcc.js" },
@@ -9,7 +9,7 @@
   "files": ["bin", "src", "templates", "scripts", "README.md", "LICENSE", "SKILL.md"],
   "engines": { "node": ">=18" },
   "scripts": { "test": "node --test test/*.test.js", "check": "node --check bin/nbcc.js" },
-  "keywords": ["kuwait", "ncsc", "nbcc", "cybersecurity", "compliance", "nist-csf", "cis-controls", "grc"],
+  "keywords": ["kuwait", "ncsc", "nbcc", "cybersecurity", "compliance", "nist-csf", "cis-controls", "grc", "arabic", "bilingual"],
   "author": "Ali AlEnezi",
   "license": "MIT",
   "repository": { "type": "git", "url": "git+https://github.com/SiteQ8/Kuwait-NBCC.git" },

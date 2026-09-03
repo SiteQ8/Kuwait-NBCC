@@ -25,12 +25,33 @@ export const PROTECT = [
       'Configurations are reviewed at least annually.',
       'Configurations are reviewed after major changes.'
     ],
+    checksAr: [
+      'توجد إعدادات مرجعية محصنة للخوادم.',
+      'توجد إعدادات مرجعية محصنة لمحطات العمل.',
+      'توجد إعدادات مرجعية محصنة لأجهزة الشبكة.',
+      'توجد إعدادات مرجعية محصنة للتطبيقات الرئيسية.',
+      'الخدمات والخصائص غير اللازمة لدور النظام معطلة أو مزالة.',
+      'المنافذ غير اللازمة لدور النظام معطلة أو مزالة.',
+      'الحسابات الافتراضية مغيرة أو معطلة.',
+      'كلمات المرور الافتراضية مغيرة أو معطلة.',
+      'جدار حماية على مستوى المضيف مفعل على الأجهزة الطرفية والخوادم.',
+      'قواعد جدار حماية المضيف تسمح فقط بحركة البيانات اللازمة للتشغيل الطبيعي.',
+      'الإعدادات تراجع سنويا على الأقل.',
+      'الإعدادات تراجع عقب التغييرات الجوهرية.'
+    ],
     evidence: [
       'Documented baseline per platform with the hardening decisions recorded',
       'Build checklist or golden image showing services and ports removed',
       'Report confirming no default credentials remain in use',
       'Host firewall policy export from a sample of endpoints and servers',
       'Dated configuration review record'
+    ],
+    evidenceAr: [
+      'إعداد مرجعي موثق لكل منصة مع تسجيل قرارات التحصين',
+      'قائمة تحقق البناء أو النسخة القياسية تبين الخدمات والمنافذ المزالة',
+      'تقرير يؤكد عدم بقاء أي بيانات اعتماد افتراضية قيد الاستخدام',
+      'تصدير سياسة جدار حماية المضيف من عينة من الأجهزة الطرفية والخوادم',
+      'محضر مؤرخ لمراجعة الإعدادات'
     ],
     cadence: 'annual',
     effort: 'high',
@@ -63,11 +84,30 @@ export const PROTECT = [
       'Such access is documented.',
       'Such access is reviewed at least annually.'
     ],
+    checksAr: [
+      'شبكات المستخدمين مفصولة عن شبكات الخوادم والبيانات متى أمكن.',
+      'واجهات الإدارة موضوعة في مقطع شبكي أكثر تقييدا.',
+      'الأنظمة المتصلة بالإنترنت موضوعة في منطقة شبكية أكثر ضبطا.',
+      'الوصول المباشر من شبكات المستخدمين إلى الخوادم الحساسة متجنب ما لم يكن مطلوبا ومعتمدا صراحة.',
+      'الموقع الشبكي وحده لا يعد أساسا كافيا للثقة.',
+      'الوصول إلى واجهات الإدارة معتمد صراحة على أساس أقل الصلاحيات.',
+      'الوصول إلى الأنظمة الحرجة معتمد صراحة على أساس أقل الصلاحيات.',
+      'مصادقة قوية تحمي الوصول الإداري بما يتفق مع الضابط PR-2.',
+      'المصادقة متعددة العوامل تحمي الوصول الإداري حيثما كان مدعوما.',
+      'هذا الوصول موثق.',
+      'هذا الوصول يراجع سنويا على الأقل.'
+    ],
     evidence: [
       'Network diagram showing user, server, management and internet facing zones',
       'Firewall or ACL rule set enforcing the separation',
       'Authorization register for management interface and Critical System access',
       'Annual access review sign off'
+    ],
+    evidenceAr: [
+      'مخطط شبكي يبين مناطق المستخدمين والخوادم والإدارة والاتصال بالإنترنت',
+      'مجموعة قواعد جدار الحماية أو قوائم التحكم التي تفرض الفصل',
+      'سجل اعتماد الوصول إلى واجهات الإدارة والأنظمة الحرجة',
+      'اعتماد المراجعة السنوية للوصول'
     ],
     cadence: 'annual',
     effort: 'high',
@@ -99,11 +139,31 @@ export const PROTECT = [
       'Records of scans are retained.',
       'Records of key remediation actions are retained.'
     ],
+    checksAr: [
+      'توجد آلية مكتوبة لإدارة الثغرات.',
+      'الآلية تراجع سنويا على الأقل.',
+      'فحوص الثغرات الآلية تجرى شهريا على الأقل للأنظمة المتصلة بالإنترنت.',
+      'فحوص الثغرات الآلية تجرى ربع سنويا على الأقل لسائر الأنظمة الداخلية المهمة.',
+      'الفحوص تجرى عقب التغييرات الجوهرية.',
+      'كل تقرير فحص يراجع.',
+      'تعد قائمة إجراءات موجزة عقب كل فحص.',
+      'النتائج العالية والحرجة تعطى أولوية المعالجة.',
+      'تحديثات أنظمة التشغيل تطبق شهريا على الأقل على الأنظمة المدعومة.',
+      'تحديثات التطبيقات تطبق شهريا على الأقل على الأنظمة المدعومة.',
+      'سجلات الفحوص محفوظة.',
+      'سجلات إجراءات المعالجة الرئيسية محفوظة.'
+    ],
     evidence: [
       'Vulnerability management procedure with review date',
       'Scan schedule and last twelve months of scan reports',
       'Remediation tracker showing findings, owners and closure dates',
       'Patch compliance report per monthly cycle'
+    ],
+    evidenceAr: [
+      'إجراء إدارة الثغرات مع تاريخ المراجعة',
+      'جدول الفحوص وتقارير آخر اثني عشر شهرا',
+      'متتبع المعالجة يبين النتائج والمسؤولين وتواريخ الإغلاق',
+      'تقرير الالتزام بالتحديثات لكل دورة شهرية'
     ],
     cadence: 'monthly',
     effort: 'high',
@@ -136,11 +196,32 @@ export const PROTECT = [
       'MFA is implemented for privileged and admin accounts where supported.',
       'MFA uses at least two different types of factor.'
     ],
+    checksAr: [
+      'كلمات مرور فريدة مطلوبة لجميع الحسابات.',
+      'إعادة استخدام كلمات المرور عبر أنظمة مختلفة محظورة.',
+      'الحسابات المحمية بالمصادقة متعددة العوامل تتطلب ثمانية محارف على الأقل.',
+      'الحسابات غير المحمية بالمصادقة متعددة العوامل تتطلب أربعة عشر محرفا على الأقل.',
+      'التغيير الدوري الإجباري لكلمات المرور متجنب ما لم يشتبه في اختراق.',
+      'محطات العمل تقفل الجلسة بعد خمس عشرة دقيقة من الخمول.',
+      'الأجهزة المحمولة تقفل بعد نحو دقيقتين من الخمول حيثما كان ذلك عمليا.',
+      'صلاحيات المدير مقصورة على حسابات إدارية مخصصة.',
+      'الموظفون يؤدون أعمالهم اليومية من حساب مستخدم عادي.',
+      'المصادقة متعددة العوامل مطبقة على كل وصول شبكي عن بعد.',
+      'المصادقة متعددة العوامل مطبقة على التطبيقات المكشوفة خارجيا.',
+      'المصادقة متعددة العوامل مطبقة على الحسابات ذات الصلاحيات والحسابات الإدارية حيثما كانت مدعومة.',
+      'المصادقة متعددة العوامل تستخدم نوعين مختلفين على الأقل من العوامل.'
+    ],
     evidence: [
       'Password policy configuration export from the directory service',
       'Screen lock policy from endpoint management',
       'List of privileged accounts showing separation from daily use accounts',
       'MFA enrolment report covering remote access, exposed applications and admins'
+    ],
+    evidenceAr: [
+      'تصدير إعداد سياسة كلمات المرور من خدمة الدليل',
+      'سياسة قفل الشاشة من نظام إدارة الأجهزة الطرفية',
+      'قائمة الحسابات ذات الصلاحيات تبين فصلها عن حسابات الاستخدام اليومي',
+      'تقرير تسجيل المصادقة متعددة العوامل يغطي الوصول عن بعد والتطبيقات المكشوفة والمديرين'
     ],
     cadence: 'continuous',
     effort: 'medium',
@@ -168,11 +249,25 @@ export const PROTECT = [
       'An acceptable use policy states the requirement.',
       'Device and email configuration prevents adding personal accounts where feasible.'
     ],
+    checksAr: [
+      'كل مراسلات العمل الرسمية تستخدم حسابات بريد مؤسسي معتمدة من الجهة.',
+      'البريد المؤسسي يعمل على نطاقات معتمدة.',
+      'حسابات البريد الشخصي أو الاستهلاكي غير مهيأة على أجهزة الجهة.',
+      'حسابات البريد الشخصي أو الاستهلاكي لا تستخدم في المراسلات المتعلقة بالعمل.',
+      'سياسة الاستخدام المقبول تنص على هذا الاشتراط.',
+      'إعدادات الأجهزة والبريد تمنع إضافة الحسابات الشخصية متى أمكن.'
+    ],
     evidence: [
       'Acceptable use policy clause on corporate email',
       'MDM or mail client profile blocking personal account enrolment',
       'Approved mail domain list',
       'Exception records where the technical control cannot be applied'
+    ],
+    evidenceAr: [
+      'بند سياسة الاستخدام المقبول الخاص بالبريد المؤسسي',
+      'ملف إدارة الأجهزة أو عميل البريد الذي يمنع تسجيل الحسابات الشخصية',
+      'قائمة نطاقات البريد المعتمدة',
+      'سجلات الاستثناء حيث يتعذر تطبيق الضابط التقني'
     ],
     cadence: 'continuous',
     effort: 'low',
@@ -198,11 +293,25 @@ export const PROTECT = [
       'Passwords are not shared through chat.',
       'Passwords are not shared on paper.'
     ],
+    checksAr: [
+      'يوفر أو يعتمد حل من نوع مدير كلمات المرور للموظفين الذين يديرون بيانات اعتماد متعددة.',
+      'يشجع استخدام كلمات مرور طويلة وفريدة ومولدة لكل نظام.',
+      'الحسابات المشتركة أو حسابات الفرق تستخدم خزانة كلمات مرور مشتركة أو قدرة مماثلة.',
+      'كلمات المرور لا تتبادل عبر البريد الإلكتروني.',
+      'كلمات المرور لا تتبادل عبر المحادثات.',
+      'كلمات المرور لا تتبادل على الورق.'
+    ],
     evidence: [
       'Approved password manager in the software inventory with licence coverage',
       'Vault configuration for shared team credentials',
       'Awareness material covering credential sharing prohibitions',
       'Rollout record for staff in credential heavy roles'
+    ],
+    evidenceAr: [
+      'مدير كلمات المرور المعتمد مدرجا في حصر البرمجيات مع تغطية الترخيص',
+      'إعداد الخزانة الخاصة ببيانات الاعتماد المشتركة بين الفرق',
+      'مواد توعوية تغطي حظر تبادل بيانات الاعتماد',
+      'محضر التعميم على الموظفين في الأدوار كثيفة بيانات الاعتماد'
     ],
     cadence: 'continuous',
     effort: 'low',
@@ -233,11 +342,30 @@ export const PROTECT = [
       'Training covers how to report suspicious activity or incidents.',
       'Material uses simple language and relevant examples.'
     ],
+    checksAr: [
+      'يوجد برنامج للتوعية الأمنية.',
+      'التدريب يقدم سنويا على الأقل.',
+      'التدريب يقدم للموظفين الجدد.',
+      'التدريب يغطي الهندسة الاجتماعية والتصيد.',
+      'التدريب يغطي الاستخدام الآمن للبريد الإلكتروني والإنترنت.',
+      'التدريب يغطي التعامل مع البيانات الحساسة والمقيدة.',
+      'التدريب يغطي سلامة كلمات المرور والمصادقة متعددة العوامل.',
+      'التدريب يغطي استخدام أدوات التواصل المعتمدة.',
+      'التدريب يغطي استخدام الوسائط المحمولة.',
+      'التدريب يغطي كيفية الإبلاغ عن النشاط المشبوه أو الحوادث.',
+      'المواد تستخدم لغة بسيطة وأمثلة ذات صلة.'
+    ],
     evidence: [
       'Awareness program plan and content outline mapped to the seven required topics',
       'Attendance and completion records for the current year',
       'New joiner induction record showing security training',
       'Sample training material in the working language of staff'
+    ],
+    evidenceAr: [
+      'خطة برنامج التوعية وموجز محتواه مقابلا للموضوعات السبعة المطلوبة',
+      'سجلات الحضور والإتمام للسنة الحالية',
+      'محضر تعريف الموظفين الجدد يبين التدريب الأمني',
+      'عينة من المواد التدريبية بلغة عمل الموظفين'
     ],
     cadence: 'annual',
     effort: 'medium',
@@ -267,11 +395,27 @@ export const PROTECT = [
       'Access to official accounts is reviewed at least annually.',
       'Access is removed when staff leave or change roles.'
     ],
+    checksAr: [
+      'يحفظ سجل مركزي لحسابات الجهة الرسمية على المنصات الخارجية.',
+      'الحسابات الرسمية تنشأ باستخدام عناوين بريد مؤسسي.',
+      'الحسابات الرسمية تتبع أعرافا مناسبة في التسمية.',
+      'التوثيق أو صفة الحساب الرسمي مفعلة حيثما توفرها المنصة واستوفيت شروطها.',
+      'الحسابات الرسمية محمية بالمصادقة متعددة العوامل.',
+      'الحسابات الرسمية تدار وفق الأدوار.',
+      'الوصول إلى الحسابات الرسمية يراجع سنويا على الأقل.',
+      'الوصول يزال عند مغادرة الموظف أو تغير دوره.'
+    ],
     evidence: [
       'Register of official accounts with platform, handle, owner and admin list',
       'MFA status screenshot per official account',
       'Annual access review record',
       'Leaver checklist entry covering social account access removal'
+    ],
+    evidenceAr: [
+      'سجل الحسابات الرسمية يبين المنصة والمعرف والمالك وقائمة المديرين',
+      'لقطة تبين حالة المصادقة متعددة العوامل لكل حساب رسمي',
+      'محضر المراجعة السنوية للوصول',
+      'بند في قائمة تحقق المغادرة يغطي إزالة الوصول إلى حسابات التواصل'
     ],
     cadence: 'annual',
     effort: 'low',
@@ -304,11 +448,32 @@ export const PROTECT = [
       'Staff are trained to be cautious with unexpected links and attachments.',
       'Staff are trained to report suspicious messages.'
     ],
+    checksAr: [
+      'حماية الأجهزة الطرفية منشورة على الخوادم المدعومة.',
+      'حماية الأجهزة الطرفية منشورة على محطات العمل المدعومة.',
+      'بصمات ومحركات حماية الأجهزة الطرفية تحدث تلقائيا.',
+      'يوجد تنبيه مركزي حيثما أمكن.',
+      'ضوابط أمن البريد تحجب المحتوى الخبيث الشائع.',
+      'ضوابط أمن الويب تحجب المحتوى الخبيث الشائع.',
+      'أنظمة البريد تحجب أو تنبه على امتدادات الملفات الخطرة غير اللازمة للعمل.',
+      'المرفقات الكبيرة جدا محدودة وفق حاجة العمل.',
+      'سجل SPF مهيأ على نطاقات بريد الجهة.',
+      'سجل DKIM مهيأ على نطاقات بريد الجهة.',
+      'سجل DMARC مهيأ على نطاقات بريد الجهة.',
+      'الموظفون مدربون على الحذر من الروابط والمرفقات غير المتوقعة.',
+      'الموظفون مدربون على الإبلاغ عن الرسائل المشبوهة.'
+    ],
     evidence: [
       'Endpoint protection coverage report against the asset inventory',
       'Mail gateway policy showing attachment and URL filtering rules',
       'DNS records proving SPF, DKIM and DMARC on every sending domain',
       'Phishing reporting statistics or mailbox activity'
+    ],
+    evidenceAr: [
+      'تقرير تغطية حماية الأجهزة الطرفية مقارنا بحصر الأصول',
+      'سياسة بوابة البريد تبين قواعد ترشيح المرفقات والروابط',
+      'سجلات نظام أسماء النطاقات تثبت تهيئة SPF وDKIM وDMARC على كل نطاق مرسل',
+      'إحصاءات الإبلاغ عن التصيد أو نشاط صندوق البريد المخصص'
     ],
     cadence: 'continuous',
     effort: 'medium',
@@ -334,11 +499,25 @@ export const PROTECT = [
       'Staff are made aware of the approved platform list.',
       'Installation or use of unapproved tools on corporate devices is restricted by configuration where feasible.'
     ],
+    checksAr: [
+      'المنصات المعتمدة من الجهة وحدها تستخدم للاجتماعات والمكالمات والمراسلة ومشاركة الشاشة الرسمية.',
+      'التطبيقات الشخصية أو غير المعتمدة لا تستخدم لبيانات العمل أو اجتماعاته.',
+      'أدوات التحكم عن بعد غير المصرح بها لا تستخدم في العمل.',
+      'تحفظ قائمة بالمنصات المعتمدة.',
+      'الموظفون على علم بقائمة المنصات المعتمدة.',
+      'تثبيت الأدوات غير المعتمدة أو استخدامها على أجهزة الجهة مقيد بالإعدادات متى أمكن.'
+    ],
     evidence: [
       'Approved collaboration platform list published to staff',
       'Application allow list or blocklist configuration from endpoint management',
       'Awareness communication announcing the list',
       'Exception records for any tolerated third party tool'
+    ],
+    evidenceAr: [
+      'قائمة منصات التعاون المعتمدة المعممة على الموظفين',
+      'إعداد قائمة السماح أو الحجب للتطبيقات من نظام إدارة الأجهزة الطرفية',
+      'تعميم توعوي يعلن القائمة',
+      'سجلات الاستثناء لأي أداة طرف ثالث مسموح بها'
     ],
     cadence: 'continuous',
     effort: 'low',
@@ -363,11 +542,24 @@ export const PROTECT = [
       'Only authorized portable media can be used.',
       'Staff are trained on proper usage of portable media devices.'
     ],
+    checksAr: [
+      'استخدام وسائط التخزين المحمولة غير المعتمدة مقيد أو معطل تقنيا متى أمكن.',
+      'الأنظمة التي تعالج بيانات حساسة تخضع لأشد قيود الوسائط المحمولة.',
+      'يوجد إجراء لاعتماد الوسائط المحمولة عند وجود حاجة عمل.',
+      'الوسائط المحمولة المصرح بها وحدها يمكن استخدامها.',
+      'الموظفون مدربون على الاستخدام السليم لأجهزة الوسائط المحمولة.'
+    ],
     evidence: [
       'Endpoint policy showing removable media control settings',
       'Register of authorized media and their approvals',
       'Training module covering removable media',
       'Report of blocked device events'
+    ],
+    evidenceAr: [
+      'سياسة الأجهزة الطرفية تبين إعدادات التحكم في الوسائط القابلة للإزالة',
+      'سجل الوسائط المصرح بها واعتماداتها',
+      'وحدة تدريبية تغطي الوسائط القابلة للإزالة',
+      'تقرير أحداث الأجهزة المحجوبة'
     ],
     cadence: 'continuous',
     effort: 'low',
@@ -400,12 +592,32 @@ export const PROTECT = [
       'Sensitive data is securely erased or destroyed when no longer needed.',
       'Backups of Sensitive data held outside Kuwait carry the required approvals.'
     ],
+    checksAr: [
+      'نسخ احتياطية آلية منتظمة تجرى للأنظمة والبيانات الحرجة.',
+      'البيانات الحساسة والمقيدة تعطى أولوية في النسخ الاحتياطي.',
+      'النسخ الاحتياطية تحفظ في موقع منفصل واحد على الأقل.',
+      'بيانات النسخ الاحتياطي محمية من الوصول غير المصرح به.',
+      'بيانات النسخ الاحتياطي محمية من العبث.',
+      'استعادة النسخ الاحتياطية للأنظمة الرئيسية تختبر سنويا على الأقل.',
+      'مدد الحفظ محددة ومطبقة.',
+      'إجراءات الإتلاف الآمن محددة ومطبقة.',
+      'الحفظ والإتلاف متوائمان مع المتطلبات القانونية ومع الإطار الوطني لتصنيف البيانات.',
+      'البيانات الحساسة تمحى أو تتلف بصورة آمنة عند انتفاء الحاجة إليها.',
+      'النسخ الاحتياطية للبيانات الحساسة المحفوظة خارج الكويت تحمل الموافقات المطلوبة.'
+    ],
     evidence: [
       'Backup schedule and last thirty days of job success reports',
       'Architecture note showing the separate backup location',
       'Backup encryption and access control configuration',
       'Restore test report with date, scope and outcome',
       'Retention schedule and destruction certificates'
+    ],
+    evidenceAr: [
+      'جدول النسخ الاحتياطي وتقارير نجاح المهام لآخر ثلاثين يوما',
+      'مذكرة معمارية تبين موقع النسخ الاحتياطي المنفصل',
+      'إعداد تشفير النسخ الاحتياطية وضوابط الوصول إليها',
+      'تقرير اختبار الاستعادة مع التاريخ والنطاق والنتيجة',
+      'جدول الحفظ وشهادات الإتلاف'
     ],
     cadence: 'annual',
     effort: 'high',
@@ -437,11 +649,27 @@ export const PROTECT = [
       'Portable equipment is stored in a locked room or cabinet when not in use.',
       'Equipment is not left unattended in public or shared areas.'
     ],
+    checksAr: [
+      'المناطق التقنية الحرجة محددة ومدرجة في قائمة.',
+      'الأبواب أو الخزائن في المناطق التقنية الحرجة يمكن قفلها عند خلوها.',
+      'الوصول مقيد بحيث لا يدخل أو يفتح المعدات إلا المخولون.',
+      'المفاتيح وبطاقات الدخول والرموز تدار من تقنية المعلومات أو إدارة المرافق.',
+      'يحفظ سجل بالزوار غير المعتادين للمناطق التقنية الحرجة.',
+      'وسائط النسخ الاحتياطي تحفظ في غرفة أو خزانة مقفلة عند عدم الاستخدام.',
+      'المعدات المحمولة تحفظ في غرفة أو خزانة مقفلة عند عدم الاستخدام.',
+      'المعدات لا تترك دون رقابة في الأماكن العامة أو المشتركة.'
+    ],
     evidence: [
       'List of critical IT areas',
       'Access card holder list for each area with authorization basis',
       'Visitor log samples covering contractor and vendor entry',
       'Photographs or inspection notes of media storage arrangements'
+    ],
+    evidenceAr: [
+      'قائمة المناطق التقنية الحرجة',
+      'قائمة حاملي بطاقات الدخول لكل منطقة مع أساس التخويل',
+      'عينات من سجل الزوار تغطي دخول المقاولين والموردين',
+      'صور أو ملاحظات تفتيش لترتيبات حفظ الوسائط'
     ],
     cadence: 'annual',
     effort: 'low',

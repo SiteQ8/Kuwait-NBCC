@@ -44,11 +44,28 @@ export const GOVERN = [
       'The role structure is reviewed and updated at least annually.',
       'The role structure is reviewed after any major organizational change.'
     ],
+    checksAr: [
+      'يعين موظف بدرجة مدير فما فوق تعيينا رسميا ليتولى المسؤولية الشاملة عن الأمن السيبراني.',
+      'التعيين موثق ويمكن تتبعه إلى كتاب تكليف موقع أو ما يقوم مقامه.',
+      'الأدوار والمسؤوليات موثقة لأمن المعلومات.',
+      'الأدوار والمسؤوليات موثقة لعمليات تقنية المعلومات.',
+      'الأدوار والمسؤوليات موثقة لإدارة المخاطر.',
+      'الأدوار والمسؤوليات موثقة لتصنيف البيانات.',
+      'الأدوار والمسؤوليات موثقة للاستجابة للحوادث.',
+      'هيكل الأدوار يراجع ويحدث سنويا على الأقل.',
+      'هيكل الأدوار يراجع عقب أي تغيير تنظيمي جوهري.'
+    ],
     evidence: [
       'Signed appointment letter or decision naming the cybersecurity lead',
       'RACI matrix or roles and responsibilities document',
       'Organizational chart showing the reporting line of the cybersecurity function',
       'Dated record of the most recent annual review'
+    ],
+    evidenceAr: [
+      'كتاب تكليف أو قرار موقع يسمي المسؤول عن الأمن السيبراني',
+      'مصفوفة مسؤوليات أو وثيقة أدوار ومسؤوليات',
+      'هيكل تنظيمي يبين خط ارتباط وظيفة الأمن السيبراني',
+      'محضر مؤرخ لآخر مراجعة سنوية'
     ],
     cadence: 'annual',
     effort: 'low',
@@ -80,11 +97,31 @@ export const GOVERN = [
       'Every recorded exception carries a documented risk acceptance.',
       'Every recorded exception carries an expiry date.'
     ],
+    checksAr: [
+      'توجد سياسة مكتوبة للاستخدام المقبول.',
+      'توجد سياسة مكتوبة للتهيئة الآمنة.',
+      'توجد سياسة مكتوبة لتصنيف البيانات.',
+      'توجد سياسة مكتوبة للتحكم في الوصول.',
+      'توجد سياسة مكتوبة للنسخ الاحتياطي والاستعادة.',
+      'توجد سياسة مكتوبة للاستجابة للحوادث.',
+      'توجد سياسة مكتوبة لأمن الأطراف الثالثة ومزودي الخدمة.',
+      'السياسات معتمدة من الإدارة.',
+      'السياسات تراجع كل سنتين على الأقل.',
+      'توجد آلية موثقة للاستثناء من السياسات.',
+      'كل استثناء مسجل يحمل قبولا موثقا للمخاطر.',
+      'كل استثناء مسجل يحمل تاريخ انتهاء.'
+    ],
     evidence: [
       'Policy set with version history and approval signatures',
       'Policy review calendar showing the two year cycle',
       'Exception register listing scope, owner, risk acceptance and expiry',
       'Compensating control notes attached to open exceptions'
+    ],
+    evidenceAr: [
+      'حزمة السياسات مع سجل الإصدارات وتواقيع الاعتماد',
+      'جدول مراجعة السياسات يبين دورة السنتين',
+      'سجل الاستثناءات يبين النطاق والمسؤول وقبول المخاطر وتاريخ الانتهاء',
+      'ملاحظات الضوابط التعويضية المرفقة بالاستثناءات المفتوحة'
     ],
     cadence: 'biennial',
     effort: 'medium',
@@ -114,12 +151,31 @@ export const GOVERN = [
       'Sensitive data receives stronger access controls and encryption than lower tiers.',
       'Any storage or processing of Sensitive data outside Kuwait has explicit prior NCSC approval.'
     ],
+    checksAr: [
+      'يطبق برنامج لتصنيف البيانات موائم للإطار الوطني لتصنيف البيانات.',
+      'التصنيف يستخدم فئات حساس ومقيد وعام على الأقل.',
+      'معايير التصنيف وأمثلته العملية موثقة.',
+      'سياسة أو وثيقة تصنيف البيانات معتمدة من الإدارة العليا.',
+      'وثيقة تصنيف البيانات مرفوعة إلى المركز لاعتمادها وفق القرار رقم 1 لسنة 2025.',
+      'البيانات موسومة بتصنيفها.',
+      'الأنظمة والسجلات المرتبطة تحمل تصنيف البيانات التي تحتويها.',
+      'تدابير الحماية تتصاعد بوضوح مع درجة الحساسية.',
+      'البيانات الحساسة تحظى بضوابط وصول وتشفير أقوى من الفئات الأدنى.',
+      'أي حفظ أو معالجة للبيانات الحساسة خارج الكويت له موافقة مسبقة صريحة من المركز.'
+    ],
     evidence: [
       'Approved Data Classification Policy with senior management signature',
       'Proof of submission to NCSC and any approval response',
       'Sample labelled records, file shares or database catalogues',
       'Control matrix showing measures applied per classification tier',
       'Approval file for every offshore location holding Sensitive data'
+    ],
+    evidenceAr: [
+      'سياسة تصنيف البيانات المعتمدة بتوقيع الإدارة العليا',
+      'ما يثبت الرفع إلى المركز وأي رد بالاعتماد',
+      'عينات من سجلات أو مجلدات أو فهارس قواعد بيانات موسومة',
+      'مصفوفة ضوابط تبين التدابير المطبقة لكل فئة تصنيف',
+      'ملف الموافقة لكل موقع خارجي يحتفظ ببيانات حساسة'
     ],
     cadence: 'annual',
     effort: 'high',
@@ -146,11 +202,26 @@ export const GOVERN = [
       'Conflict of interest checks are performed before hire into sensitive cyber roles.',
       'Screening outcomes are documented and retained.'
     ],
+    checksAr: [
+      'الكوادر الكويتية المؤهلة تعطى الأولوية في الأدوار السيبرانية الرئيسية متى أمكن.',
+      'نهج الأولوية متسق مع أطر الموارد البشرية الوطنية والقوانين المحلية.',
+      'تحفظ قائمة بالأدوار السيبرانية الحساسة المحددة.',
+      'يتحقق من الهوية قبل التعيين في الأدوار السيبرانية الحساسة.',
+      'يتحقق من التاريخ الوظيفي قبل التعيين في الأدوار السيبرانية الحساسة.',
+      'يتحقق من تعارض المصالح قبل التعيين في الأدوار السيبرانية الحساسة.',
+      'نتائج التحري موثقة ومحفوظة.'
+    ],
     evidence: [
       'Register of designated sensitive cyber roles',
       'Screening records held per role holder in line with HR policy',
       'Recruitment policy clause covering national prioritization',
       'Hiring file samples showing completed checks'
+    ],
+    evidenceAr: [
+      'سجل الأدوار السيبرانية الحساسة المحددة',
+      'سجلات التحري المحفوظة لكل شاغل دور وفق سياسة الموارد البشرية',
+      'بند في سياسة التوظيف يغطي أولوية الكوادر الوطنية',
+      'عينات من ملفات التعيين تبين استكمال عمليات التحري'
     ],
     cadence: 'per hire',
     effort: 'low',
@@ -179,11 +250,28 @@ export const GOVERN = [
       'Records can be produced for NCSC on request.',
       'Major incidents and audit findings feed back into assessment priorities.'
     ],
+    checksAr: [
+      'يستكمل تقييم ذاتي مقابل الضوابط مرة واحدة سنويا على الأقل.',
+      'التقييم الذاتي يستخدم قائمة تحقق صادرة عن المركز أو معتمدة منه.',
+      'النتائج موثقة.',
+      'الفجوات الرئيسية موثقة.',
+      'إجراءات المعالجة موثقة.',
+      'تواريخ مستهدفة مسجلة لكل إجراء.',
+      'سجلات التقييم محفوظة ثلاث سنوات على الأقل.',
+      'السجلات يمكن تقديمها للمركز عند الطلب.',
+      'الحوادث الكبرى وملاحظات التدقيق تغذي أولويات التقييم.'
+    ],
     evidence: [
       'Completed self assessment for the current year',
       'Gap and action register with owners and target dates',
       'Retention proof covering the last three annual cycles',
       'Change log showing priorities updated after an incident or audit'
+    ],
+    evidenceAr: [
+      'التقييم الذاتي المكتمل للسنة الحالية',
+      'سجل الفجوات والإجراءات مع المسؤولين والتواريخ المستهدفة',
+      'ما يثبت الحفظ لآخر ثلاث دورات سنوية',
+      'سجل تغيير يبين تحديث الأولويات بعد حادث أو تدقيق'
     ],
     cadence: 'annual',
     effort: 'medium',
@@ -218,11 +306,31 @@ export const GOVERN = [
       'Offboarding actions handle provider held data appropriately.',
       'Evidence of offboarding actions is retained.'
     ],
+    checksAr: [
+      'يوجد حصر لمزودي الخدمة يشمل الخدمات السحابية والمدارة.',
+      'كل سجل مزود يحمل تصنيفا.',
+      'كل سجل مزود يسمي جهة اتصال داخل الجهة.',
+      'الحصر يراجع سنويا على الأقل أو عند أي تغيير جوهري.',
+      'نطاق الخدمة موثق لمزودي البيانات الحساسة أو الخدمات الحرجة.',
+      'المسؤوليات المشتركة عن حماية الخدمة والبيانات موثقة لهؤلاء المزودين.',
+      'بيانات الاتصال للاستجابة للحوادث تشمل مزودي الخدمة المعنيين.',
+      'مهل الإبلاغ عن الحوادث المتعلقة بالمزودين محددة.',
+      'آليات الإبلاغ عن الحوادث المتعلقة بالمزودين محددة.',
+      'إجراءات إنهاء التعاقد تزيل وصول المزود.',
+      'إجراءات إنهاء التعاقد تعالج البيانات المحفوظة لدى المزود على النحو المناسب.',
+      'ما يثبت تنفيذ إجراءات إنهاء التعاقد محفوظ.'
+    ],
     evidence: [
       'Service provider register with classification, contact and review date',
       'Scope and shared responsibility documents for critical providers',
       'Incident contact list including provider escalation paths',
       'Completed offboarding checklists with access removal proof'
+    ],
+    evidenceAr: [
+      'سجل مزودي الخدمة مع التصنيف وجهة الاتصال وتاريخ المراجعة',
+      'وثائق النطاق والمسؤوليات المشتركة للمزودين الحرجين',
+      'قائمة اتصال الحوادث شاملة مسارات التصعيد لدى المزودين',
+      'قوائم تحقق إنهاء التعاقد مكتملة مع ما يثبت إزالة الوصول'
     ],
     cadence: 'annual',
     effort: 'medium',

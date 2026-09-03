@@ -140,7 +140,7 @@ ${C.bold}Usage${C.reset}
 
 ${C.bold}Understand the baseline${C.reset}
   catalog                     List all ${CATALOG_STATS.controls} controls
-  show <id>                   Full detail of one control, for example: nbcc show PR-2
+  show <id> [--ar]            Full detail of one control, for example: nbcc show PR-2
   search <term>               Find controls whose text matches a term
   crosswalk [--to csf|cis|iso]  Map the baseline onto other frameworks
   deadline                    Where today sits in the 18 month window
@@ -157,6 +157,7 @@ ${C.bold}Produce a record${C.reset}
   export <file> --as md|csv|json
 
 ${C.bold}Options${C.reset}
+  --ar                        Print the checks and evidence in Arabic
   --fn GOV|ID|PR|DE|RS|RC|CLD   Filter by function
   --phase 1|2|3                 Filter by readiness phase
   --gaps                        Show only controls that are not met
@@ -215,15 +216,16 @@ function cmdShow(positional, flags) {
     lines.forEach((line, i) => out(bullet ? `    ${i === 0 ? '\u2022 ' : '  '}${line}` : `  ${line}`));
   }
   out('');
-  out(`${C.cyan}Checks${C.reset} ${C.dim}(${c.checks.length})${C.reset}`);
-  c.checks.forEach((t, i) => {
+  const ar = Boolean(flags.ar);
+  out(`${C.cyan}${ar ? 'بنود التحقق' : 'Checks'}${C.reset} ${C.dim}(${c.checks.length})${C.reset}`);
+  (ar ? c.checksAr : c.checks).forEach((t, i) => {
     const lines = wrap(t, 72);
     out(`  ${C.dim}${padStart(i + 1, 2)}${C.reset}  ${lines[0]}`);
     for (const l of lines.slice(1)) out(`      ${l}`);
   });
   out('');
-  out(`${C.cyan}Evidence to retain${C.reset}`);
-  for (const e of c.evidence) out(`  \u00b7 ${e}`);
+  out(`${C.cyan}${ar ? 'الأدلة الواجب حفظها' : 'Evidence to retain'}${C.reset}`);
+  for (const e of (ar ? c.evidenceAr : c.evidence)) out(`  \u00b7 ${e}`);
   const m = mappingsFor(c.id);
   out('');
   out(`${C.cyan}Maps to${C.reset}`);

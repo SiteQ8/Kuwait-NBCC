@@ -29,11 +29,33 @@ export const DETECT = [
       'Logs are retained at least 12 months in total, live or archived.',
       'Logs are reviewed for suspicious activity at a frequency matched to entity risk.'
     ],
+    checksAr: [
+      'تسجيل التدقيق مفعل على الأنظمة الحرجة.',
+      'تسجيل التدقيق مفعل على أجهزة الشبكة.',
+      'تسجيل التدقيق مفعل على أدوات الأمن.',
+      'تسجيل التدقيق مفعل على التطبيقات الرئيسية.',
+      'أحداث المصادقة مسجلة.',
+      'الإجراءات الإدارية مسجلة.',
+      'الأحداث الأمنية المهمة مسجلة.',
+      'السجلات تجمع مركزيا في حل للتسجيل متى أمكن.',
+      'الوصول إلى السجلات مقصور على المخولين فقط.',
+      'السجلات محمية من التعديل أو الحذف غير المصرح به.',
+      'التغييرات على إعدادات التسجيل تسجل هي نفسها.',
+      'السجلات تحفظ تسعين يوما على الأقل بصورة حية.',
+      'السجلات تحفظ اثني عشر شهرا على الأقل إجمالا حية كانت أو مؤرشفة.',
+      'السجلات تراجع بحثا عن نشاط مشبوه بوتيرة تناسب مخاطر الجهة.'
+    ],
     evidence: [
       'Logging configuration export from a sample of critical systems',
       'Central log platform onboarding list against the asset inventory',
       'Retention policy configuration proving 90 day live and 12 month total',
       'Log review records with reviewer, date and findings'
+    ],
+    evidenceAr: [
+      'تصدير إعدادات التسجيل من عينة من الأنظمة الحرجة',
+      'قائمة الأنظمة المرتبطة بمنصة السجلات المركزية مقارنة بحصر الأصول',
+      'إعداد سياسة الحفظ يثبت تسعين يوما حية واثني عشر شهرا إجمالا',
+      'محاضر مراجعة السجلات مع اسم المراجع والتاريخ والنتائج'
     ],
     cadence: 'weekly',
     effort: 'high',
@@ -58,10 +80,22 @@ export const DETECT = [
       'Log timestamps are consistent across the infrastructure.',
       'System clock synchronization is verified periodically.'
     ],
+    checksAr: [
+      'الخوادم تزامن ساعاتها مع مصدر زمني موثوق ومعتمد.',
+      'محطات العمل تزامن ساعاتها مع مصدر زمني موثوق ومعتمد.',
+      'أجهزة الشبكة تزامن ساعاتها مع مصدر زمني موثوق ومعتمد.',
+      'الطوابع الزمنية في السجلات متسقة عبر البنية التحتية.',
+      'تزامن ساعات الأنظمة يتحقق منه دوريا.'
+    ],
     evidence: [
       'NTP configuration standard and the authoritative source in use',
       'Time drift report or comparison of timestamps across systems',
       'Group policy or configuration management proof of enforcement'
+    ],
+    evidenceAr: [
+      'معيار إعداد بروتوكول توقيت الشبكة والمصدر المعتمد المستخدم',
+      'تقرير انحراف التوقيت أو مقارنة الطوابع الزمنية عبر الأنظمة',
+      'ما يثبت الإلزام عبر سياسة المجموعة أو إدارة الإعدادات'
     ],
     cadence: 'quarterly',
     effort: 'low',
@@ -96,12 +130,33 @@ export const RESPOND = [
       'Out of band communication channels are available for use during active incidents.',
       'Follow up updates are provided to NCSC as required by reporting guidance.'
     ],
+    checksAr: [
+      'توجد آلية مبسطة للإبلاغ عن الحوادث.',
+      'آلية الإبلاغ معممة بحيث يعرف الموظفون كيف يبلغون عن الحوادث المشتبه بها.',
+      'يعين شخص واحد مسؤولا عن الاستجابة للحوادث.',
+      'يعين بديل واحد على الأقل لمسؤول الاستجابة للحوادث.',
+      'التعيين قائم حتى مع الاستعانة بمزودي خدمة خارجيين.',
+      'بيانات الاتصال محدثة لمسؤول الحوادث وبديله.',
+      'بيانات الاتصال محدثة لمزودي الخدمة المعنيين.',
+      'بيانات الاتصال محدثة للمركز.',
+      'الحوادث الواجب الإبلاغ عنها تبلغ للمركز فورا عبر القنوات الرسمية.',
+      'الإبلاغ يلتزم بالمهل التي يحددها المركز.',
+      'تتوافر قنوات اتصال بديلة للاستخدام أثناء الحوادث النشطة.',
+      'التحديثات اللاحقة تقدم للمركز وفق إرشادات الإبلاغ.'
+    ],
     evidence: [
       'Published incident reporting procedure and the channel staff use',
       'Appointment record for the incident lead and backup',
       'Contact directory including NCSC official channels',
       'Notification records for any incident in the reporting period',
       'Out of band channel description and test record'
+    ],
+    evidenceAr: [
+      'إجراء الإبلاغ عن الحوادث المعمم والقناة التي يستخدمها الموظفون',
+      'محضر تعيين مسؤول الحوادث وبديله',
+      'دليل جهات الاتصال شاملا القنوات الرسمية للمركز',
+      'سجلات الإبلاغ عن أي حادث خلال فترة التقرير',
+      'وصف القناة البديلة ومحضر اختبارها'
     ],
     cadence: 'continuous',
     effort: 'medium',
@@ -134,11 +189,32 @@ export const RESPOND = [
       'Key improvements from lessons learned are recorded.',
       'Relevant lessons learned are shared with NCSC or sector authorities where appropriate.'
     ],
+    checksAr: [
+      'يوجد إجراء مكتوب للاستجابة للحوادث.',
+      'الإجراء يغطي الفرز الأولي.',
+      'الإجراء يغطي الاحتواء.',
+      'الإجراء يغطي التواصل.',
+      'الإجراء يغطي حفظ الأدلة.',
+      'الإجراء يغطي التعافي.',
+      'الإجراء يغطي الإبلاغ والتصعيد شاملا المركز والجهات الرقابية وجهات إنفاذ القانون.',
+      'الإخطارات الواردة من المركز أو من جهة مختصة أخرى تفرز ويحقق فيها فورا.',
+      'تتخذ إجراءات معالجة معقولة استجابة لتلك الإخطارات.',
+      'تقدم تغذية راجعة للجهة المخطرة عند طلبها.',
+      'تجرى مراجعة للدروس المستفادة عقب كل حادث جوهري.',
+      'التحسينات الرئيسية المستخلصة من الدروس المستفادة مسجلة.',
+      'الدروس المستفادة ذات الصلة تشارك مع المركز أو جهات القطاع عند الاقتضاء.'
+    ],
     evidence: [
       'Incident response procedure covering the six required stages',
       'Ticket history showing triage of authority notifications',
       'Lessons learned reports for significant incidents',
       'Improvement tracker linked to incident findings'
+    ],
+    evidenceAr: [
+      'إجراء الاستجابة للحوادث يغطي المراحل الست المطلوبة',
+      'سجل التذاكر يبين فرز إخطارات الجهات المختصة',
+      'تقارير الدروس المستفادة للحوادث الجوهرية',
+      'متتبع التحسينات مرتبطا بنتائج الحوادث'
     ],
     cadence: 'per incident',
     effort: 'medium',
@@ -168,11 +244,26 @@ export const RECOVER = [
       'The plan is reviewed and updated at least annually.',
       'The plan is reviewed and updated after major changes.'
     ],
+    checksAr: [
+      'توجد خطة تعاف أو إجراءات استعادة موثقة للأنظمة والخدمات الحرجة.',
+      'الخطة تشير إلى مواقع النسخ الاحتياطية.',
+      'الخطة تشير إلى جهات الاتصال الرئيسية.',
+      'الخطة تبين أي ترتيب لازم لعمليات الاستعادة.',
+      'الترتيب يولي عناية خاصة للبيانات الحساسة والمقيدة.',
+      'الخطة تراجع وتحدث سنويا على الأقل.',
+      'الخطة تراجع وتحدث عقب التغييرات الجوهرية.'
+    ],
     evidence: [
       'Recovery plan document with version and review date',
       'Restoration runbook per critical system',
       'Contact list embedded in or attached to the plan',
       'Change record showing update after a major change'
+    ],
+    evidenceAr: [
+      'وثيقة خطة التعافي مع رقم الإصدار وتاريخ المراجعة',
+      'دليل تشغيل الاستعادة لكل نظام حرج',
+      'قائمة جهات الاتصال مدرجة في الخطة أو مرفقة بها',
+      'محضر تغيير يبين التحديث عقب تغيير جوهري'
     ],
     cadence: 'annual',
     effort: 'medium',
@@ -198,11 +289,25 @@ export const RECOVER = [
       'Procedures and controls are updated where practical.',
       'Completion of agreed improvements is tracked.'
     ],
+    checksAr: [
+      'تجرى اختبارات التعافي أو الاستمرارية للأنظمة الحرجة سنويا على الأقل.',
+      'الاختبارات تتخذ صورة معروفة كتمرين مكتبي أو اختبار استعادة جزئي.',
+      'الدروس المستفادة توثق عقب الاختبارات.',
+      'الدروس المستفادة توثق عقب الحوادث الفعلية.',
+      'الإجراءات والضوابط تحدث حيثما كان ذلك عمليا.',
+      'إنجاز التحسينات المتفق عليها يتابع.'
+    ],
     evidence: [
       'Test plan and after action report for the current year',
       'Attendance record for the exercise',
       'Updated procedure versions traceable to test findings',
       'Improvement tracker with closure dates'
+    ],
+    evidenceAr: [
+      'خطة الاختبار وتقرير ما بعد التمرين للسنة الحالية',
+      'كشف حضور التمرين',
+      'إصدارات الإجراءات المحدثة مرتبطة بنتائج الاختبار',
+      'متتبع التحسينات مع تواريخ الإغلاق'
     ],
     cadence: 'annual',
     effort: 'medium',
