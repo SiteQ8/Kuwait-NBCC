@@ -24,6 +24,7 @@ import { renderReport, renderMarkdown, renderCSV } from '../src/report.js';
 import { diffAssessments } from '../src/diff.js';
 import { evidenceRegister, unevidencedClaims, renderRegisterCSV } from '../src/evidence.js';
 import { forecast } from '../src/trend.js';
+import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
 
 // Read from the manifest so the reported version can never drift from the
 // package that was actually published.
@@ -165,6 +166,7 @@ ${C.bold}Measure an entity${C.reset}
   evidence <file>             Evidence register: what is held, where, how old
   diff <before> <after>       Posture change between two assessments
   trend <file...>             Project a series of assessments at the deadline
+  portfolio <file...>         Roll several entities up and separate systemic gaps
 
 ${C.bold}Produce a record${C.reset}
   report <file> [--out f]     Self contained HTML report
@@ -561,6 +563,73 @@ function cmdTrend(positional, flags) {
   out(`\n${C.dim}A straight line through the snapshots. Compliance work rarely moves in one, so treat this as a direction, not a date.${C.reset}`);
 }
 
+function cmdPortfolio(positional, flags) {
+  if (positional.length < 2) {
+    fail('at least two assessment files are required: nbcc portfolio a.json b.json');
+  }
+  const docs = positional.map((p) => loadAssessment(p, { quiet: true }));
+  const asOf = flags.date ? new Date(`${flags.date}T00:00:00Z`) : new Date();
+
+  if (flags.csv) return emit(renderPortfolioCSV(docs, { asOf }));
+  const r = rollUp(docs, { asOf });
+  if (flags.json) return out(JSON.stringify(r, null, 2));
+
+  out(`${C.bold}Portfolio${C.reset} ${C.dim}${r.entities} entities, ${r.daysToDeadline} days to ${r.deadline}${C.reset}\n`);
+
+  if (r.looksLikeSeries) {
+    out(`${C.yellow}warning${C.reset} every file carries the same entity name.`);
+    out(`${C.dim}        If these are one entity over time, "nbcc trend" is the command you want.${C.reset}\n`);
+  }
+
+  out(`  Mean implementation   ${bar(r.scores.meanImplementation)} ${padStart(`${r.scores.meanImplementation}%`, 6)}`);
+  out(`  Mean evidence         ${bar(r.scores.meanEvidence)} ${padStart(`${r.scores.meanEvidence}%`, 6)}`);
+  out(`\n  ${C.dim}Range ${r.scores.lowest}% to ${r.scores.highest}%, a spread of ${r.scores.spread} points` +
+      ` \u00b7 ${r.scores.atBaseline} of ${r.entities} at the baseline` +
+      ` \u00b7 ${r.scores.totalHighFindings} high findings` +
+      ` \u00b7 ${r.scores.totalUnevidencedClaims} unevidenced claims${C.reset}`);
+
+  out(`\n${C.cyan}Entities${C.reset} ${C.dim}most exposed first${C.reset}`);
+  for (const e of r.ranked) {
+    const col = e.implementation >= 95 ? C.green : e.implementation >= 75 ? C.blue
+      : e.implementation >= 50 ? C.yellow : C.red;
+    out(`  ${pad(e.name, 24)} ${bar(e.implementation, 18)} ${col}${padStart(`${e.implementation}%`, 6)}${C.reset}` +
+        `  ${C.dim}${pad(e.bandName, 13)} evidence ${padStart(`${e.evidenceProducible}%`, 6)}` +
+        `  ${e.highFindings ? C.red : C.dim}${padStart(String(e.highFindings), 2)} high${C.reset}`);
+  }
+
+  if (r.systemic.length > 0) {
+    out(`\n${C.cyan}Systemic${C.reset} ${C.dim}failing at ${Math.round(SYSTEMIC_SHARE * 100)}% or more of the entities it applies to${C.reset}`);
+    out(`${C.dim}These are group problems with group fixes. Remediating them entity by entity wastes the year.${C.reset}`);
+    for (const c of r.systemic.slice(0, 12)) {
+      out(`  ${C.red}${pad(c.id, 9)}${C.reset} ${pad(c.title, 42)} ${C.red}${padStart(`${c.entitiesFailing}/${c.entitiesApplicable}`, 6)}${C.reset}` +
+          `  ${C.dim}mean ${padStart(`${c.mean}%`, 6)} \u00b7 phase ${c.phase} \u00b7 ${c.effort} effort${C.reset}`);
+    }
+    if (r.systemic.length > 12) out(`  ${C.dim}and ${r.systemic.length - 12} more${C.reset}`);
+  } else {
+    out(`\n${C.cyan}Systemic${C.reset}  ${C.green}none${C.reset} ${C.dim}no control fails across most of the portfolio${C.reset}`);
+  }
+
+  if (r.isolated.length > 0 && !flags.systemic) {
+    out(`\n${C.cyan}Isolated${C.reset} ${C.dim}weak at some entities but not the group${C.reset}`);
+    for (const c of r.isolated.slice(0, 8)) {
+      out(`  ${C.yellow}${pad(c.id, 9)}${C.reset} ${pad(c.title, 42)} ${padStart(`${c.entitiesFailing}/${c.entitiesApplicable}`, 6)}` +
+          `  ${C.dim}${c.failingNames.slice(0, 3).join(', ')}${c.failingNames.length > 3 ? ', ...' : ''}${C.reset}`);
+    }
+    if (r.isolated.length > 8) out(`  ${C.dim}and ${r.isolated.length - 8} more${C.reset}`);
+  }
+
+  out(`\n${C.cyan}By function${C.reset} ${C.dim}weakest first${C.reset}`);
+  for (const f of r.byFunction) {
+    out(`  ${pad(f.name, 10)} ${bar(f.mean, 20)} ${padStart(`${f.mean}%`, 6)} mean` +
+        `  ${C.dim}${padStart(`${f.lowest}%`, 6)} to ${padStart(`${f.highest}%`, 6)}${C.reset}`);
+  }
+
+  if (r.duplicateNames.length > 0) {
+    out(`\n${C.yellow}warning${C.reset} repeated entity name(s): ${r.duplicateNames.join(', ')}`);
+  }
+  out(`\n${C.dim}Add --csv for one row per entity, --systemic to hide the isolated list.${C.reset}`);
+}
+
 function cmdCrosswalk(flags) {
   const to = flags.to ? String(flags.to).toLowerCase() : null;
   if (to && !FRAMEWORKS[to]) fail(`unknown framework "${to}". Use csf, cis or iso.`);
@@ -711,6 +780,9 @@ function main() {
       return cmdReport(positional, flags);
     case 'export':
       return cmdExport(positional, flags);
+    case 'portfolio':
+    case 'group':
+      return cmdPortfolio(positional, flags);
     case 'trend':
     case 'forecast':
       return cmdTrend(positional, flags);

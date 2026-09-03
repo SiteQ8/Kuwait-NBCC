@@ -16,6 +16,7 @@ import { renderReport, renderMarkdown, renderCSV } from '../src/report.js';
 import { diffAssessments } from '../src/diff.js';
 import { evidenceRegister, unevidencedClaims, renderRegisterCSV, readEvidenceRecords, REFRESH_DAYS } from '../src/evidence.js';
 import { forecast, buildSeries } from '../src/trend.js';
+import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
 import { buildSite, buildPayload } from '../scripts/build-site.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -781,6 +782,123 @@ test('asOf overrides the assessment date so a lapsed exception is caught', () =>
   assert.ok(expired(later) > expired(asRecorded),
     'exceptions valid on the assessment date should lapse when judged later');
   assert.ok(later.scores.posture < asRecorded.scores.posture);
+});
+
+/* ------------------------------------------------------------ portfolio */
+
+function entity(name, share, opts = {}) {
+  const doc = scaffold({ profile: { usesCloud: opts.usesCloud !== false, hasPublicAccounts: true } });
+  doc.entity = { name, sector: opts.sector || 'Test' };
+  doc.assessmentDate = '2026-09-01';
+  for (const id of Object.keys(doc.controls)) {
+    const n = getControl(id).checks.length;
+    const s = (opts.weak || []).includes(id) ? 0 : share;
+    const target = Math.round(n * s);
+    doc.controls[id].checks = getControl(id).checks.map((_, i) => (i < target ? 'met' : 'unknown'));
+    doc.controls[id].owner = 'Owner';
+  }
+  return doc;
+}
+const SEP3 = new Date('2026-09-03T00:00:00Z');
+
+test('a roll up summarises every entity and the spread between them', () => {
+  const r = rollUp([entity('A', 0.9), entity('B', 0.5), entity('C', 0.3)], { asOf: SEP3 });
+  assert.equal(r.entities, 3);
+  assert.equal(r.scores.highest, r.list.find((e) => e.name === 'A').implementation);
+  assert.equal(r.scores.lowest, r.list.find((e) => e.name === 'C').implementation);
+  assert.equal(r.scores.spread, round1(r.scores.highest - r.scores.lowest));
+  assert.ok(r.scores.meanImplementation > r.scores.lowest);
+  assert.ok(r.scores.meanImplementation < r.scores.highest);
+});
+
+function round1(n) { return Math.round(n * 10) / 10; }
+
+test('a control failing across most entities is systemic, one failing at few is not', () => {
+  const weak = ['DE-1'];
+  const r = rollUp([
+    entity('A', 0.95, { weak }), entity('B', 0.95, { weak }),
+    entity('C', 0.95, { weak }), entity('D', 0.95)
+  ], { asOf: SEP3 });
+  const de1 = r.systemic.find((c) => c.id === 'DE-1');
+  assert.ok(de1, 'DE-1 fails at three of four and should be systemic');
+  assert.equal(de1.entitiesFailing, 3);
+  assert.equal(de1.entitiesApplicable, 4);
+  assert.ok(de1.failShare >= SYSTEMIC_SHARE * 100);
+
+  const one = rollUp([entity('A', 0.95, { weak: ['RC-2'] }), entity('B', 0.95),
+    entity('C', 0.95), entity('D', 0.95)], { asOf: SEP3 });
+  assert.ok(!one.systemic.some((c) => c.id === 'RC-2'));
+  assert.ok(one.isolated.some((c) => c.id === 'RC-2'));
+});
+
+test('a systemic control names which entities are failing it', () => {
+  const r = rollUp([entity('Alpha', 0.9, { weak: ['DE-2'] }), entity('Beta', 0.9, { weak: ['DE-2'] }),
+    entity('Gamma', 0.9)], { asOf: SEP3 });
+  const de2 = r.systemic.find((c) => c.id === 'DE-2');
+  assert.deepEqual(de2.failingNames.sort(), ['Alpha', 'Beta']);
+});
+
+test('out of scope controls shrink the denominator rather than counting as failures', () => {
+  const r = rollUp([
+    entity('Cloudy', 0.9), entity('Cloudy2', 0.9), entity('OnPrem', 0.9, { usesCloud: false })
+  ], { asOf: SEP3 });
+  const cld = r.controls.find((c) => c.id === 'CLD-1');
+  assert.equal(cld.entitiesApplicable, 2, 'the entity with no cloud is not counted');
+  const gov = r.controls.find((c) => c.id === 'GOV-1');
+  assert.equal(gov.entitiesApplicable, 3);
+});
+
+test('a single entity portfolio has no systemic finding to make', () => {
+  const r = rollUp([entity('Solo', 0.2)], { asOf: SEP3 });
+  assert.equal(r.entities, 1);
+  assert.equal(r.systemic.length, 0, 'one entity cannot establish a group pattern');
+});
+
+test('entities are ranked by exposure, not alphabetically', () => {
+  const r = rollUp([entity('Zeta', 0.95), entity('Alpha', 0.2), entity('Mid', 0.6)], { asOf: SEP3 });
+  assert.equal(r.ranked[0].name, 'Alpha');
+  assert.equal(r.ranked[r.ranked.length - 1].name, 'Zeta');
+});
+
+test('a set of files sharing one entity name is flagged as probably a time series', () => {
+  const r = rollUp([entity('Same', 0.3), entity('Same', 0.6)], { asOf: SEP3 });
+  assert.equal(r.looksLikeSeries, true);
+  assert.deepEqual(r.duplicateNames, ['Same']);
+  const mixed = rollUp([entity('A', 0.3), entity('B', 0.6)], { asOf: SEP3 });
+  assert.equal(mixed.looksLikeSeries, false);
+  assert.deepEqual(mixed.duplicateNames, []);
+});
+
+test('functions are ranked weakest mean first with the range shown', () => {
+  const r = rollUp([entity('A', 0.9, { weak: ['DE-1', 'DE-2'] }), entity('B', 0.9)], { asOf: SEP3 });
+  assert.equal(r.byFunction[0].fn, 'DE');
+  assert.ok(r.byFunction[0].lowest <= r.byFunction[0].mean);
+  assert.ok(r.byFunction[0].highest >= r.byFunction[0].mean);
+});
+
+test('the portfolio CSV has one row per entity and balanced quoting', () => {
+  const csv = renderPortfolioCSV([entity('A, Inc', 0.4), entity('B "quoted"', 0.7)], { asOf: SEP3 });
+  const lines = csv.trim().split('\n');
+  assert.equal(lines.length - 1, 2);
+  assert.ok(lines[0].startsWith('entity,sector'));
+  for (const line of lines.slice(1)) {
+    const bare = line.replace(/"(?:[^"]|"")*"/g, '');
+    assert.equal(bare.split(',').length, 13, `unbalanced row: ${line.slice(0, 50)}`);
+  }
+  assert.ok(csv.includes('""quoted""'), 'a quote inside a field must be doubled');
+});
+
+test('cli portfolio refuses one file and reports systemic gaps', () => {
+  assert.throws(() => cli(['portfolio', EXAMPLE]), (e) => /at least two/.test(String(e.stderr)));
+  const dir = resolve(root, 'templates/snapshots');
+  const files = readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => resolve(dir, f));
+  const text = cli(['portfolio', ...files, '--date', '2026-09-03']);
+  assert.ok(text.includes('Portfolio'));
+  assert.ok(text.includes('Entities'));
+  assert.ok(text.includes('By function'));
+  // The snapshots are one entity over time, which the command should notice.
+  assert.ok(text.includes('nbcc trend'), 'a time series passed here should be redirected');
+  assert.doesNotThrow(() => JSON.parse(cli(['portfolio', ...files, '--json', '--date', '2026-09-03'])));
 });
 
 /* ---------------------------------------------------------- crosswalk */

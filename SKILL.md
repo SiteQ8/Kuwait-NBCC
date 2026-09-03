@@ -46,6 +46,7 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 | HTML report | `nbcc report entity.json --out report.html` |
 | Compare two points in time | `nbcc diff q1.json q3.json` |
 | Will we make the deadline | `nbcc trend snapshots/*.json` |
+| Roll several entities up | `nbcc portfolio entities/*.json` |
 
 Add `--json` to any read command for machine readable output. Add `--no-cloud` to `init` for an entity that runs no cloud, which drops the 16 Appendix A controls from scope.
 
@@ -102,6 +103,12 @@ Report the **claimed but unevidenced** count alongside the score. Controls score
 `trend` needs at least two snapshots on different dates. It reports a verdict of on track, close, behind, stalled or regressing, and when behind it gives both the current rate and the rate required, so the gap is expressed as a multiple of present pace.
 
 Treat it as a direction rather than a date. It fits a straight line, and compliance work rarely moves in one. Two qualifiers matter when reporting it: whether the recent pace diverges from the average, which the tool flags, and the separate evidence projection, since implementation can be on track while the ability to prove it is not.
+
+## Reading a portfolio
+
+`portfolio` takes several entities, not one entity over time. The distinction it draws is systemic versus isolated: a control failing at 60% or more of the entities it applies to is a group problem with a group fix, while the rest are individual. Report the systemic list first, because scheduling those once instead of n times is where the time is saved.
+
+Scope is respected, so an entity running no cloud shrinks the denominator on Appendix A rather than registering sixteen failures.
 
 ## Cautions
 

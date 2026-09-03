@@ -114,6 +114,7 @@ Measure an entity
   evidence <file>               Evidence register: what is held, where, how old
   diff <before> <after>         Posture change between two assessments
   trend <file...>               Project a series of snapshots at the deadline
+  portfolio <file...>           Roll several entities up, split systemic from isolated
 
 Produce artifacts
   report <file> --out x.html    Self contained HTML report
@@ -167,6 +168,22 @@ The example snapshots live in `templates/snapshots/`.
 
 The projection is a straight line and says so. Compliance work rarely moves in one, so it is a direction, not a date.
 
+## Several entities at once
+
+A holding group, a ministry with subordinate bodies, or a consultancy carrying several clients has the same problem: 44 controls times n entities is too much to hold in the head.
+
+```bash
+nbcc portfolio entities/*.json
+```
+
+The interesting question is not which entity is worst. It is **which failures are systemic**. A control that is a gap at one entity is that entity's problem. The same control failing at six of six is a group problem with a group fix, and treating it as six separate remediations is how a programme wastes a year.
+
+So the roll up splits the two. Anything failing at 60% or more of the entities it applies to is reported as systemic, with its mean score, phase and effort so it can be scheduled once. Everything else is listed as isolated, naming the entities affected.
+
+Scope is respected across the group. An entity that runs no cloud shrinks the denominator on the Appendix A controls rather than counting as sixteen failures.
+
+Entities are ranked by exposure rather than alphabetically, weighting distance from the baseline, how little can be evidenced, and open high severity findings. If every file carries the same entity name the command says so and points at `trend`, because that is a time series rather than a portfolio.
+
 ## The plan knows what blocks what
 
 Work is not ranked by control number. It is ranked by how much it unblocks, how early its phase falls, how much of it is still open, and how little it costs to start.
@@ -219,7 +236,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 99 tests
+node --test test/*.test.js     # 109 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 
