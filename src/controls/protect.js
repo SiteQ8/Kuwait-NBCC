@@ -247,7 +247,7 @@ checks: [
     purpose:
       'Ensure work communications use managed, auditable channels and reduce data leakage via personal email.',
     purposeAr:
-      'ضمان جريان مراسلات العمل عبر قنوات مُدارة قابلة للتدقيق والحد من تسرب البيانات عبر البريد الشخصي.',
+      'ضمان مرور مراسلات العمل عبر قنوات مدارة قابلة للتدقيق والحد من تسرب البيانات عبر البريد الشخصي.',
     purposeSource: 'annex',
     requirement:
       'Require that all official business communications use only Entity-approved corporate email accounts on approved domains. Personal/consumer email accounts MUST NOT be configured on corporate devices and MUST NOT be used for work-related communication. Enforce this via (1) an acceptable use policy, and (2) device and email configuration (e.g., MDM or mail client settings) that prevent adding personal accounts where feasible.',
@@ -553,7 +553,7 @@ checks: [
     title: 'Portable Media Device Control',
     titleAr: 'التحكم في وسائط التخزين الخارجية',
     purpose: 'Limit the risks from use of unapproved removable media devices.',
-    purposeAr: 'الحد من مخاطر استخدام وسائط التخزين القابلة للإزالة غير المعتمدة.',
+    purposeAr: 'الحد من مخاطر استخدام وسائط التخزين الخارجية غير المعتمدة.',
     purposeSource: 'annex',
     requirement:
       'Where feasible, restrict or technically disable the use of unapproved portable storage media (e.g., USB drives) on Entity systems, especially those handling Sensitive data. Establish procedures to allow only authorized portable media if necessary for business, and train staff on proper usage of portable media devices.',
@@ -580,9 +580,9 @@ checks: [
       'Report of blocked device events'
     ],
     evidenceAr: [
-      'سياسة الأجهزة الطرفية تبين إعدادات التحكم في الوسائط القابلة للإزالة',
+      'سياسة الأجهزة الطرفية تبين إعدادات التحكم في وسائط التخزين الخارجية',
       'سجل وسائط التخزين المصرح بها واعتماداتها',
-      'وحدة تدريبية تغطي الوسائط القابلة للإزالة',
+      'وحدة تدريبية تغطي وسائط التخزين الخارجية',
       'تقرير أحداث الأجهزة المحجوبة'
     ],
     cadence: 'continuous',

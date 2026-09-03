@@ -118,7 +118,7 @@ export const RESPOND = [
     title: 'Incident Reporting to NCSC & Leadership',
     titleAr: 'الإبلاغ عن الحوادث للمركز وللإدارة العليا',
     purpose: 'Ensure serious incidents are reported to NCSC and handled by designated leaders.',
-    purposeAr: 'ضمان الإبلاغ عن الحوادث الجسيمة للمركز ومعالجتها من قبل قيادات محددة.',
+    purposeAr: 'ضمان الإبلاغ عن الحوادث الجسيمة للمركز وإسناد معالجتها إلى مسؤولين محددين.',
     purposeSource: 'annex',
     requirement:
       'Establish and communicate a simple incident reporting process so that staff know how to report suspected incidents (for example, phishing, data loss, or system compromise). Appoint one person as the incident response lead and at least one backup to coordinate incident handling, even if external service providers are used. Maintain up-to-date contact details for the incident lead, backup, relevant service providers, and NCSC. Where an actual or suspected cybersecurity incident or threat may be reportable under NCSC-issued incident management or reporting guidance, the Entity MUST notify NCSC promptly through the official channels and within the applicable timelines set by NCSC. Where appropriate, the Entity MUST use out-of-band communication channels during active incidents or where normal channels may be affected. The Entity MUST provide follow-up updates and information as required by applicable NCSC reporting guidance.',

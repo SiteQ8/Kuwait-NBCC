@@ -100,7 +100,7 @@ checks: [
     title: 'Right to Audit (Third-Party Assurance)',
     titleAr: 'حق التدقيق (تأكيدات الأطراف الخارجية)',
     purpose: 'Preserve assurance over a shared environment without physical inspection.',
-    purposeAr: 'الحفاظ على التأكيد بشأن بيئة مشتركة دون الحاجة إلى معاينة مادية.',
+    purposeAr: 'الحصول على تأكيد بشأن البيئة المشتركة دون الحاجة إلى زيارة ميدانية.',
     purposeSource: 'editorial',
     requirement:
       'Contracts MUST include a "Right to Audit." To protect the security of multi-tenant environments, this right is exercised by the Entity reviewing the CSP\u2019s independent Third-Party Audit Reports (e.g., SOC 2, C5) rather than conducting physical data center visits.',
@@ -176,7 +176,7 @@ checks: [
     title: 'Data Ownership & Exit',
     titleAr: 'ملكية البيانات وإنهاء الخدمة',
     purpose: 'Keep ownership with the entity and keep exit technically possible.',
-    purposeAr: 'إبقاء الملكية لدى الجهة وإبقاء الخروج ممكنا من الناحية التقنية.',
+    purposeAr: 'إبقاء ملكية البيانات لدى الجهة وإبقاء إنهاء الخدمة ممكنا من الناحية التقنية.',
     purposeSource: 'editorial',
     requirement:
       'The contract MUST explicitly state that the Entity retains exclusive ownership of their data. The CSP MUST provide tools or standard APIs to allow the Entity to retrieve their data upon contract termination.',
@@ -214,7 +214,7 @@ checks: [
     title: 'Service Level Agreements (SLAs)',
     titleAr: 'اتفاقيات مستوى الخدمة (SLA)',
     purpose: 'Fix availability expectations and the remedy for missing them.',
-    purposeAr: 'تثبيت التوقعات بشأن التوافرية وتحديد التعويض عند الإخلال بها.',
+    purposeAr: 'تثبيت التوقعات بشأن الإتاحة وتحديد التعويض عند الإخلال بها.',
     purposeSource: 'editorial',
     requirement:
       'Contracts MUST define Service Level Agreements (SLAs) for availability. The agreement SHOULD include financial remedies (service credits) for failure to meet these standards.',
@@ -334,7 +334,7 @@ checks: [
     title: 'MFA for Cloud Consoles',
     titleAr: 'المصادقة متعددة العوامل للوحات التحكم السحابية',
     purpose: 'Protect the highest value credentials in the environment.',
-    purposeAr: 'حماية أعلى بيانات الاعتماد قيمة في البيئة.',
+    purposeAr: 'حماية أثمن بيانات الاعتماد في البيئة.',
     purposeSource: 'editorial',
     requirement:
       'Multi-Factor Authentication (MFA) MUST be enforced for all users with administrative access to the Cloud Management Console and root accounts.',
@@ -490,7 +490,7 @@ checks: [
     title: 'Operational Metadata Exemption',
     titleAr: 'استثناء البيانات الوصفية التشغيلية',
     purpose: 'Keep the residency rule workable by keeping metadata non sensitive.',
-    purposeAr: 'إبقاء قاعدة التوطين قابلة للتطبيق عبر إبقاء البيانات الوصفية غير حساسة.',
+    purposeAr: 'إبقاء قاعدة التوطين قابلة للتطبيق بجعل البيانات الوصفية غير حساسة.',
     purposeSource: 'editorial',
     requirement:
       'Residency requirements apply to Customer Content. Operational Metadata (e.g., project IDs, billing logs, system status, and IP addresses) can be processed globally to ensure platform security, reliability, and accurate billing. Entities must ensure that metadata identifiers (such as Project IDs, folder names and labels) remain non-sensitive.',
@@ -572,7 +572,7 @@ checks: [
     title: 'Cloud Audit Logging',
     titleAr: 'تسجيل الأحداث السحابية',
     purpose: 'Record who changed the environment and who reached the data.',
-    purposeAr: 'تسجيل من غير البيئة ومن وصل إلى البيانات.',
+    purposeAr: 'تسجيل من أجرى تغييرا على البيئة ومن اطلع على البيانات.',
     purposeSource: 'editorial',
     requirement:
       'Enable audit logging for cloud projects. Logs MUST capture "Admin Activity" (configuration changes) and "Data Access" (who accessed data) for sensitive workloads. Retain logs for a minimum of 12 months.',

@@ -17,6 +17,7 @@ import { diffAssessments } from '../src/diff.js';
 import { evidenceRegister, unevidencedClaims, renderRegisterCSV, readEvidenceRecords, REFRESH_DAYS } from '../src/evidence.js';
 import { forecast, buildSeries } from '../src/trend.js';
 import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
+import { MESSAGES, count } from '../src/messages.js';
 import { buildSite, buildPayload } from '../scripts/build-site.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -148,6 +149,38 @@ test('the report renders bullets as a list rather than running prose', () => {
   assert.ok(html.includes('<ul class="reqlist">'));
   assert.ok(html.includes('<li>Doors or cabinets that can be locked when the area is unattended.</li>'));
   assert.ok(!html.includes('\u2022'), 'raw bullet characters should not reach the report');
+});
+
+test('no user facing Arabic is written inline in the command line tool', () => {
+  // The message table exists so a command cannot half switch language. Two
+  // commands were still carrying their own inline ternaries long after the
+  // table landed, which is how "2 ضابطا" survived the numeral agreement pass.
+  const cli = readFileSync(resolve(root, 'bin/nbcc.js'), 'utf8');
+  const stray = cli.split('\n')
+    .map((line, i) => [i + 1, line])
+    .filter(([, line]) => /[\u0600-\u06FF]/.test(line));
+  assert.deepEqual(stray.map(([n, l]) => `${n}: ${l.trim().slice(0, 70)}`), [],
+    'Arabic belongs in src/messages.js, not in a command body');
+});
+
+test('Arabic counts agree with the noun they count', () => {
+  // One takes the singular, two the dual, three to ten a plural, and eleven
+  // upward a singular accusative. A template that always writes يوما is wrong
+  // for every count below eleven.
+  const cases = [
+    [1, 'day', 'يوم واحد'], [2, 'day', 'يومان'], [3, 'day', '3 أيام'],
+    [10, 'day', '10 أيام'], [11, 'day', '11 يوما'], [397, 'day', '397 يوما'],
+    [1, 'control', 'ضابط واحد'], [2, 'control', 'ضابطان'], [7, 'control', '7 ضوابط'],
+    [44, 'control', '44 ضابطا'], [3, 'year', '3 سنوات'], [2, 'entity', 'جهتان']
+  ];
+  for (const [n, kind, want] of cases) {
+    assert.equal(count(n, kind), want, `count(${n}, ${kind})`);
+  }
+  // And the deadline line has to use it rather than a bare template.
+  assert.equal(MESSAGES.ar.deadlineRemain(1, '2027-10-05'),
+    'بقي يوم واحد على استحقاق الامتثال الكامل في 2027-10-05.');
+  assert.equal(MESSAGES.ar.deadlineRemain(4, '2027-10-05'),
+    'بقي 4 أيام على استحقاق الامتثال الكامل في 2027-10-05.');
 });
 
 test('the Arabic interface carries no calqued English idioms', () => {

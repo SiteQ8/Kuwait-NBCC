@@ -146,13 +146,7 @@ function padStart(s, n) {
   return str.length >= n ? str : ' '.repeat(n - str.length) + str;
 }
 
-const STATE_WORDS = {
-  en: { met: 'met', partial: 'partial', gap: 'gap', 'covered-by-exception': 'covered by exception',
-        unassessed: 'unassessed', 'not-applicable': 'not applicable', 'out-of-scope': 'out of scope' },
-  ar: { met: 'مستوف', partial: 'جزئي', gap: 'فجوة', 'covered-by-exception': 'مغطى باستثناء',
-        unassessed: 'غير مقيم', 'not-applicable': 'لا ينطبق', 'out-of-scope': 'خارج النطاق' }
-};
-const STATE_WORD = (state) => (arabic() ? STATE_WORDS.ar : STATE_WORDS.en)[state] || state;
+const STATE_WORD = (state) => m('states')[state] || state;
 
 const STATE_COLOR = {
   met: C.green,
@@ -219,8 +213,7 @@ function cmdCatalog(flags) {
 
   const ar = Boolean(flags.ar);
   out(`${C.bold}${ar ? REGULATION.titleAr : REGULATION.title}${C.reset}  ${C.dim}${ar ? REGULATION.decisionAr : REGULATION.decision}${C.reset}`);
-  out(`${C.dim}${ar ? `${list.length} ضابطا و${list.reduce((n, c) => n + c.checks.length, 0)} بندا للتحقق`
-    : `${list.length} controls, ${list.reduce((n, c) => n + c.checks.length, 0)} checks`}${C.reset}\n`);
+  out(`${C.dim}${m('catalogCount', list.length, list.reduce((n, c) => n + c.checks.length, 0))}${C.reset}\n`);
   let current = null;
   for (const c of list) {
     if (c.fn !== current) {
@@ -229,10 +222,10 @@ function cmdCatalog(flags) {
       out(`${C.bold}${C.cyan}${ar ? fn.nameAr : fn.name}${C.reset} ${C.dim}${ar ? fn.blurbAr : fn.blurb}${C.reset}`);
     }
     out(
-      `  ${C.bold}${pad(c.id, 9)}${C.reset} ${pad(ar ? c.titleAr : c.title, 46)} ${C.dim}${padStart(c.checks.length, 3)}${ar ? ' بندا' : ' checks'}  ${ar ? 'مرحلة' : 'phase'} ${c.phase}${C.reset}`
+      `  ${C.bold}${pad(c.id, 9)}${C.reset} ${pad(ar ? c.titleAr : c.title, 46)} ${C.dim}${padStart(c.checks.length, 3)} ${m('checksUnit')}  ${m('phase')} ${c.phase}${C.reset}`
     );
   }
-  out(`\n${C.dim}${ar ? 'استخدم "nbcc show <id> --ar" لعرض الحد الأدنى المطلوب.' : 'Run "nbcc show <id>" for the official minimum requirement.'}${C.reset}`);
+  out(`\n${C.dim}${m('catalogHint')}${C.reset}`);
 }
 
 function cmdShow(positional, flags) {
@@ -244,21 +237,17 @@ function cmdShow(positional, flags) {
 
   const fn = getFunction(c.fn);
   const ar = Boolean(flags.ar);
-  const CADENCE_AR = { annual:'سنويا', biennial:'كل سنتين', 'per hire':'عند كل تعيين', weekly:'أسبوعيا',
-    monthly:'شهريا', quarterly:'ربع سنوي', continuous:'مستمر', 'per incident':'عند كل حادث',
-    'per engagement':'عند كل تعاقد' };
-  const EFFORT_AR = { low:'منخفض', medium:'متوسط', high:'مرتفع' };
 
   out(`${C.bold}${c.id}${C.reset}  ${C.bold}${ar ? c.titleAr : c.title}${C.reset}`);
-  out(`${C.dim}${ar ? `${fn.nameAr} \u00b7 المرحلة ${c.phase} \u00b7 الجهد ${EFFORT_AR[c.effort] || c.effort} \u00b7 ${CADENCE_AR[c.cadence] || c.cadence}`
-    : `${fn.name} \u00b7 phase ${c.phase} \u00b7 ${c.effort} effort \u00b7 ${c.cadence}`}${C.reset}\n`);
-  out(`${C.cyan}${ar ? 'الغرض' : 'Purpose'}${C.reset}`);
+  out(`${C.dim}${arabic() ? fn.nameAr : fn.name}  ${m('phase')} ${c.phase}  ${m('effort')} ` +
+      `${m('efforts')[c.effort] || c.effort}  ${m('cadence')} ${m('cadences')[c.cadence] || c.cadence}${C.reset}\n`);
+  out(`${C.cyan}${m('purpose')}${C.reset}`);
   const editorialNote = c.purposeSource === 'editorial'
-    ? `  ${C.dim}${ar ? '(تلخيص، وليس من نص الملحق)' : '(summary, not Annex text)'}${C.reset}` : '';
+    ? `  ${C.dim}${m('editorialNote')}${C.reset}` : '';
   out(`  ${ar ? c.purposeAr : c.purpose}${editorialNote}\n`);
   // Article 6 keeps the English Annex authoritative, so the Arabic is offered
   // as a working translation and the official wording is printed after it.
-  out(`${C.cyan}${ar ? 'الحد الأدنى المطلوب' : 'Minimum requirement'}${C.reset}  ${C.dim}${ar ? '(ترجمة عاملة)' : '(official text)'}${C.reset}`);
+  out(`${C.cyan}${m('reqHead')}${C.reset}  ${C.dim}${arabic() ? m('reqWorking') : m('reqOfficial')}${C.reset}`);
   // The Annex uses bullets inside some requirements and they carry meaning,
   // so each one keeps its own hanging indent rather than running together.
   const printRequirement = (text) => {
@@ -272,25 +261,25 @@ function cmdShow(positional, flags) {
   printRequirement(ar ? c.requirementAr : c.requirement);
   if (ar) {
     out('');
-    out(`${C.cyan}النص الرسمي بالإنجليزية${C.reset}`);
+    out(`${C.cyan}${m('officialHead')}${C.reset}`);
     printRequirement(c.requirement);
   }
   out('');
-  out(`${C.cyan}${ar ? 'بنود التحقق' : 'Checks'}${C.reset} ${C.dim}(${c.checks.length})${C.reset}`);
+  out(`${C.cyan}${m('checksHead')}${C.reset} ${C.dim}(${c.checks.length})${C.reset}`);
   (ar ? c.checksAr : c.checks).forEach((t, i) => {
     const lines = wrap(t, 72);
     out(`  ${C.dim}${padStart(i + 1, 2)}${C.reset}  ${lines[0]}`);
     for (const l of lines.slice(1)) out(`      ${l}`);
   });
   out('');
-  out(`${C.cyan}${ar ? 'الأدلة الواجب حفظها' : 'Evidence to retain'}${C.reset}`);
+  out(`${C.cyan}${m('evidenceHead')}${C.reset}`);
   for (const e of (ar ? c.evidenceAr : c.evidence)) out(`  \u00b7 ${e}`);
-  const m = mappingsFor(c.id);
+  const maps = mappingsFor(c.id);
   out('');
-  out(`${C.cyan}${ar ? 'المواءمة مع الأطر' : 'Maps to'}${C.reset}`);
-  out(`  NIST CSF 2.0    ${m.csf.join(', ')}`);
-  out(`  CIS v8.1 IG1    ${m.cis.join(', ')}`);
-  out(`  ISO 27001:2022  ${m.iso.join(', ')}`);
+  out(`${C.cyan}${m('mapsTo')}${C.reset}`);
+  out(`  NIST CSF 2.0    ${maps.csf.join(', ')}`);
+  out(`  CIS v8.1 IG1    ${maps.cis.join(', ')}`);
+  out(`  ISO 27001:2022  ${maps.iso.join(', ')}`);
   if (c.appliesWhen.length) {
     out('');
     out(`${C.dim}Applies only when: ${c.appliesWhen.join(', ')}${C.reset}`);
@@ -344,7 +333,7 @@ function cmdDeadline(flags) {
   out(`${C.cyan}${m('milestonesHead')}${C.reset}`);
   for (const stone of s.milestones) {
     const mark = stone.passed
-      ? `${C.red}${arabic() ? 'انقضت' : 'passed'}${C.reset}`
+      ? `${C.red}${m('passed')}${C.reset}`
       : `${C.green}${stone.daysRemaining} ${m('days')}${C.reset}`;
     out(`  ${stone.passed ? '\u25cf' : '\u25cb'} ${pad(arabic() ? stone.nameAr : stone.name, arabic() ? 16 : 12)} ${C.dim}${m('dueOn')}${C.reset} ${stone.due}  ${mark}`);
     for (const l of wrap(arabic() ? stone.blurbAr : stone.blurb, 66)) out(`    ${C.dim}${l}${C.reset}`);
@@ -443,7 +432,7 @@ function cmdPlan(positional, flags) {
 
   for (const phase of p.phases) {
     out(`\n${C.cyan}${m('phase')} ${phase.id}: ${arabic() ? phase.nameAr : phase.name}${C.reset} ` +
-        `${C.dim}${m('dueOn')} ${phase.due}, ${phase.passed ? (arabic() ? 'انقضت' : 'passed') : phase.daysRemaining + ' ' + m('days')}${C.reset}`);
+        `${C.dim}${m('dueOn')} ${phase.due}, ${phase.passed ? m('passed') : phase.daysRemaining + ' ' + m('days')}${C.reset}`);
     for (const l of wrap(arabic() ? phase.blurbAr : phase.blurb, 74)) out(`  ${C.dim}${l}${C.reset}`);
     if (!phase.items.length) {
       out(`  ${C.green}${m('planNoWork')}${C.reset}`);
@@ -458,7 +447,7 @@ function cmdPlan(positional, flags) {
   }
 
   if (p.quickWins.length) {
-    out(`\n${C.cyan}${arabic() ? 'ابدأ من هنا' : 'Start here'}${C.reset} ${C.dim}${arabic() ? 'جهد منخفض ومفتوح الآن' : 'low effort, open now'}${C.reset}`);
+    out(`\n${C.cyan}${m('startHere')}${C.reset} ${C.dim}${m('startHereSub')}${C.reset}`);
     for (const q of p.quickWins) out(`  ${pad(q.id, 9)} ${arabic() ? q.titleAr || q.title : q.title}`);
   }
 }

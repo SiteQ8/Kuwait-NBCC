@@ -119,7 +119,7 @@ checks: [
     title: 'Data & Account Inventory',
     titleAr: 'حصر البيانات والحسابات',
     purpose: 'Understand what data and accounts exist and who owns them.',
-    purposeAr: 'إدراك البيانات والحسابات الموجودة ومعرفة مالكيها.',
+    purposeAr: 'معرفة البيانات والحسابات القائمة ومالكيها.',
     purposeSource: 'annex',
     requirement:
       'Maintain an inventory of critical and sensitive data sets, including classification, location, and business owner. Maintain an inventory of user and service accounts including privileges and last activity. Review accounts at least quarterly. Disable or remove dormant interactive user accounts that have not been used for 90 days, where the technology supports it. Review service accounts at least quarterly to validate continued business need. Ensure high-risk or privileged accounts are clearly identified.',

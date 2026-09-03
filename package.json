@@ -1,6 +1,6 @@
 {
   "name": "kuwait-nbcc",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "Kuwait NBCC compliance toolkit. Assess, plan and evidence the National Basic Cybersecurity Controls of NCSC Decision No. 2 of 2026.",
   "type": "module",
   "bin": { "nbcc": "./bin/nbcc.js" },

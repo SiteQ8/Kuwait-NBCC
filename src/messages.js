@@ -6,6 +6,34 @@
  * Arabic output, so the rule is that no user facing literal is written inline.
  */
 
+
+/*
+ * Arabic counts change the noun after them. One takes the singular, two the
+ * dual, three to ten a plural, and eleven upward a singular accusative. Writing
+ * "5 يوما" the way a template does is wrong in every one of those cases but
+ * the last, and a reader notices it immediately.
+ */
+const COUNTED = {
+  day: ['يوم واحد', 'يومان', 'أيام', 'يوما'],
+  workday: ['يوم عمل واحد', 'يوما عمل', 'أيام عمل', 'يوم عمل'],
+  control: ['ضابط واحد', 'ضابطان', 'ضوابط', 'ضابطا'],
+  check: ['بند واحد', 'بندان', 'بنود', 'بندا'],
+  entity: ['جهة واحدة', 'جهتان', 'جهات', 'جهة'],
+  assessment: ['تقييم واحد', 'تقييمان', 'تقييمات', 'تقييما'],
+  year: ['سنة واحدة', 'سنتان', 'سنوات', 'سنة'],
+  point: ['نقطة واحدة', 'نقطتان', 'نقاط', 'نقطة'],
+  evidence: ['دليل واحد', 'دليلان', 'أدلة', 'دليلا']
+};
+
+export function count(n, kind) {
+  const [one, two, few, many] = COUNTED[kind];
+  const c = Math.abs(Math.round(Number(n) || 0));
+  if (c === 1) return one;
+  if (c === 2) return two;
+  if (c >= 3 && c <= 10) return `${c} ${few}`;
+  return `${c} ${many}`;
+}
+
 export const MESSAGES = {
   en: {
     dir: 'ltr',
@@ -129,6 +157,11 @@ export const MESSAGES = {
     crosswalkOfficial: 'named in the Annex', crosswalkConvenience: 'convenience mapping',
     crosswalkReferenced: 'referenced', colControl: 'CONTROL',
 
+    states: { met: 'met', partial: 'partial', gap: 'gap', 'covered-by-exception': 'covered by exception',
+      unassessed: 'unassessed', 'not-applicable': 'not applicable', 'out-of-scope': 'out of scope' },
+    passed: 'passed', startHere: 'Start here', startHereSub: 'low effort, open now',
+    checksUnit: 'checks',
+
     // doctor
     doctorHead: 'Self check', doctorOk: 'Catalog is internally consistent.',
     docControls: 'Controls', docChecks: 'Checks', docEvidence: 'Evidence items',
@@ -151,7 +184,7 @@ export const MESSAGES = {
     },
     severities: { high: 'مرتفعة', medium: 'متوسطة', low: 'منخفضة' },
 
-    catalogCount: (c, k) => `${c} ضابطا و${k} بندا للتحقق`,
+    catalogCount: (c, k) => `${count(c, 'control')} و${count(k, 'check')} للتحقق`,
     catalogHint: 'استخدم "nbcc show <id> --ar" لعرض الحد الأدنى المطلوب.',
 
     purpose: 'الغرض', editorialNote: '(تلخيص، وليس من نص الملحق)',
@@ -162,15 +195,15 @@ export const MESSAGES = {
     searchNone: (q) => `لا نتائج مطابقة لـ "${q}".`,
     searchFound: (n, q) => `${n} من الضوابط تطابق "${q}"`,
 
-    deadlineRemain: (n, d) => `بقي ${n} يوما على استحقاق الامتثال الكامل في ${d}.`,
-    deadlineOver: (n, d) => `مضى ${n} يوما على الموعد النهائي ${d}.`,
+    deadlineRemain: (n, d) => `بقي ${count(n, 'day')} على استحقاق الامتثال الكامل في ${d}.`,
+    deadlineOver: (n, d) => `مضى ${count(n, 'day')} على الموعد النهائي ${d}.`,
     deadlineElapsed: (p) => `انقضى ${p}٪ من المدة`,
     publishedIn: (p, g) => `نشر في ${p} في ${g}`,
     milestonesHead: 'مراحل المهلة',
     dueOn: 'يستحق',
 
     initWrote: (p) => `أنشئ ${p}`,
-    initScope: (c, k) => `${c} ضابطا منطبقا، و${k} بندا للإجابة عنها.`,
+    initScope: (c, k) => `${count(c, 'control')} منطبقة، و${count(k, 'check')} للإجابة عنها.`,
     initStatuses: 'الحالات: met و partial و gap و exception و na و unknown.',
     initNext: (p) => `أجب عن البنود ثم شغل "nbcc assess ${p}".`,
 
@@ -178,7 +211,7 @@ export const MESSAGES = {
     implementation: 'نسبة التطبيق', posture: 'الوضع القابل للإثبات', coverage: 'نسبة التغطية',
     scoreLine: (m, p, g, u, e) =>
       `${m} مستوف \u00b7 ${p} جزئي \u00b7 ${g} فجوة \u00b7 ${u} غير مقيم \u00b7 ${e} مستثنى`,
-    scopeLine: (i, o, k) => `${i} ضابطا ضمن النطاق، و${o} خارجه، و${k} بندا مقيسا`,
+    scopeLine: (i, o, k) => `${count(i, 'control')} ضمن النطاق، و${o} خارجه، و${count(k, 'check')} مقيسا`,
     byFunction: 'بحسب الوظيفة', metShort: 'مستوف',
     controlsHead: 'الضوابط', findingsHead: 'الملاحظات',
     findingsMore: (n) => `و${n} أخرى، انظر "nbcc report"`,
@@ -187,34 +220,34 @@ export const MESSAGES = {
     evidenceClaims: 'من الضوابط قيمت مستوفاة أو جزئية دون ما يثبتها',
     evidenceHint: (p) => `شغل "nbcc evidence ${p}" لعرض السجل.`,
 
-    planHead: 'خطة الجاهزية', planEffort: (d, w) => `${d} يوم عمل مفتوح، وبقي ${w} يوم عمل`,
+    planHead: 'خطة الجاهزية', planEffort: (d, w) => `${count(d, 'workday')} مفتوحة، وبقي ${count(w, 'workday')}`,
     planPhase: (n, d) => `يستحق ${d}`, planOpen: 'مفتوح', planWaits: 'ينتظر', planUnblocks: 'يفتح الطريق أمام',
     planNoWork: 'لا عمل مفتوح، فكل ضابط منطبق مستوفى بالكامل.',
 
     registerHead: 'سجل الأدلة',
-    registerSub: (n, y) => `${n} دليلا \u00b7 تحفظ ${y} سنوات \u00b7 تقدم للمركز عند الطلب`,
+    registerSub: (n, y) => `${count(n, 'evidence')} \u00b7 تحفظ ${count(y, 'year')} \u00b7 تقدم للمركز عند الطلب`,
     regRecorded: 'مسجل', regProducible: 'يمكن تقديمه',
     regCounts: (h, u, s, d, m) =>
       `${h} محفوظ \u00b7 ${u} دون موضع \u00b7 ${s} متقادم \u00b7 ${d} دون تاريخ \u00b7 ${m} مفقود`,
     regRange: (a, b) => `جمعت بين ${a} و${b}`,
     regNoLocation: 'لم يسجل موضعه', regNoDate: 'دون تاريخ جمع',
-    regNoRef: 'دون مرجع', regOld: (n) => `مضى عليه ${n} يوما`,
+    regNoRef: 'دون مرجع', regOld: (n) => `مضى عليه ${count(n, 'day')}`,
     regAttention: 'يستدعي المعالجة',
     regClaimsHead: 'ادعي استيفاؤها دون دليل',
     regClaimsSub: 'ضوابط قيمت مستوفاة أو جزئية دون ما يثبتها.',
     regHint: 'أضف ‎--csv‎ لتصدير السجل، أو ‎--missing‎ أو ‎--stale‎ لتضييقه.',
 
     trendHead: 'الاتجاه',
-    trendSub: (n, a, b, d) => `${n} تقييمات من ${a} إلى ${b}، ${d} يوما`,
+    trendSub: (n, a, b, d) => `${count(n, 'assessment')} من ${a} إلى ${b}، ${count(d, 'day')}`,
     trendSeries: 'سلسلة التقييمات', trendRate: 'المعدل', trendForecast: 'التوقع',
-    trendForecastSub: (d, n) => `خط مستقيم حتى ${d}، على بعد ${n} يوما`,
+    trendForecastSub: (d, n) => `خط مستقيم حتى ${d}، على بعد ${count(n, 'day')}`,
     trendMoved: (label, c, m) => `تحرك ${label} بمقدار ${c > 0 ? '+' : ''}${c} نقطة، أي ${m} شهريا`,
     trendDrift: (p, dir, m) =>
       `سارت الفترة الأخيرة ${p}٪ ${dir} بمعدل ${m} شهريا، فالخط المستقيم يجمل الصورة أو يبخسها`,
     faster: 'أسرع', slower: 'أبطأ',
-    trendReaches: (d, n) => `تبلغ نسبة التطبيق 100٪ نحو ${d}، أي قبل الموعد النهائي بـ ${n} يوما.`,
-    trendStalled: (c, m) => `لا معدل تقدم يبنى عليه توقع، وعند ${c}٪ اليوم يحتاج سد الفجوة ${m} نقطة شهريا.`,
-    trendShort: (p, s) => `التوقع ${p}٪ عند الموعد النهائي، بعجز قدره ${s} نقطة.`,
+    trendReaches: (d, n) => `تبلغ نسبة التطبيق 100٪ نحو ${d}، أي قبل الموعد النهائي بـ ${count(n, 'day')}.`,
+    trendStalled: (c, m) => `لا معدل تقدم يبنى عليه توقع، وعند ${c}٪ اليوم يحتاج سد الفجوة ${count(m, 'point')} شهريا.`,
+    trendShort: (p, s) => `التوقع ${p}٪ عند الموعد النهائي، بعجز قدره ${count(s, 'point')}.`,
     trendNeeded: (cur, need, mult) =>
       `المعدل الحالي ${cur} شهريا، والوصول في الموعد يحتاج ${need} شهريا، أي نحو ${mult} أضعاف المعدل الحالي.`,
     trendEvidence: (p) => `يتوقع أن تبلغ الأدلة ${p}٪، والضابط الذي لا يمكن إثباته لا يمكن الدفاع عنه.`,
@@ -229,12 +262,12 @@ export const MESSAGES = {
     trendSkipped: 'تخطي',
 
     portfolioHead: 'نظرة المجموعة',
-    portfolioSub: (n, d, dl) => `${n} جهات، و${d} يوما حتى ${dl}`,
+    portfolioSub: (n, d, dl) => `${count(n, 'entity')}، و${count(d, 'day')} حتى ${dl}`,
     portfolioSeriesWarn: 'كل الملفات تحمل اسم الجهة نفسه.',
     portfolioSeriesHint: 'إن كانت هذه جهة واحدة عبر الزمن، فالأمر المطلوب هو "nbcc trend".',
     meanImpl: 'متوسط التطبيق', meanEvidence: 'متوسط الأدلة',
     portfolioRange: (lo, hi, sp, base, tot, hf, uc) =>
-      `المدى من ${lo}٪ إلى ${hi}٪ بفارق ${sp} نقطة \u00b7 ${base} من ${tot} بلغت الحد الأدنى` +
+      `المدى من ${lo}٪ إلى ${hi}٪ بفارق ${count(sp, 'point')} \u00b7 ${base} من ${tot} بلغت الحد الأدنى` +
       ` \u00b7 ${hf} ملاحظة مرتفعة \u00b7 ${uc} دعوى دون دليل`,
     entitiesHead: 'الجهات', mostExposed: 'الأكثر انكشافا أولا',
     systemicHead: 'ثغرات مشتركة',
@@ -249,6 +282,11 @@ export const MESSAGES = {
     crosswalkHead: 'مواءمة الضوابط الوطنية', crosswalkTo: 'مقابل الضوابط الوطنية',
     crosswalkOfficial: 'منصوص عليه في الملحق', crosswalkConvenience: 'مواءمة تيسيرية',
     crosswalkReferenced: 'مرجعا', colControl: 'الضابط',
+
+    states: { met: 'مستوف', partial: 'جزئي', gap: 'فجوة', 'covered-by-exception': 'مغطى باستثناء',
+      unassessed: 'غير مقيم', 'not-applicable': 'لا ينطبق', 'out-of-scope': 'خارج النطاق' },
+    passed: 'انقضت', startHere: 'ابدأ من هنا', startHereSub: 'جهد منخفض ومفتوح الآن',
+    checksUnit: 'بندا',
 
     doctorHead: 'الفحص الذاتي', doctorOk: 'فهرس الضوابط متسق داخليا.',
     docControls: 'الضوابط', docChecks: 'بنود التحقق', docEvidence: 'عناصر الأدلة',
