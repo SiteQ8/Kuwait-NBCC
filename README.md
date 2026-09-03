@@ -144,6 +144,25 @@ Annex Section 1 aligns the NBCC with **NIST CSF 2.0** and **CIS Controls v8.1 IG
 nbcc crosswalk --to cis      # what an existing CIS IG1 programme already earns you
 ```
 
+## Verified against the gazette
+
+Every official string in the catalog is checked against the published Annex by `scripts/verify-against-gazette.py`, which normalises both sides and compares them character for character. As of 3 September 2026, against Kuwait Al Youm issue 1785:
+
+- **44/44 control titles** match, including the ampersands and parenthetical qualifiers the Annex prints
+- **44/44 minimum requirements** match, including the bullet structure inside GOV-6, PR-1.1, PR-6 and DE-1
+- **28/28 purposes** match where the Annex prints one
+
+Two cells (PR-2.1 and CLD-7) wrap such that the PDF text layer interleaves adjacent table columns, so they cannot match as a contiguous run. Both were read against the page by hand and the script records them as known artifacts rather than passing them silently.
+
+**Appendix A prints no Purpose column.** Its tables carry only Control ID, Control Title and Minimum Requirement. The purpose text shown for the 16 cloud controls is therefore this project's own summary, is tagged `purposeSource: 'editorial'`, and is marked as a summary everywhere it appears. It must never be quoted as Annex text.
+
+To re-run the check against your own copy of the gazette:
+
+```bash
+pip install pypdf
+python3 scripts/verify-against-gazette.py path/to/gazette.pdf
+```
+
 ## Not an official instrument
 
 This is a readiness aid. The authoritative text is the Annex as published in *Kuwait Al Youm* issue 1785, and Article 6 makes the English version controlling. Nothing this tool produces is a determination of compliance by NCSC, and no output should be presented as one. Verify against the gazette before you rely on it.
@@ -155,7 +174,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 54 tests
+node --test test/*.test.js     # 61 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

@@ -6,6 +6,25 @@ import { buildPlan, deadlineStatus, evidencePack } from './plan.js';
 import { mappingsFor } from './crosswalk.js';
 import { BASE_CSS, TOKENS, windowScaleSVG, statusPill, scoreColor } from './theme.js';
 
+/*
+ * Some minimum requirements are bulleted in the Annex, and the bullets carry
+ * meaning, so they are reproduced as a list rather than flattened into prose.
+ */
+function renderRequirement(control) {
+  let html = '<b>Minimum requirement.</b> ';
+  let open = false;
+  for (const para of control.requirement.split('\n')) {
+    if (para.startsWith('\u2022')) {
+      if (!open) { html += '<ul class="reqlist">'; open = true; }
+      html += `<li>${esc(para.slice(1).trim())}</li>`;
+    } else {
+      if (open) { html += '</ul>'; open = false; }
+      html += `<span>${esc(para)}</span>`;
+    }
+  }
+  return open ? html + '</ul>' : html;
+}
+
 function esc(value) {
   return String(value === undefined || value === null ? '' : value)
     .replace(/&/g, '&amp;')
@@ -58,6 +77,9 @@ details.ctl > summary:hover{background:var(--paper-alt)}
 details.ctl[open] > summary{border-bottom:1px solid var(--line); background:var(--paper-alt)}
 .ctl .body{padding:15px 17px}
 .ctl .t{font-weight:600; flex:1; min-width:190px}
+.reqlist{margin:7px 0 0 0; padding-inline-start:19px}
+.reqlist li{margin:4px 0}
+.edmark{font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:3px; padding:1px 5px; color:var(--slate); vertical-align:1px}
 .req{background:var(--paper-alt); border-left:3px solid var(--ink); padding:12px 15px; border-radius:0 var(--r) var(--r) 0; font-size:.9rem; margin:0 0 15px}
 .chk{list-style:none; padding:0; margin:0 0 15px}
 .chk li{display:grid; grid-template-columns:26px 1fr 108px; gap:10px; padding:7px 0; border-bottom:1px solid var(--line); font-size:.88rem; align-items:start}
@@ -170,8 +192,11 @@ function controlDetail(row) {
       <span class="num muted" style="font-size:.85rem">${row.implementation === null ? '' : row.implementation + '%'}</span>
     </summary>
     <div class="body">
-      <p class="muted" style="margin:0 0 12px">${esc(control.purpose)}</p>
-      <div class="req"><b>Minimum requirement.</b> ${esc(control.requirement)}</div>
+      <p class="muted" style="margin:0 0 12px">${esc(control.purpose)}${
+        control.purposeSource === 'editorial'
+          ? ' <span class="edmark" title="Appendix A prints no Purpose column. This summary is not Annex text.">summary</span>'
+          : ''}</p>
+      <div class="req">${renderRequirement(control)}</div>
       <h4 style="margin:0 0 8px">Checks</h4>
       <ul class="chk">${checks}</ul>
       <h4 style="margin:0 0 8px">Evidence to retain</h4>

@@ -4,10 +4,11 @@ export const IDENTIFY = [
   {
     id: 'ID-1',
     fn: 'ID',
-    title: 'Asset and Service Inventory',
+    title: 'Asset & Service Inventory',
     titleAr: 'حصر الأصول والخدمات',
-    purpose: 'Maintain an up to date view of hardware and key services.',
+    purpose: 'Maintain an up-to-date view of hardware and key services.',
     purposeAr: 'الاحتفاظ بصورة محدثة عن الأجهزة والخدمات الرئيسية.',
+    purposeSource: 'annex',
     requirement:
       'Maintain a central electronic inventory of hardware assets (servers, workstations, laptops, network equipment, IoT/OT devices, etc.) and key on-premises services. Record at least: owner, location, purpose, criticality, and lifecycle state (in use, spare, retired). For physical assets, use unique, machine-readable labels (e.g., barcode/QR-style) to support scanning and tracking. At least weekly, review network discovery or similar tools to identify unauthorized devices and either remove, block, or formally approve them.',
     checks: [
@@ -38,10 +39,11 @@ export const IDENTIFY = [
   {
     id: 'ID-2',
     fn: 'ID',
-    title: 'Software and Provider Inventory',
+    title: 'Software & Provider Inventory',
     titleAr: 'حصر البرمجيات ومزودي الخدمة',
     purpose: 'Maintain visibility of software in use and service providers.',
     purposeAr: 'الحفاظ على وضوح الرؤية بشأن البرمجيات المستخدمة ومزودي الخدمات.',
+    purposeSource: 'annex',
     requirement:
       'Maintain a list of authorized software (including version families) and service providers (including cloud and SaaS). At least monthly, review systems for unauthorized software and either remove it or record a documented exception. The list register SHOULD include owner, contact details, service description, criticality, and data sensitivity (which classifications are processed). Review provider information at least annually.',
     checks: [
@@ -72,10 +74,11 @@ export const IDENTIFY = [
   {
     id: 'ID-3',
     fn: 'ID',
-    title: 'Data and Account Inventory',
+    title: 'Data & Account Inventory',
     titleAr: 'حصر البيانات والحسابات',
     purpose: 'Understand what data and accounts exist and who owns them.',
     purposeAr: 'إدراك البيانات والحسابات الموجودة ومعرفة مالكيها.',
+    purposeSource: 'annex',
     requirement:
       'Maintain an inventory of critical and sensitive data sets, including classification, location, and business owner. Maintain an inventory of user and service accounts including privileges and last activity. Review accounts at least quarterly. Disable or remove dormant interactive user accounts that have not been used for 90 days, where the technology supports it. Review service accounts at least quarterly to validate continued business need. Ensure high-risk or privileged accounts are clearly identified.',
     checks: [

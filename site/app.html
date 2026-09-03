@@ -111,6 +111,9 @@ body.working .hero{display:none}
 .fnbar{width:4px; align-self:stretch; border-radius:2px; flex:none}
 .req{background:var(--paper-2); border-inline-start:3px solid var(--ink); padding:13px 16px; border-radius:0 var(--r) var(--r) 0; font-size:.92rem; margin-bottom:16px}
 [dir=rtl] .req{border-radius:var(--r) 0 0 var(--r)}
+.reqlist{margin:7px 0 0; padding-inline-start:20px}
+.reqlist li{margin:4px 0}
+.edmark{font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:3px; padding:1px 5px; color:var(--slate); white-space:nowrap}
 .req b{display:block; margin-bottom:3px; font-size:.82rem; color:var(--slate); font-weight:600}
 .ltx{direction:ltr; text-align:left}
 [dir=rtl] .ltx{unicode-bidi:isolate}
@@ -545,7 +548,7 @@ const STR = {
     daysLeft:n=>`<b>${n}</b> days to full compliance`,
     overdue:n=>`<b>${n}</b> days past the deadline`,
     windowSub:p=>`Published 5 April 2026, due 5 October 2027, ${p}% of the window elapsed`,
-    controls:'controls', checks:'checks', functions:'functions', months:'month window',
+    controls:'controls', checks:'checks', functions:'CSF functions, plus Appendix A', months:'month window',
     blH:'Every control, in full',
     blP:'The official minimum requirement of each control, broken into the individual statements an assessor would check one by one.',
     plH:'What to do, and when',
@@ -556,6 +559,7 @@ const STR = {
     impl:'Implementation', post:'Defensible posture', cov:'Coverage', bandL:'Band',
     metL:'met', gapL:'no coverage',
     reqL:'Minimum requirement', checksL:'Checks', evidenceL:'Evidence to retain',
+    edmark:'summary', edmarkT:'Appendix A prints no Purpose column, so this summary is not Annex text.',
     owner:'Owner', cadence:'Cadence', effort:'Effort', phase:'Phase', unassigned:'unassigned',
     all:'All', showing:(a,b)=>`${a} of ${b} controls`, openAll:'Open all', closeAll:'Close all',
     markAll:'Mark every check', reset:'Clear this control',
@@ -584,7 +588,7 @@ const STR = {
     daysLeft:n=>`<b>${n}</b> يوما حتى الامتثال الكامل`,
     overdue:n=>`مضى <b>${n}</b> يوما على الموعد النهائي`,
     windowSub:p=>`نشر في 5 أبريل 2026 ويستحق في 5 أكتوبر 2027، وقد انقضى ${p}٪ من المدة`,
-    controls:'ضابطا', checks:'بندا للتحقق', functions:'وظائف', months:'شهرا للمهلة',
+    controls:'ضابطا', checks:'بندا للتحقق', functions:'وظائف الإطار، ويضاف إليها الملحق الأول', months:'شهرا للمهلة',
     blH:'الضوابط كاملة',
     blP:'نص الحد الأدنى الرسمي لكل ضابط مفصلا إلى بنود يتحقق منها المدقق واحدا تلو الآخر.',
     plH:'ما ينبغي عمله ومتى',
@@ -634,6 +638,26 @@ const PILL_CLASS = { met:'p-met', partial:'p-partial', gap:'p-gap', 'covered-by-
   exception:'p-exception', na:'p-na', unknown:'p-unknown', unassessed:'p-unknown',
   'not-applicable':'p-na', 'out-of-scope':'p-na' };
 function pill(s){ const l = STATE_LABEL[s] || [s,s]; return `<span class="pill ${PILL_CLASS[s]||'p-unknown'}">${lang==='ar'?l[1]:l[0]}</span>`; }
+function reqHTML(c){
+  let html = `<b>${t('reqL')}</b>`, open = false;
+  for (const para of c.requirement.split('\n')) {
+    if (para.startsWith('\u2022')) {
+      if (!open) { html += '<ul class="reqlist ltx">'; open = true; }
+      html += `<li>${esc(para.slice(1).trim())}</li>`;
+    } else {
+      if (open) { html += '</ul>'; open = false; }
+      html += `<span class="ltx">${esc(para)}</span>`;
+    }
+  }
+  return open ? html + '</ul>' : html;
+}
+
+function purposeHTML(c){
+  const mark = c.purposeSource === 'editorial'
+    ? ` <span class="edmark" title="${esc(t('edmarkT'))}">${esc(t('edmark'))}</span>` : '';
+  return esc(L(c,'purpose')) + mark;
+}
+
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function fnColor(id){ return getComputedStyle(document.documentElement).getPropertyValue('--'+id.toLowerCase()).trim() || '#5D6E74'; }
 
@@ -656,7 +680,7 @@ function renderHero(){
   const checks = CONTROLS.reduce((n,c) => n + c.checks.length, 0);
   document.getElementById('facts').innerHTML = [
     [CONTROLS.length, t('controls')], [checks, t('checks')],
-    [FUNCS.length, t('functions')], [REG.complianceWindowMonths, t('months')]
+    [FUNCS.filter(f => f.id !== 'CLD').length, t('functions')], [REG.complianceWindowMonths, t('months')]
   ].map(([v,k]) => `<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
 }
 
@@ -687,8 +711,8 @@ function controlCard(c, open){
       <span class="muted" style="font-size:.82rem">${c.checks.length} ${t('checks')}</span>
     </summary>
     <div class="body">
-      <p class="muted" style="margin:0 0 13px">${esc(L(c,'purpose'))}</p>
-      <div class="req"><b>${t('reqL')}</b><span class="ltx">${esc(c.requirement)}</span></div>
+      <p class="muted" style="margin:0 0 13px">${purposeHTML(c)}</p>
+      <div class="req">${reqHTML(c)}</div>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('checksL')}</h3>
       <ul class="klist ltx">${c.checks.map((k,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(k)}</span></li>`).join('')}</ul>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('evidenceL')}</h3>
@@ -790,10 +814,10 @@ function renderMain(s){
         ${pill(r.state)}
         <span class="mono muted">${r.iP===null?'':r.iP+'%'}</span>
       </div>
-      <p class="muted" style="margin:0; font-size:.9rem">${esc(L(c,'purpose'))}</p>
+      <p class="muted" style="margin:0; font-size:.9rem">${purposeHTML(c)}</p>
     </div>
     <div class="wb-body">
-      <div class="req"><b>${t('reqL')}</b><span class="ltx">${esc(c.requirement)}</span></div>
+      <div class="req">${reqHTML(c)}</div>
       <div class="bulk">
         <span>${t('markAll')}</span>
         ${segs.map(([v,en,ar]) => `<button class="btn" data-all="${v}">${lang==='ar'?ar:en}</button>`).join('')}

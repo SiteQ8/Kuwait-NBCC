@@ -4,10 +4,11 @@ export const PROTECT = [
   {
     id: 'PR-1',
     fn: 'PR',
-    title: 'Secure Configuration and Hardening',
+    title: 'Secure Configuration, Hardening & Network Segmentation',
     titleAr: 'التهيئة الآمنة والتحصين',
     purpose: 'Reduce the attack surface of systems and devices.',
     purposeAr: 'تقليص سطح الهجوم على الأنظمة والأجهزة.',
+    purposeSource: 'annex',
     requirement:
       'Establish hardened configuration baselines for servers, workstations, network devices, and key applications. From this baseline, disable or remove services, features and ports that are not needed for the system\u2019s role. Change or disable default accounts and default passwords. Enable a host-based firewall on endpoints and servers and allow only the network traffic required for normal operation. Review configurations at least annually and after major changes.',
     checks: [
@@ -44,8 +45,11 @@ export const PROTECT = [
     titleAr: 'تجزئة الشبكة',
     purpose: 'Limit the spread and impact of attacks by separating networks.',
     purposeAr: 'الحد من انتشار الهجمات وأثرها عبر الفصل بين الشبكات.',
+    purposeSource: 'annex',
     requirement:
-      'Where feasible, separate user networks from server/data networks, and keep management/admin interfaces on a more restricted network segment. Place internet-facing systems in a more controlled network zone. Avoid direct access from user networks to sensitive servers unless explicitly required and approved. Do not treat network location alone as sufficient basis for trust. Access to management/admin interfaces and Critical Systems MUST be explicitly authorized based on least privilege and protected with strong authentication in accordance with PR-2 (including MFA for administrative access where supported). Document such access and review it at least annually.',
+      'Where feasible, separate user networks from server/data networks, and keep management/admin interfaces on a more restricted network segment. Place internet-facing systems in a more controlled network zone. Avoid direct access from user networks to sensitive servers unless explicitly required and approved.\n' +
+      '• Do not treat network location alone as sufficient basis for trust. Access to management/admin interfaces and Critical Systems MUST be explicitly authorized based on least privilege and protected with strong authentication in accordance with PR-2 (including MFA for administrative access where supported).\n' +
+      '• Document such access and review it at least annually.',
     checks: [
       'User networks are separated from server and data networks where feasible.',
       'Management and admin interfaces sit on a more restricted network segment.',
@@ -74,10 +78,11 @@ export const PROTECT = [
   {
     id: 'PR-1.2',
     fn: 'PR',
-    title: 'Vulnerability Management and Patching',
+    title: 'Vulnerability Management & Patching',
     titleAr: 'إدارة الثغرات والتحديثات الأمنية',
     purpose: 'Identify and address technical weaknesses in a structured way.',
     purposeAr: 'اكتشاف نقاط الضعف التقنية ومعالجتها بأسلوب منهجي.',
+    purposeSource: 'annex',
     requirement:
       'Have a simple written process for vulnerability management and review it at least annually. Run automated vulnerability scans on key systems: at least monthly for internet-facing systems, at least quarterly for other important internal systems, and after major changes. After each scan, review the report, produce a short action list, and fix the most serious issues first (for example, high and critical findings). Aim to apply operating system and application patches at least monthly on supported systems. Keep records of scans and key remediation actions.',
     checks: [
@@ -109,10 +114,11 @@ export const PROTECT = [
   {
     id: 'PR-2',
     fn: 'PR',
-    title: 'Identity, Authentication and Password Hygiene',
+    title: 'Identity, Authentication & Password Hygiene',
     titleAr: 'الهوية والمصادقة وسلامة كلمات المرور',
     purpose: 'Ensure access is properly controlled and accounts are harder to compromise.',
     purposeAr: 'ضمان ضبط الوصول على نحو سليم وجعل اختراق الحسابات أصعب.',
+    purposeSource: 'annex',
     requirement:
       'Require unique passwords for all accounts; do not reuse the same password across different systems. As a simple rule, require at least 8 characters for accounts protected by multi-factor authentication (MFA) and at least 14 characters for accounts without MFA. Avoid forcing regular password changes unless compromise is suspected. Enforce session lock or screen saver after 15 minutes of inactivity for workstations and around 2 minutes for mobile devices where practical. Limit administrator privileges to dedicated admin accounts, and require staff to perform day-to-day activities (email, web browsing, office work) from a normal user account. Implement MFA for all remote network access, externally exposed applications, and privileged/admin accounts where supported, using at least two different types of factor (something you know, something you have, something you are).',
     checks: [
@@ -145,12 +151,13 @@ export const PROTECT = [
   {
     id: 'PR-2.1',
     fn: 'PR',
-    title: 'Corporate Email Only and Personal Email Ban',
+    title: 'Corporate Email Only & Personal Email Ban',
     titleAr: 'قصر المراسلات على البريد المؤسسي ومنع البريد الشخصي',
     purpose:
       'Ensure work communications use managed, auditable channels and reduce data leakage via personal email.',
     purposeAr:
       'ضمان جريان مراسلات العمل عبر قنوات مُدارة قابلة للتدقيق والحد من تسرب البيانات عبر البريد الشخصي.',
+    purposeSource: 'annex',
     requirement:
       'Require that all official business communications use only Entity-approved corporate email accounts on approved domains. Personal/consumer email accounts MUST NOT be configured on corporate devices and MUST NOT be used for work-related communication. Enforce this via (1) an acceptable use policy, and (2) device and email configuration (e.g., MDM or mail client settings) that prevent adding personal accounts where feasible.',
     checks: [
@@ -176,10 +183,11 @@ export const PROTECT = [
   {
     id: 'PR-2.2',
     fn: 'PR',
-    title: 'Password Manager and Credential Hygiene',
+    title: 'Password Manager & Credential Hygiene',
     titleAr: 'مدير كلمات المرور وسلامة بيانات الاعتماد',
     purpose: 'Help staff maintain strong, unique passwords without reuse.',
     purposeAr: 'مساعدة الموظفين على استخدام كلمات مرور قوية وفريدة دون تكرار.',
+    purposeSource: 'annex',
     requirement:
       'Provide or approve a password-manager-style solution for staff who manage multiple credentials. Encourage use of long, unique passwords generated by the manager for each system. For shared/team accounts (where unavoidable), use shared password vaults or similar capabilities; do not share passwords through email, chat, or on paper.',
     checks: [
@@ -205,10 +213,11 @@ export const PROTECT = [
   {
     id: 'PR-3',
     fn: 'PR',
-    title: 'Security Awareness and Training',
+    title: 'Awareness & Human Factors',
     titleAr: 'التوعية والتدريب الأمني',
     purpose: 'Build a basic culture of secure behavior.',
     purposeAr: 'بناء ثقافة أساسية للسلوك الآمن.',
+    purposeSource: 'annex',
     requirement:
       'Establish a security awareness program and provide training at least annually and for new joiners. At minimum, cover: social engineering and phishing, safe use of email and the web, handling of Sensitive and Restricted data, password and MFA hygiene, use of approved communication tools, use of portable media, and how to report suspicious activity or incidents. Use simple language and relevant examples.',
     checks: [
@@ -239,12 +248,13 @@ export const PROTECT = [
   {
     id: 'PR-3.1',
     fn: 'PR',
-    title: 'Official Social Media and Digital Presence',
+    title: 'Official Social Media & Digital Presence',
     titleAr: 'الحسابات الرسمية والحضور الرقمي',
     purpose:
       'Ensure official accounts are authentic, protected, and clearly distinguished from impostors.',
     purposeAr:
       'ضمان أصالة الحسابات الرسمية وحمايتها وتمييزها بوضوح عن الحسابات المنتحلة.',
+    purposeSource: 'annex',
     requirement:
       'Maintain a central register of official Entity accounts on external platforms (e.g., major social networks, video platforms). Create official accounts using corporate email addresses and appropriate naming conventions. Where the platform provides it and criteria are met, enable verification or "official" status. Protect these accounts with MFA and role-based administration; review access at least annually and remove access when staff leave or change roles.',
     checks: [
@@ -272,10 +282,11 @@ export const PROTECT = [
   {
     id: 'PR-4',
     fn: 'PR',
-    title: 'Malware, Email and Web Protection',
+    title: 'Malware, Email & Web Protection',
     titleAr: 'الحماية من البرمجيات الخبيثة وحماية البريد والويب',
     purpose: 'Reduce the risk of malware and phishing attacks.',
     purposeAr: 'تقليل مخاطر البرمجيات الخبيثة وهجمات التصيد.',
+    purposeSource: 'annex',
     requirement:
       'Deploy endpoint protection (e.g., anti-malware/EDR software) on supported servers and workstations with automatic updates and centralized alerting where possible. Use email and web security controls (e.g., spam filtering, attachment and URL filtering) to block common malicious content and clearly suspicious file types. Configure email systems to block or warn on dangerous file extensions that are not needed for business and to limit very large attachments according to business need. Configure email domains with appropriate anti-spoofing controls (SPF, DKIM, DMARC) to prevent impersonation. Train staff to be cautious with unexpected links and attachments, and to report suspicious messages.',
     checks: [
@@ -308,10 +319,11 @@ export const PROTECT = [
   {
     id: 'PR-4.1',
     fn: 'PR',
-    title: 'Approved Communication and Videoconferencing Platforms',
+    title: 'Approved Communication & Videoconferencing Platforms',
     titleAr: 'منصات التواصل والاجتماعات المرئية المعتمدة',
-    purpose: 'Reduce risk from unapproved chat, voice, video tools and remote control apps.',
+    purpose: 'Reduce risk from unapproved chat/voice/video tools and remote control apps.',
     purposeAr: 'تقليل المخاطر الناتجة عن أدوات المحادثة والصوت والفيديو والتحكم عن بعد غير المعتمدة.',
+    purposeSource: 'annex',
     requirement:
       'For official work (meetings, calls, messaging, screen sharing), use only Entity-approved communication and collaboration platforms. Do not use personal or unapproved apps (for example, private messaging, personal email, unauthorized remote-control tools) for work data or meetings. Maintain a simple list of approved platforms and ensure staff are aware of it. Where feasible, restrict installation or use of unapproved tools on corporate devices via configuration.',
     checks: [
@@ -341,6 +353,7 @@ export const PROTECT = [
     titleAr: 'ضبط وسائط التخزين المحمولة',
     purpose: 'Limit the risks from use of unapproved removable media devices.',
     purposeAr: 'الحد من مخاطر استخدام وسائط التخزين القابلة للإزالة غير المعتمدة.',
+    purposeSource: 'annex',
     requirement:
       'Where feasible, restrict or technically disable the use of unapproved portable storage media (e.g., USB drives) on Entity systems, especially those handling Sensitive data. Establish procedures to allow only authorized portable media if necessary for business, and train staff on proper usage of portable media devices.',
     checks: [
@@ -365,12 +378,13 @@ export const PROTECT = [
   {
     id: 'PR-5',
     fn: 'PR',
-    title: 'Data Protection, Backup and Lifecycle',
+    title: 'Data Protection, Backup & Lifecycle',
     titleAr: 'حماية البيانات والنسخ الاحتياطي ودورة الحياة',
     purpose:
       'Ensure critical data is appropriately protected, can be restored, and is disposed of safely.',
     purposeAr:
       'ضمان حماية البيانات الحرجة على النحو المناسب وإمكانية استعادتها والتخلص منها بأمان.',
+    purposeSource: 'annex',
     requirement:
       'Implement regular, automated backups for critical systems and data, with priority to Sensitive and Restricted data. Store backups in at least one separate location (for example, a separate network segment, storage system, or cloud account). Protect backup data from unauthorized access and tampering (e.g., access controls, encryption). Test restoration of backups for key systems at least annually. Define and apply retention periods and secure disposal procedures aligned with legal requirements and the National Data Classification Framework, ensuring Sensitive data is securely erased or destroyed when no longer needed. For Sensitive data, if backups involve storage outside Kuwait (such as cloud backups), obtain any required approvals in line with data sovereignty requirements.',
     checks: [
@@ -406,8 +420,13 @@ export const PROTECT = [
     titleAr: 'الحماية المادية للأصول التقنية الحرجة',
     purpose: 'Reduce the risk of tampering, theft or damage to critical IT equipment.',
     purposeAr: 'تقليل مخاطر العبث بالمعدات التقنية الحرجة أو سرقتها أو إتلافها.',
+    purposeSource: 'annex',
     requirement:
-      'Identify critical IT areas (for example, data centers, server rooms, main network rooms, and locations where backup media are stored) and keep a simple list of them. For these areas, implement basic physical protections appropriate to the site, including at least: doors or cabinets that can be locked when the area is unattended; restricted access so that only authorized personnel can enter or unlock equipment (for example, keys, access cards, or codes managed by IT or facilities); and a simple record of non-routine visitors (such as contractors or vendors) to critical IT areas, which MAY be kept using existing building or guard logs. Store backup media and portable equipment (such as laptops) in a locked room or cabinet when not in use; avoid leaving them unattended in public or shared areas. This control focuses on the physical protection of IT assets and SHOULD make use of the entity\u2019s existing building or facility security arrangements wherever possible.',
+      'Identify critical IT areas (for example, data centers, server rooms, main network rooms, and locations where backup media are stored) and keep a simple list of them. For these areas, implement basic physical protections appropriate to the site, including at least:\n' +
+      '• Doors or cabinets that can be locked when the area is unattended.\n' +
+      '• Restricted access so that only authorized personnel can enter or unlock equipment (for example, keys, access cards, or codes managed by IT or facilities).\n' +
+      '• A simple record of non-routine visitors (such as contractors or vendors) to critical IT areas, which MAY be kept using existing building or guard logs.\n' +
+      'Store backup media and portable equipment (such as laptops) in a locked room or cabinet when not in use; avoid leaving them unattended in public or shared areas. This control focuses on the physical protection of IT assets and SHOULD make use of the entity’s existing building or facility security arrangements wherever possible.',
     checks: [
       'Critical IT areas are identified and listed.',
       'Doors or cabinets in critical IT areas can be locked when unattended.',

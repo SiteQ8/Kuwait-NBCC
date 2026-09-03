@@ -23,7 +23,11 @@ import { crosswalkTable, reverseIndex, mappingsFor, coverageSummary, FRAMEWORKS 
 import { renderReport, renderMarkdown, renderCSV } from '../src/report.js';
 import { diffAssessments } from '../src/diff.js';
 
-const VERSION = '0.1.0';
+// Read from the manifest so the reported version can never drift from the
+// package that was actually published.
+const VERSION = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8')
+).version;
 
 // Piping to head or less closes stdout early. That is normal shell behaviour,
 // not an error worth a stack trace.
@@ -200,9 +204,16 @@ function cmdShow(positional, flags) {
   out(`${C.dim}${c.titleAr}${C.reset}`);
   out(`${C.dim}${fn.name} \u00b7 phase ${c.phase} \u00b7 ${c.effort} effort \u00b7 ${c.cadence}${C.reset}\n`);
   out(`${C.cyan}Purpose${C.reset}`);
-  out(`  ${c.purpose}\n`);
+  out(`  ${c.purpose}${c.purposeSource === 'editorial' ? `  ${C.dim}(summary, not Annex text)${C.reset}` : ''}\n`);
   out(`${C.cyan}Minimum requirement${C.reset}  ${C.dim}(official text)${C.reset}`);
-  for (const line of wrap(c.requirement, 76)) out(`  ${line}`);
+  // The Annex uses bullets inside some requirements and they carry meaning,
+  // so each one keeps its own hanging indent rather than running together.
+  for (const para of c.requirement.split('\n')) {
+    const bullet = para.startsWith('\u2022');
+    const body = bullet ? para.slice(1).trim() : para;
+    const lines = wrap(body, bullet ? 72 : 76);
+    lines.forEach((line, i) => out(bullet ? `    ${i === 0 ? '\u2022 ' : '  '}${line}` : `  ${line}`));
+  }
   out('');
   out(`${C.cyan}Checks${C.reset} ${C.dim}(${c.checks.length})${C.reset}`);
   c.checks.forEach((t, i) => {

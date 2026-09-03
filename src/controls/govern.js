@@ -6,7 +6,11 @@
  *   fn            NIST CSF function grouping used by the Annex
  *   title         official English control title
  *   titleAr       Arabic rendering of the title
- *   purpose       official "Purpose / Description" cell
+ *   purpose       the "Purpose / Description" cell, where the Annex has one
+ *   purposeSource "annex" where the Annex prints a purpose, "editorial" where
+ *                 it does not. Appendix A tables carry only Control ID, Control
+ *                 Title and Minimum Requirement, so every cloud purpose here is
+ *                 this project's own summary and must never be shown as official.
  *   purposeAr     Arabic rendering of the purpose
  *   requirement   official "Minimum Requirement" cell, quoted
  *   checks        atomic verifiable statements derived from the requirement
@@ -22,10 +26,11 @@ export const GOVERN = [
   {
     id: 'GOV-1',
     fn: 'GOV',
-    title: 'Governance and Roles',
+    title: 'Governance & Roles',
     titleAr: 'الحوكمة والأدوار',
     purpose: 'Establish clear accountability for cybersecurity.',
     purposeAr: 'ترسيخ مساءلة واضحة عن الأمن السيبراني.',
+    purposeSource: 'annex',
     requirement:
       'The entity MUST designate an employee at manager level or above with overall responsibility for cybersecurity. Define and document roles and responsibilities for information security, IT operations, risk management, data classification, and incident response. Review and update this structure at least annually or when major organizational changes occur.',
     checks: [
@@ -54,10 +59,11 @@ export const GOVERN = [
   {
     id: 'GOV-2',
     fn: 'GOV',
-    title: 'Policies and Exception Management',
+    title: 'Policies & Exception Management',
     titleAr: 'السياسات وإدارة الاستثناءات',
     purpose: 'Ensure behavior and decisions are guided by documented, approved rules.',
     purposeAr: 'ضمان استناد السلوكيات والقرارات إلى قواعد موثقة ومعتمدة.',
+    purposeSource: 'annex',
     requirement:
       'Maintain core written policies that, at minimum, cover: acceptable use, Secure Configuration, data classification, access control, backup & recovery, incident response, and third-party / service provider security. Policies SHOULD be approved by management and reviewed at least every two years. Any deviations MUST follow a simple exception process with documented risk acceptance and an expiry date.',
     checks: [
@@ -89,10 +95,11 @@ export const GOVERN = [
   {
     id: 'GOV-3',
     fn: 'GOV',
-    title: 'Data Classification and Sovereignty',
+    title: 'Data Classification & Sovereignty',
     titleAr: 'تصنيف البيانات والسيادة عليها',
     purpose: 'Ensure data is handled according to its sensitivity and legal requirements.',
     purposeAr: 'ضمان التعامل مع البيانات وفق درجة حساسيتها ومتطلباتها القانونية.',
+    purposeSource: 'annex',
     requirement:
       'Implement a data classification program aligned with the National Data Classification Framework, using at least Sensitive, Restricted, and Public categories, with clear criteria and examples. Issue a Data Classification Policy/Document approved by senior management and submitted to NCSC for approval, in accordance with Decision No. 1 of 2025. Tag or label data (and related systems/records) with its classification and ensure protection measures increase with sensitivity (for example: stronger access controls and encryption for Sensitive data). Storing or processing Sensitive data outside Kuwait MUST follow the national approval process and receive explicit NCSC approval before use (per applicable regulations).',
     checks: [
@@ -123,10 +130,11 @@ export const GOVERN = [
   {
     id: 'GOV-4',
     fn: 'GOV',
-    title: 'Kuwaitization and Vetting for Cyber Roles',
+    title: 'Kuwaitization & Vetting for Cyber Roles',
     titleAr: 'التكويت والتحري في الأدوار السيبرانية',
     purpose: 'Support national capacity building and reduce insider risk in critical cyber roles.',
     purposeAr: 'دعم بناء القدرات الوطنية والحد من مخاطر التهديد الداخلي في الأدوار السيبرانية الحرجة.',
+    purposeSource: 'annex',
     requirement:
       'For key cybersecurity roles (e.g., SOC analysts, administrators, incident responders), prioritize qualified Kuwaiti nationals where feasible and consistent with national HR frameworks and local laws and regulations. For staff in such sensitive roles, perform basic pre-employment screening (e.g., identity verification, employment history, conflict-of-interest checks) in line with applicable laws and HR policies. Maintain a simple list of designated "sensitive cyber roles" and ensure screening is documented.',
     checks: [
@@ -153,10 +161,11 @@ export const GOVERN = [
   {
     id: 'GOV-5',
     fn: 'GOV',
-    title: 'Periodic Self Assessment and Continuous Improvement',
+    title: 'Periodic Self-Assessment & Continuous Improvement',
     titleAr: 'التقييم الذاتي الدوري والتحسين المستمر',
     purpose: 'Provide a minimal mechanism to measure implementation of this baseline.',
     purposeAr: 'توفير آلية بسيطة لقياس مدى تطبيق هذه الضوابط.',
+    purposeSource: 'annex',
     requirement:
       'At least once per year, complete a self-assessment against this baseline using an NCSC-issued or NCSC-approved checklist. Document the results, key gaps, actions, and target dates. Retain the record for at least three years and make it available to NCSC upon request. Use major incidents or audits to update priorities.',
     checks: [
@@ -185,12 +194,16 @@ export const GOVERN = [
   {
     id: 'GOV-6',
     fn: 'GOV',
-    title: 'Service Provider and Outsourcing Governance',
+    title: 'Service Provider & Outsourcing Governance',
     titleAr: 'حوكمة مزودي الخدمة والإسناد الخارجي',
     purpose: 'Manage cybersecurity risk arising from external providers, including cloud.',
     purposeAr: 'إدارة مخاطر الأمن السيبراني الناشئة عن مزودي الخدمات الخارجيين ومنهم مزودو الخدمات السحابية.',
+    purposeSource: 'annex',
     requirement:
-      'Establish and maintain an inventory of service providers (including cloud/managed services), including classification and an entity contact for each provider; review at least annually or upon significant change. For service providers handling Sensitive data or supporting critical services, document the service scope and shared responsibilities for protecting the service and data. Ensure incident response contact information includes relevant service providers, and define incident reporting timeframes and mechanisms for provider-related incidents. For offboarding/termination, ensure required actions are performed to remove access and handle data appropriately, retaining evidence where applicable.',
+      'Establish and maintain an inventory of service providers (including cloud/managed services), including classification and an entity contact for each provider; review at least annually or upon significant change.\n' +
+      '• For service providers handling Sensitive data or supporting critical services, document the service scope and shared responsibilities for protecting the service and data.\n' +
+      '• Ensure incident response contact information includes relevant service providers, and define incident reporting timeframes and mechanisms for provider-related incidents.\n' +
+      '• For offboarding/termination, ensure required actions are performed to remove access and handle data appropriately, retaining evidence where applicable.',
     checks: [
       'An inventory of service providers exists and covers cloud and managed services.',
       'Each provider record carries a classification.',

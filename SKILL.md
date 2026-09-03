@@ -89,3 +89,5 @@ Check statuses: `met`, `partial`, `gap`, `exception`, `na`, `unknown`. A control
 ## Cautions
 
 Do not present any output as a determination of compliance by NCSC. The authoritative text is the gazetted Annex. The decomposition of each requirement into checks is this toolkit's own work and carries no official standing, and the ISO 27001 crosswalk is a convenience mapping, unlike the NIST CSF and CIS mappings which the Annex itself names.
+
+Appendix A prints no Purpose column, so the purpose shown for the 16 cloud controls is this toolkit's own summary rather than regulation text. It is tagged `purposeSource: "editorial"` and marked as a summary in every output. Never quote it as the Annex.

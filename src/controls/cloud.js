@@ -25,8 +25,9 @@ export const CLOUD = [
     titleAr: 'الترخيص التنظيمي',
     purpose: 'Confirm the provider may lawfully operate in Kuwait before it is engaged.',
     purposeAr: 'التحقق من أحقية المزود في العمل داخل الكويت قبل التعاقد معه.',
+    purposeSource: 'editorial',
     requirement:
-      'Entities MUST ensure the Cloud Service Provider (CSP) is authorized to operate in the State of Kuwait in accordance with regulations issued by the relevant national authorities.',
+      'Entities MUST ensure the Cloud Service Provider (CSP) is authorized to operate in the State of Kuwait in accordance with regulations issued by the relevant national authorities',
     checks: [
       'Every cloud service provider in use is authorized to operate in the State of Kuwait.',
       'Authorization is verified against regulations issued by the relevant national authorities.',
@@ -50,6 +51,7 @@ export const CLOUD = [
     titleAr: 'العناية الواجبة تجاه المزود',
     purpose: 'Evaluate the security posture of the provider before selection.',
     purposeAr: 'تقييم الوضع الأمني للمزود قبل اختياره.',
+    purposeSource: 'editorial',
     requirement:
       'Prior to selection, Entities MUST evaluate the CSP\u2019s security posture. This requirement is satisfied by reviewing the CSP\u2019s valid, independent international security certifications (e.g., ISO 27001, SOC 2 Type II, CSA STAR Level 2).',
     checks: [
@@ -71,10 +73,11 @@ export const CLOUD = [
   {
     id: 'CLD-3',
     fn: 'CLD',
-    title: 'Right to Audit',
+    title: 'Right to Audit (Third-Party Assurance)',
     titleAr: 'حق التدقيق',
     purpose: 'Preserve assurance over a shared environment without physical inspection.',
     purposeAr: 'الحفاظ على التأكيد بشأن بيئة مشتركة دون الحاجة إلى معاينة مادية.',
+    purposeSource: 'editorial',
     requirement:
       'Contracts MUST include a "Right to Audit." To protect the security of multi-tenant environments, this right is exercised by the Entity reviewing the CSP\u2019s independent Third-Party Audit Reports (e.g., SOC 2, C5) rather than conducting physical data center visits.',
     checks: [
@@ -100,6 +103,7 @@ export const CLOUD = [
     titleAr: 'شرط الإخطار بالحوادث',
     purpose: 'Guarantee the entity learns of provider side incidents in time to act.',
     purposeAr: 'ضمان علم الجهة بحوادث المزود في وقت يسمح لها بالتصرف.',
+    purposeSource: 'editorial',
     requirement:
       'Contracts MUST include a commitment from the CSP to notify the Entity of a confirmed data incident without undue delay to allow for accurate investigation and reporting.',
     checks: [
@@ -121,10 +125,11 @@ export const CLOUD = [
   {
     id: 'CLD-5',
     fn: 'CLD',
-    title: 'Data Ownership and Exit',
+    title: 'Data Ownership & Exit',
     titleAr: 'ملكية البيانات والخروج من الخدمة',
     purpose: 'Keep ownership with the entity and keep exit technically possible.',
     purposeAr: 'إبقاء الملكية لدى الجهة وإبقاء الخروج ممكنا من الناحية التقنية.',
+    purposeSource: 'editorial',
     requirement:
       'The contract MUST explicitly state that the Entity retains exclusive ownership of their data. The CSP MUST provide tools or standard APIs to allow the Entity to retrieve their data upon contract termination.',
     checks: [
@@ -146,10 +151,11 @@ export const CLOUD = [
   {
     id: 'CLD-6',
     fn: 'CLD',
-    title: 'Service Level Agreements',
+    title: 'Service Level Agreements (SLAs)',
     titleAr: 'اتفاقيات مستوى الخدمة',
     purpose: 'Fix availability expectations and the remedy for missing them.',
     purposeAr: 'تثبيت التوقعات بشأن التوافرية وتحديد التعويض عند الإخلال بها.',
+    purposeSource: 'editorial',
     requirement:
       'Contracts MUST define Service Level Agreements (SLAs) for availability. The agreement SHOULD include financial remedies (service credits) for failure to meet these standards.',
     checks: [
@@ -175,6 +181,7 @@ export const CLOUD = [
     titleAr: 'مصفوفة المسؤولية المشتركة',
     purpose: 'Remove ambiguity about which party secures which layer.',
     purposeAr: 'إزالة الغموض بشأن الطرف المسؤول عن تأمين كل طبقة.',
+    purposeSource: 'editorial',
     requirement:
       'Entities MUST document the cloud service model (IaaS, PaaS, or SaaS) and the resulting division of security responsibilities. The Entity retains accountability for Data Classification, Identity & Access Management (IAM), and Resource Configuration, regardless of the model.',
     checks: [
@@ -202,6 +209,7 @@ export const CLOUD = [
     titleAr: 'حصر الأصول السحابية',
     purpose: 'Keep a live view of cloud resources and what they hold.',
     purposeAr: 'الاحتفاظ برؤية آنية للموارد السحابية ولما تحتويه.',
+    purposeSource: 'editorial',
     requirement:
       'Maintain a real-time inventory of cloud resources. Use programmatic resource tagging to identify the Data Classification (Public, Restricted, Sensitive) and Business Owner of each resource.',
     checks: [
@@ -228,6 +236,7 @@ export const CLOUD = [
     titleAr: 'المصادقة متعددة العوامل لوحدات التحكم السحابية',
     purpose: 'Protect the highest value credentials in the environment.',
     purposeAr: 'حماية أعلى بيانات الاعتماد قيمة في البيئة.',
+    purposeSource: 'editorial',
     requirement:
       'Multi-Factor Authentication (MFA) MUST be enforced for all users with administrative access to the Cloud Management Console and root accounts.',
     checks: [
@@ -253,6 +262,7 @@ export const CLOUD = [
     titleAr: 'سلامة حسابات الخدمة',
     purpose: 'Prevent credential theft through long lived non human identities.',
     purposeAr: 'منع سرقة بيانات الاعتماد عبر الهويات غير البشرية طويلة الأمد.',
+    purposeSource: 'editorial',
     requirement:
       'Service Accounts (non-human identities) MUST NOT be used for interactive human login. Keys for service accounts SHOULD be rotated periodically based on risk, or managed via automated identity federation (e.g., OIDC) to prevent credential theft.',
     checks: [
@@ -278,6 +288,7 @@ export const CLOUD = [
     titleAr: 'التشفير التلقائي',
     purpose: 'Ensure stored data is unreadable without the key.',
     purposeAr: 'ضمان عدم إمكانية قراءة البيانات المخزنة دون المفتاح.',
+    purposeSource: 'editorial',
     requirement:
       'All data at rest in the cloud MUST be encrypted. Entities SHOULD utilize the CSP\u2019s default encryption (platform-managed keys) as a minimum standard. For Sensitive data, Entities MAY opt for Customer-Managed Encryption Keys (CMEK) on cloud, based on a risk assessment. In accordance with Decision (1) of 2025.',
     checks: [
@@ -300,10 +311,11 @@ export const CLOUD = [
   {
     id: 'CLD-12',
     fn: 'CLD',
-    title: 'Data Residency for Customer Content',
+    title: 'Data Residency (Customer Content)',
     titleAr: 'موطن حفظ محتوى العميل',
     purpose: 'Keep Customer Content where the national framework requires it.',
     purposeAr: 'إبقاء محتوى العميل في الموطن الذي يفرضه الإطار الوطني.',
+    purposeSource: 'editorial',
     requirement:
       'The Entity MUST configure cloud services and related contracts to store and process Customer Content (files, databases, application data) according to the National Data Classification Framework (Decision No. 1 of 2025).',
     checks: [
@@ -330,6 +342,7 @@ export const CLOUD = [
     titleAr: 'استثناء البيانات الوصفية التشغيلية',
     purpose: 'Keep the residency rule workable by keeping metadata non sensitive.',
     purposeAr: 'إبقاء قاعدة الموطن قابلة للتطبيق عبر إبقاء البيانات الوصفية غير حساسة.',
+    purposeSource: 'editorial',
     requirement:
       'Residency requirements apply to Customer Content. Operational Metadata (e.g., project IDs, billing logs, system status, and IP addresses) can be processed globally to ensure platform security, reliability, and accurate billing. Entities must ensure that metadata identifiers (such as Project IDs, folder names and labels) remain non-sensitive.',
     checks: [
@@ -357,6 +370,7 @@ export const CLOUD = [
     titleAr: 'منع الوصول العام',
     purpose: 'Close the single most common cause of cloud data exposure.',
     purposeAr: 'سد أكثر أسباب انكشاف البيانات السحابية شيوعا.',
+    purposeSource: 'editorial',
     requirement:
       'Cloud storage resources (e.g., object storage buckets) MUST be configured to block public access by default. Public exposure MUST be an explicit, documented exception approved by the data owner.',
     checks: [
@@ -383,6 +397,7 @@ export const CLOUD = [
     titleAr: 'تسجيل الأحداث السحابية',
     purpose: 'Record who changed the environment and who reached the data.',
     purposeAr: 'تسجيل من غير البيئة ومن وصل إلى البيانات.',
+    purposeSource: 'editorial',
     requirement:
       'Enable audit logging for cloud projects. Logs MUST capture "Admin Activity" (configuration changes) and "Data Access" (who accessed data) for sensitive workloads. Retain logs for a minimum of 12 months.',
     checks: [
@@ -409,6 +424,7 @@ export const CLOUD = [
     titleAr: 'الاتصال الآمن',
     purpose: 'Protect traffic in transit and keep management planes off the open internet.',
     purposeAr: 'حماية البيانات أثناء نقلها وإبعاد واجهات الإدارة عن الإنترنت المفتوح.',
+    purposeSource: 'editorial',
     requirement:
       'All traffic between the entity and the cloud provider MUST be encrypted in transit using industry-standard protocols (e.g., TLS 1.2 or higher). Management interfaces MUST NOT be exposed directly to the public internet; use secure bastions, VPNs, or Identity-Aware Proxies.',
     checks: [

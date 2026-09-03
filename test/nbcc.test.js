@@ -85,6 +85,68 @@ test('catalog statistics stay in step with the data', () => {
   assert.equal(CATALOG_STATS.functions, FUNCTIONS.length);
 });
 
+test('official titles keep the ampersand the gazette prints', () => {
+  // These were silently normalised to "and" in an earlier pass, which made the
+  // catalog quietly disagree with the instrument it claims to reproduce.
+  const expected = {
+    'GOV-1': 'Governance & Roles',
+    'GOV-5': 'Periodic Self-Assessment & Continuous Improvement',
+    'PR-1': 'Secure Configuration, Hardening & Network Segmentation',
+    'PR-3': 'Awareness & Human Factors',
+    'CLD-3': 'Right to Audit (Third-Party Assurance)',
+    'CLD-12': 'Data Residency (Customer Content)'
+  };
+  for (const [id, title] of Object.entries(expected)) {
+    assert.equal(getControl(id).title, title);
+  }
+  const ampersands = CONTROLS.filter((c) => c.title.includes('&')).length;
+  assert.equal(ampersands, 24, 'the Annex prints 24 titles containing an ampersand');
+});
+
+test('bulleted requirements keep the structure the Annex gives them', () => {
+  const bulleted = CONTROLS.filter((c) => c.requirement.includes('\u2022')).map((c) => c.id);
+  assert.deepEqual(bulleted, ['GOV-6', 'PR-1.1', 'PR-6', 'DE-1']);
+  const pr6 = getControl('PR-6').requirement.split('\n');
+  assert.equal(pr6.filter((l) => l.startsWith('\u2022')).length, 3);
+  assert.ok(pr6[0].endsWith('including at least:'), 'the lead in must introduce the list');
+  for (const id of bulleted) {
+    for (const line of getControl(id).requirement.split('\n')) {
+      assert.ok(line.trim().length > 0, `${id} requirement has a blank line`);
+      assert.ok(!line.startsWith(' '), `${id} requirement line is indented`);
+    }
+  }
+});
+
+test('every purpose declares whether the Annex actually prints one', () => {
+  // Appendix A tables carry only Control ID, Control Title and Minimum
+  // Requirement, so a cloud purpose is this project's summary, not the text.
+  for (const c of CONTROLS) {
+    assert.ok(['annex', 'editorial'].includes(c.purposeSource), `${c.id} has no purposeSource`);
+  }
+  const editorial = CONTROLS.filter((c) => c.purposeSource === 'editorial').map((c) => c.id);
+  assert.equal(editorial.length, 16);
+  assert.ok(editorial.every((id) => id.startsWith('CLD-')));
+  assert.ok(CONTROLS.filter((c) => c.fn !== 'CLD').every((c) => c.purposeSource === 'annex'));
+});
+
+test('an editorial purpose is marked wherever it is displayed', () => {
+  const doc = scaffold();
+  const html = renderReport(doc);
+  assert.ok(html.includes('not Annex text'), 'the report must disclaim editorial purposes');
+  const site = buildSite();
+  assert.ok(site.includes('edmark'), 'the site must carry the editorial marker');
+  assert.ok(site.includes('purposeSource'), 'the payload must carry provenance');
+  const out = execFileSync(process.execPath, [CLI, 'show', 'CLD-1'], { encoding: 'utf8' });
+  assert.ok(out.includes('not Annex text'), 'the CLI must disclaim editorial purposes');
+});
+
+test('the report renders bullets as a list rather than running prose', () => {
+  const html = renderReport(scaffold());
+  assert.ok(html.includes('<ul class="reqlist">'));
+  assert.ok(html.includes('<li>Doors or cabinets that can be locked when the area is unattended.</li>'));
+  assert.ok(!html.includes('\u2022'), 'raw bullet characters should not reach the report');
+});
+
 /* -------------------------------------------------------------- scoping */
 
 test('cloud controls drop out when the entity uses no cloud', () => {
@@ -516,6 +578,12 @@ test('the README quotes the deadline the Decision actually sets', () => {
 });
 
 /* ----------------------------------------------------------------- CLI */
+
+test('the reported version is the one the manifest declares', () => {
+  const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
+  assert.equal(cli(['version']).trim(), pkg.version);
+  assert.ok(cli(['help']).includes(`v${pkg.version}`));
+});
 
 test('cli reports its version and help without a file', () => {
   assert.match(cli(['version']), /^\d+\.\d+\.\d+/);

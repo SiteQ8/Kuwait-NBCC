@@ -28,6 +28,7 @@ export function buildPayload() {
       titleAr: c.titleAr,
       purpose: c.purpose,
       purposeAr: c.purposeAr,
+      purposeSource: c.purposeSource,
       requirement: c.requirement,
       checks: c.checks,
       evidence: c.evidence,
