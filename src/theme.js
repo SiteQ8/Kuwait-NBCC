@@ -60,9 +60,8 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,su
 .num{font-family:var(--mono); font-variant-numeric:tabular-nums; letter-spacing:-0.02em}
 .muted{color:var(--slate)}
 .cid{
-  font-family:var(--mono); font-size:.78rem; font-weight:500;
-  background:var(--ink); color:var(--paper); padding:2px 7px; border-radius:3px;
-  white-space:nowrap; letter-spacing:.01em;
+  font-family:var(--mono); font-size:.79rem; font-weight:500; color:var(--slate);
+  white-space:nowrap; letter-spacing:-.01em; min-width:5.2rem; display:inline-block;
 }
 table{border-collapse:collapse; width:100%; font-size:.92rem}
 th{text-align:left; font-weight:600; color:var(--slate); padding:9px 12px; border-bottom:1.5px solid var(--line)}
@@ -128,10 +127,8 @@ export function windowScaleSVG(status, opts = {}) {
   <line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="${TOKENS.line}" stroke-width="3.5" stroke-linecap="round"/>
   <line x1="${padL}" y1="${y}" x2="${x.toFixed(1)}" y2="${y}" stroke="${TOKENS.green}" stroke-width="3.5" stroke-linecap="round"/>
   ${tickMarkup}
-  <g transform="translate(${x.toFixed(1)},${y})">
-    <polygon points="0,-6 6,-16 -6,-16" fill="${TOKENS.ink}"/>
-    <circle r="4.5" fill="${TOKENS.ink}"/>
-  </g>
+  <line x1="${x.toFixed(1)}" y1="${y - 15}" x2="${x.toFixed(1)}" y2="${y + 15}" stroke="${TOKENS.ink}" stroke-width="2"/>
+  <circle cx="${x.toFixed(1)}" cy="${y}" r="3.5" fill="${TOKENS.ink}"/>
 </svg>`;
 }
 

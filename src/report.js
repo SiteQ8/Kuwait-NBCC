@@ -62,7 +62,7 @@ const T = {
   en: {
     dir: 'ltr', locale: 'en-GB',
     reportTitle: (n) => `${n} NBCC readiness report`,
-    kicker: (d, t) => `${d} \u00b7 ${t}`,
+    kicker: (d) => `Annex (1) to ${d}`,
     subtitle: 'Readiness against the national minimum baseline issued by the National Cyber Security Center (NCSC).',
     assessed: 'Assessed', assessor: 'Assessor', deadline: 'Deadline', band: 'Band',
     unnamed: 'Unnamed entity', notRecorded: 'Not recorded',
@@ -115,7 +115,7 @@ const T = {
   ar: {
     dir: 'rtl', locale: 'ar-KW',
     reportTitle: (n) => `تقرير جاهزية ${n} للضوابط الوطنية الأساسية`,
-    kicker: (d, t) => `${d} \u00b7 ${t}`,
+    kicker: (d) => `الملحق الأول من ${d}`,
     subtitle: 'الجاهزية مقابل الحد الأدنى الوطني الصادر عن المركز الوطني للأمن السيبراني.',
     assessed: 'تاريخ التقييم', assessor: 'جهة التقييم', deadline: 'الموعد النهائي', band: 'المستوى',
     unnamed: 'جهة دون اسم', notRecorded: 'غير مسجل',
@@ -208,13 +208,16 @@ section:first-of-type{border-top:none}
 .sev-high{background:var(--crimson-soft); color:var(--crimson)}
 .sev-medium{background:var(--ochre-soft); color:#8A6508}
 .sev-low{background:var(--paper-alt); color:var(--slate)}
-details.ctl{border:1px solid var(--line); border-radius:var(--r); margin-bottom:9px; background:var(--paper); overflow:hidden}
-details.ctl > summary{padding:12px 15px; cursor:pointer; display:flex; gap:12px; align-items:center; flex-wrap:wrap; list-style:none}
+/* The printed report is a register too, so entries are ruled rather than boxed
+   and 44 of them stack without becoming 44 objects on the page. */
+details.ctl{border-top:1px solid var(--line); background:none}
+details.ctl:last-of-type{border-bottom:1px solid var(--line)}
+details.ctl > summary{padding:13px 2px; cursor:pointer; display:flex; gap:13px; align-items:baseline; flex-wrap:wrap; list-style:none}
 details.ctl > summary::-webkit-details-marker{display:none}
-details.ctl > summary:hover{background:var(--paper-alt)}
-details.ctl[open] > summary{border-bottom:1px solid var(--line); background:var(--paper-alt)}
-.ctl .body{padding:15px 17px}
-.ctl .t{font-weight:600; flex:1; min-width:190px}
+details.ctl[open] > summary{padding-bottom:3px}
+.ctl .body{padding:4px 2px 22px; max-width:82ch}
+.ctl .t{font-weight:500; flex:1; min-width:190px}
+.ctl[open] .t{font-weight:600}
 .reqlist{margin:7px 0 0 0; padding-inline-start:19px}
 .reqlist li{margin:4px 0}
 .reg{width:100%; border-collapse:collapse; font-size:.88rem; margin-top:4px}

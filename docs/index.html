@@ -25,7 +25,8 @@
   --slate:#5D6E74; --slate-2:#8B9AA0;
   --sans:"IBM Plex Sans Arabic","IBM Plex Sans","Segoe UI",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --r:7px; --maxw:1240px;
+  --r:4px; --maxw:1180px;
+  --rule:#E3DFD4; --rule-2:#CFC9BA;
   --gov:#7c5cff; --id:#0ea5a4; --pr:#2563eb; --de:#d97706; --rs:#dc2626; --rc:#059669; --cld:#0891b2;
 }
 *{box-sizing:border-box}
@@ -48,7 +49,7 @@ button{font:inherit; cursor:pointer}
 .skip:focus{top:8px}
 
 /* ---------- top bar ---------- */
-.top{position:sticky; top:0; z-index:40; background:rgba(251,250,246,.93); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--line)}
+.top{position:sticky; top:0; z-index:40; background:var(--paper); border-bottom:1px solid var(--rule)}
 .top .wrap{display:flex; align-items:center; gap:18px; height:60px}
 .brand{display:flex; align-items:center; gap:10px; font-weight:600; letter-spacing:-.02em; text-decoration:none; color:var(--ink)}
 .brand svg{flex:none}
@@ -66,51 +67,108 @@ button{font:inherit; cursor:pointer}
 
 /* ---------- hero ---------- */
 body.working .hero{display:none}
-.hero{background:var(--ink); color:var(--paper); padding:48px 0 42px; position:relative; overflow:hidden}
+.hero{background:var(--ink); color:var(--paper); padding:60px 0 0; position:relative; overflow:hidden}
 .hero::after{content:""; position:absolute; inset:0; background:radial-gradient(1100px 380px at 78% -8%, rgba(5,104,57,.30), transparent 62%); pointer-events:none}
 .hero .wrap{position:relative; z-index:1}
-.hero .kick{color:#8FBBA3; font-size:.94rem; margin-bottom:14px; font-weight:450}
-.hero h1{max-width:19ch; color:var(--paper); font-size:clamp(1.85rem,3.5vw,2.75rem)}
-.hero .lede{color:#B7CBD3; max-width:54ch; margin:15px 0 0; font-size:1.02rem}
-.hero .split{display:grid; grid-template-columns:1.25fr .85fr; gap:34px; align-items:end}
-@media(max-width:900px){.hero .split{grid-template-columns:1fr; gap:26px; align-items:start}}
-.scale{margin-top:32px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.13); border-radius:var(--r); padding:20px 22px 10px}
+.hero .kick{letter-spacing:.005em; font-size:.92rem; color:#8FBBA3; font-size:.94rem; margin-bottom:14px; font-weight:450}
+.hero h1{max-width:24ch; color:var(--paper); font-size:clamp(2rem,4.2vw,3.3rem); line-height:1.06; letter-spacing:-.028em; font-weight:600}
+.hero .lede{color:#9FB6BE; max-width:62ch; margin:18px 0 0; font-size:1.03rem; line-height:1.6}
+.hero .split{display:block}
+.scaleOLD{margin-top:32px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.13); border-radius:var(--r); padding:20px 22px 10px}
 .scale .row{display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:4px}
 .scale .big{font-size:clamp(1.05rem,2vw,1.3rem); font-weight:500; line-height:1.3}
 .scale .big b{font-family:var(--mono); font-size:clamp(1.6rem,3.4vw,2.15rem); font-variant-numeric:tabular-nums; letter-spacing:-.045em; font-weight:600; margin-inline-end:5px}
 .scale .sub{color:#9FB6BE; font-size:.88rem}
-.facts{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.13); border-radius:var(--r); overflow:hidden}
+.factsOLD{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.13); border-radius:var(--r); overflow:hidden}
 .facts div{background:var(--ink); padding:13px 17px}
 .facts .v{font-family:var(--mono); font-size:1.7rem; letter-spacing:-.04em; line-height:1.15}
 .facts .k{color:#9FB6BE; font-size:.81rem; line-height:1.4; margin-top:1px}
 
 /* ---------- panels ---------- */
+/* The compliance window, drawn as a measure rather than a progress bar. It is
+   the defining fact of the instrument, so it is the one loud object here. */
+.window{margin-top:52px; border-top:1px solid rgba(255,255,255,.16); padding:26px 0 40px}
+.window .count{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+.window .n{font-size:clamp(3.2rem,8vw,5.4rem); line-height:.86; letter-spacing:-.05em; font-weight:600;
+  font-variant-numeric:tabular-nums; color:var(--paper)}
+.window .unit{font-size:1.05rem; color:#9FB6BE; max-width:26ch; line-height:1.35}
+.window .pub{margin-inline-start:auto; text-align:end; color:#7E939B; font-size:.86rem; line-height:1.5}
+@media(max-width:720px){.window .pub{margin-inline-start:0; text-align:start; width:100%}}
+.window .measure{margin-top:26px}
+.tally{display:flex; gap:0; margin-top:30px; border-top:1px solid rgba(255,255,255,.16)}
+.tally div{flex:1; padding:15px 0 0}
+.tally .v{font-size:1.5rem; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1}
+.tally .k{color:#7E939B; font-size:.82rem; margin-top:6px; line-height:1.35}
+@media(max-width:640px){.tally{flex-wrap:wrap} .tally div{flex:1 1 45%; padding-bottom:12px}}
+
 .panel{display:none; padding:40px 0 70px}
 .panel.on{display:block}
 .phead{margin-bottom:26px; max-width:66ch}
 .phead p{color:var(--slate); margin:9px 0 0}
 
 /* ---------- filters ---------- */
-.filters{display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:20px; padding-bottom:18px; border-bottom:1px solid var(--line)}
-.filters input[type=search]{flex:1 1 220px; min-width:170px; padding:8px 13px; border:1px solid var(--line-2); border-radius:var(--r); font:inherit; font-size:.92rem; background:var(--paper)}
-.chip{background:var(--paper); border:1px solid var(--line-2); border-radius:100px; padding:5px 12px; font-size:.85rem; font-weight:500; color:var(--slate)}
-.chip:hover{border-color:var(--ink)}
-.chip[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--paper)}
-.chip .dot{display:inline-block; width:7px; height:7px; border-radius:2px; margin-inline-end:6px; vertical-align:1px}
+.filters{display:flex; gap:10px 18px; flex-wrap:wrap; align-items:center; margin:26px 0 0; padding-bottom:14px}
+@media(max-width:900px){.grp.sep{border-inline-start:none; padding-inline-start:0}}
+.filters input[type=search]{flex:1 1 200px; min-width:160px; max-width:340px; padding:9px 2px; border:none;
+  border-bottom:1.5px solid var(--rule-2); border-radius:0; font:inherit; font-size:1rem;
+  background:none; color:var(--ink)}
+.filters input[type=search]:focus{outline:none; border-bottom-color:var(--green)}
+.filters input[type=search]::placeholder{color:var(--slate-2)}
+.grp{display:flex; gap:3px; flex-wrap:wrap; align-items:center}
+.chip{background:none; border:none; border-radius:100px; padding:5px 11px; font-size:.86rem;
+  font-weight:500; color:var(--slate); cursor:pointer; white-space:nowrap}
+.chip:hover{background:var(--paper-2); color:var(--ink)}
+.chip:focus-visible{outline:2px solid var(--green); outline-offset:-2px}
+.chip[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+.chip[aria-pressed="true"]:hover{background:var(--ink-2)}
+.linkbtn{background:none; border:none; padding:2px 0; font:inherit; font-size:.85rem;
+  color:var(--green); font-weight:500; cursor:pointer; border-bottom:1px solid transparent}
+.linkbtn:hover{border-bottom-color:var(--green)}
+.linkbtn:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+.chip .dot{display:inline-block; width:6px; height:6px; border-radius:50%; margin-inline-end:7px; vertical-align:1px}
+.grp.sep{border-inline-start:1px solid var(--rule); padding-inline-start:18px}
+.tally-line{display:flex; justify-content:space-between; align-items:center; gap:16px;
+  border-top:1px solid var(--rule-2); padding-top:10px; margin-top:6px; color:var(--slate); font-size:.85rem}
 
 /* ---------- control cards ---------- */
-.ctl{border:1px solid var(--line); border-radius:var(--r); background:var(--paper); margin-bottom:9px; overflow:hidden}
-.ctl > summary{padding:13px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; list-style:none; cursor:pointer}
+/* An assessor reads a register, not a deck of cards. Entries are ruled and
+   share one hairline, so 44 of them stack without becoming 44 objects. */
+.ctl{border-top:1px solid var(--rule); background:none}
+.ctl:last-of-type{border-bottom:1px solid var(--rule)}
+.ctl > summary{padding:15px 4px; display:grid; grid-template-columns:auto 1fr auto auto;
+  gap:14px; align-items:baseline; list-style:none; cursor:pointer; position:relative}
 .ctl > summary::-webkit-details-marker{display:none}
-.ctl > summary:hover{background:var(--paper-2)}
-.ctl[open] > summary{background:var(--paper-2); border-bottom:1px solid var(--line)}
-.ctl .t{font-weight:600; flex:1 1 220px}
-.ctl .t small{display:block; font-weight:400; color:var(--slate); font-size:.83rem}
-.ctl .body{padding:17px 18px}
-.cid{font-family:var(--mono); font-size:.77rem; font-weight:500; background:var(--ink); color:var(--paper); padding:2px 7px; border-radius:3px; white-space:nowrap}
-.fnbar{width:4px; align-self:stretch; border-radius:2px; flex:none}
+.ctl > summary:hover .t{color:var(--green)}
+.ctl > summary:focus-visible{outline:2px solid var(--green); outline-offset:-2px}
+.ctl[open] > summary{padding-bottom:4px}
+.ctl[open] > summary .t{font-weight:600}
+.ctl .t{font-weight:500; min-width:0}
+.ctl .body{padding:4px 4px 26px; max-width:78ch}
+@media(max-width:640px){
+  .ctl > summary{grid-template-columns:auto 1fr; row-gap:5px}
+  .ctl > summary .pill, .ctl > summary .kn{grid-column:2}
+}
+.cid{font-family:var(--mono); font-size:.79rem; font-weight:500; color:var(--slate);
+  white-space:nowrap; letter-spacing:-.01em; min-width:5.4rem; display:inline-block}
+.ctl[open] > summary .cid, .ctl > summary:hover .cid{color:var(--green)}
+.kn{font-family:var(--mono); font-size:.78rem; color:var(--slate-2); font-variant-numeric:tabular-nums}
+.fnd{display:inline-block; width:5px; height:5px; border-radius:50%; vertical-align:middle;
+  margin-inline-end:7px; margin-top:-2px}
+.fnbarOLD{width:4px; align-self:stretch; border-radius:2px; flex:none}
+.rec{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:0 22px;
+  margin-top:22px; border-top:1px solid var(--rule); padding-top:12px}
+.rec > div{padding:4px 0}
+.rec dt{color:var(--slate-2); font-size:.76rem; margin-bottom:2px}
+.rec dd{margin:0; font-size:.87rem; font-weight:500}
+.rec dd.f{font-family:var(--mono); font-size:.8rem; font-weight:400; letter-spacing:-.01em}
 .req{background:var(--paper-2); border-inline-start:3px solid var(--ink); padding:13px 16px; border-radius:0 var(--r) var(--r) 0; font-size:.92rem; margin-bottom:16px}
-[dir=rtl] .req{border-radius:var(--r) 0 0 var(--r)}
+[dir=rtl] .rec{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:0 22px;
+  margin-top:22px; border-top:1px solid var(--rule); padding-top:12px}
+.rec > div{padding:4px 0}
+.rec dt{color:var(--slate-2); font-size:.76rem; margin-bottom:2px}
+.rec dd{margin:0; font-size:.87rem; font-weight:500}
+.rec dd.f{font-family:var(--mono); font-size:.8rem; font-weight:400; letter-spacing:-.01em}
+.req{border-radius:var(--r) 0 0 var(--r)}
 .evreg{margin-top:20px; padding-top:17px; border-top:1px solid var(--line)}
 .evhead{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:3px}
 .evhead h3{margin:0; font-size:.95rem}
@@ -123,7 +181,7 @@ body.working .hero{display:none}
 .evlabel{font-size:.89rem; line-height:1.45}
 .evrow.on .evlabel{color:var(--ink)}
 .evrow .evlabel{color:var(--slate)}
-.evflag{font-size:.7rem; letter-spacing:.03em; text-transform:uppercase; border-radius:3px; padding:1px 5px; white-space:nowrap; margin-inline-start:4px}
+.evflag{font-size:.74rem; border-radius:3px; padding:1px 6px; white-space:nowrap; margin-inline-start:6px; font-weight:500}
 .evflag.warn{background:#FBF2DA; color:#7A5A08; border:1px solid #E6D08F}
 .evflag.bad{background:#FBE3E5; color:#8E1A24; border:1px solid #EDB6BB}
 .evfields{display:grid; grid-template-columns:1fr 150px; gap:8px; margin-top:7px}
@@ -132,13 +190,13 @@ body.working .hero{display:none}
 @media(max-width:640px){.evfields{grid-template-columns:1fr}}
 .reqp{display:block}
 .reqp + .reqp{margin-top:7px}
-.unofficial{font-weight:500; font-size:.72rem; letter-spacing:.03em; border:1px solid var(--line-2); border-radius:3px; padding:1px 6px; color:var(--slate); margin-inline-start:6px}
+.unofficial{font-weight:500; font-size:.73rem; border:1px solid var(--rule-2); border-radius:3px; padding:1px 6px; color:var(--slate-2); margin-inline-start:7px}
 .official{margin-top:11px; border-top:1px dashed var(--line-2); padding-top:9px}
 .official summary{cursor:pointer; font-size:.82rem; color:var(--slate); font-weight:500}
 .official > div{margin-top:8px; font-size:.88rem; color:var(--slate)}
 .reqlist{margin:7px 0 0; padding-inline-start:20px}
 .reqlist li{margin:4px 0}
-.edmark{font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:3px; padding:1px 5px; color:var(--slate); white-space:nowrap}
+.edmark{font-size:.73rem; border:1px solid var(--rule-2); border-radius:3px; padding:1px 6px; color:var(--slate-2); white-space:nowrap}
 .req b{display:block; margin-bottom:3px; font-size:.82rem; color:var(--slate); font-weight:600}
 .ltx{direction:ltr; text-align:left}
 [dir=rtl] .ltx{unicode-bidi:isolate}
@@ -147,7 +205,7 @@ body.working .hero{display:none}
 .klist li:last-child{border-bottom:none}
 .klist .n{font-family:var(--mono); font-size:.76rem; color:var(--slate-2); flex:none; min-width:20px}
 .evd{margin:0 0 4px; padding-inline-start:20px; font-size:.89rem; color:var(--slate)}
-.meta{display:flex; gap:7px 20px; flex-wrap:wrap; font-size:.83rem; color:var(--slate); margin-top:15px; padding-top:14px; border-top:1px solid var(--line)}
+.metaOLD{display:flex; gap:7px 20px; flex-wrap:wrap; font-size:.83rem; color:var(--slate); margin-top:15px; padding-top:14px; border-top:1px solid var(--line)}
 .meta b{color:var(--ink); font-weight:600}
 
 /* ---------- pills ---------- */
@@ -159,35 +217,65 @@ body.working .hero{display:none}
 .p-na,.p-unknown{background:var(--paper-2); color:var(--slate); border-color:var(--line)}
 
 /* ---------- workbench ---------- */
-.wb{display:grid; grid-template-columns:296px 1fr; gap:22px; align-items:start}
-.wb-side{position:sticky; top:74px; max-height:calc(100vh - 96px); overflow:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--paper)}
-.wb-side h4{padding:11px 14px 7px; font-size:.76rem; color:var(--slate); font-weight:600; letter-spacing:.02em; background:var(--paper-2); border-bottom:1px solid var(--line); position:sticky; top:0}
-.wb-item{display:flex; align-items:center; gap:9px; width:100%; text-align:start; padding:8px 14px; border:none; background:none; border-bottom:1px solid var(--line); font-size:.87rem; color:var(--ink)}
-.wb-item:hover{background:var(--paper-2)}
+.wb{display:grid; grid-template-columns:270px 1fr; gap:40px; align-items:start}
+/* The index of controls is a contents list, so it is ruled rather than boxed
+   and the marker carries the state instead of a separate badge. */
+.wb-side{position:sticky; top:76px; max-height:calc(100vh - 100px); overflow:auto;
+  border-inline-end:1px solid var(--rule); padding-inline-end:16px}
+.wb-side h4{padding:16px 0 6px; font-size:.75rem; color:var(--slate-2); font-weight:600;
+  background:var(--paper); position:sticky; top:0}
+.wb-side h4:first-child{padding-top:2px}
+.wb-item{display:flex; align-items:center; gap:10px; width:100%; text-align:start;
+  padding:6px 8px 6px 6px; border:none; background:none; font-size:.86rem; color:var(--slate);
+  border-radius:3px; cursor:pointer}
+.wb-item:hover{background:var(--paper-2); color:var(--ink)}
+.wb-item:focus-visible{outline:2px solid var(--green); outline-offset:-2px}
 .wb-item[aria-current="true"]{background:var(--ink); color:var(--paper)}
 .wb-item[aria-current="true"] .wb-id{color:#9FD5B4}
-.wb-id{font-family:var(--mono); font-size:.74rem; color:var(--slate); flex:none; min-width:50px}
+.wb-id{font-family:var(--mono); font-size:.73rem; color:var(--slate-2); flex:none; min-width:48px}
 .wb-nm{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.wb-dot{width:8px; height:8px; border-radius:50%; flex:none; background:var(--line-2)}
+.wb-dot{width:6px; height:6px; border-radius:50%; flex:none; background:var(--rule-2)}
 .wb-main{min-width:0}
-.wb-card{border:1px solid var(--line); border-radius:var(--r); background:var(--paper); overflow:hidden}
-.wb-head{padding:17px 20px; border-bottom:1px solid var(--line); background:var(--paper-2)}
-.wb-head .r1{display:flex; gap:11px; align-items:center; flex-wrap:wrap; margin-bottom:7px}
-.wb-body{padding:19px 20px}
-.check{display:grid; grid-template-columns:1fr auto; gap:9px 14px; padding:11px 0; border-bottom:1px solid var(--line); align-items:center}
-.check:last-of-type{border-bottom:none}
-.check .txt{font-size:.92rem}
-.seg{display:inline-flex; border:1px solid var(--line-2); border-radius:var(--r); overflow:hidden; background:var(--paper); flex:none}
-.seg button{border:none; background:none; padding:5px 10px; font-size:.78rem; font-weight:500; color:var(--slate); border-inline-end:1px solid var(--line-2); line-height:1.5; min-width:52px; text-align:center}
-.seg button:last-child{border-inline-end:none}
-.seg button:hover{background:var(--paper-2)}
+.wb-card{border:none; background:none}
+.wb-head{padding:0 0 16px; border-bottom:1px solid var(--rule-2)}
+.wb-head .r1{display:flex; gap:12px; align-items:baseline; flex-wrap:wrap; margin-bottom:6px}
+.wb-body{padding:20px 0 0; max-width:80ch}
+/* This row repeats 329 times, so its resting weight decides whether the
+   workbench reads as a document or as a wall of buttons. The control is quiet
+   until the pointer or the keyboard reaches it. */
+.check{display:grid; grid-template-columns:2.2rem 1fr auto; gap:4px 14px; padding:10px 0 10px 0;
+  border-top:1px solid var(--rule); align-items:baseline}
+.check:first-of-type{border-top:none}
+.check .txt{font-size:.93rem; line-height:1.5}
+.check .n{font-family:var(--mono); font-size:.75rem; color:var(--slate-2); font-variant-numeric:tabular-nums}
+.check.answered .txt{color:var(--ink)}
+.check .txt{color:var(--slate)}
+.seg{display:inline-flex; gap:1px; flex:none; background:var(--rule); border-radius:3px; overflow:hidden;
+  opacity:.62; transition:opacity .12s ease}
+.check:hover .seg, .seg:focus-within{opacity:1}
+.check.answered .seg{opacity:1}
+.seg button{border:none; background:var(--paper); padding:4px 9px; font-size:.76rem; font-weight:500;
+  color:var(--slate-2); line-height:1.45; min-width:48px; text-align:center; cursor:pointer}
+.seg button:hover{background:var(--paper-3); color:var(--ink)}
+.seg button:focus-visible{outline:2px solid var(--green); outline-offset:-2px; z-index:1}
 .seg button[aria-pressed="true"]{color:#fff}
+@media(max-width:640px){
+  .check{grid-template-columns:2.2rem 1fr}
+  .check .seg{grid-column:2; margin-top:5px}
+}
 .seg button[data-v=met][aria-pressed="true"]{background:var(--green)}
 .seg button[data-v=partial][aria-pressed="true"]{background:var(--ochre)}
 .seg button[data-v=gap][aria-pressed="true"]{background:var(--crimson)}
 .seg button[data-v=exception][aria-pressed="true"]{background:var(--blue)}
 .seg button[data-v=na][aria-pressed="true"]{background:var(--slate)}
-.bulk{display:flex; gap:7px; flex-wrap:wrap; align-items:center; margin-bottom:15px; font-size:.85rem; color:var(--slate)}
+.bulk{display:flex; gap:1px; flex-wrap:wrap; align-items:center; margin-bottom:18px;
+  font-size:.85rem; color:var(--slate-2)}
+.bulk span{margin-inline-end:11px}
+.bulk .btn{border:none; background:var(--paper-2); color:var(--slate); padding:5px 11px;
+  font-size:.79rem; font-weight:500; border-radius:0; min-width:52px}
+.bulk .btn:first-of-type{border-start-start-radius:3px; border-end-start-radius:3px}
+.bulk .btn:last-of-type{border-start-end-radius:3px; border-end-end-radius:3px}
+.bulk .btn:hover{background:var(--paper-3); color:var(--ink)}
 .btn{background:var(--paper); border:1px solid var(--line-2); border-radius:var(--r); padding:6px 12px; font-size:.85rem; font-weight:500; color:var(--ink)}
 .btn:hover{background:var(--paper-2); border-color:var(--ink)}
 .btn-p{background:var(--ink); color:var(--paper); border-color:var(--ink)}
@@ -199,13 +287,18 @@ body.working .hero{display:none}
 .grid2{display:grid; grid-template-columns:1fr 1fr; gap:0 14px}
 
 /* ---------- score strip ---------- */
-.score{position:sticky; top:60px; z-index:30; background:var(--ink); color:var(--paper); border-radius:var(--r); margin-bottom:20px}
-.score .in{display:flex; gap:12px 22px; align-items:center; flex-wrap:wrap; padding:13px 18px}
-.score .m{min-width:80px}
-.score .mv{font-family:var(--mono); font-size:1.35rem; letter-spacing:-.03em; line-height:1.2}
-.score .mk{font-size:.76rem; color:#9FB6BE}
-.score .acts{margin-inline-start:auto; display:flex; gap:7px; flex-wrap:wrap}
-.score .btn{background:transparent; color:var(--paper); border-color:rgba(255,255,255,.3)}
+.score{position:sticky; top:60px; z-index:30; background:var(--ink); color:var(--paper);
+  border-radius:var(--r); margin-bottom:26px}
+.score .in{display:flex; gap:14px 30px; align-items:center; flex-wrap:wrap; padding:16px 20px}
+.score .m{min-width:74px}
+.score .mv{font-size:1.2rem; letter-spacing:-.03em; line-height:1.15; font-variant-numeric:tabular-nums}
+.score .mk{font-size:.75rem; color:#7E939B; margin-top:3px}
+.score .lead{min-width:0}
+.score .lead .mv{font-size:2.5rem; letter-spacing:-.05em; line-height:.92; font-weight:600}
+.score .lead .mk{font-size:.8rem; color:#9FB6BE; margin-top:6px}
+.score .rule{width:1px; align-self:stretch; background:rgba(255,255,255,.16); margin:2px 0}
+.score .acts{margin-inline-start:auto; display:flex; gap:6px; flex-wrap:wrap}
+.score .btn{background:transparent; color:#C6D6DC; border-color:rgba(255,255,255,.22); font-size:.83rem; padding:6px 11px}
 .score .btn:hover{background:rgba(255,255,255,.12); color:var(--paper); border-color:rgba(255,255,255,.55)}
 .bar{height:6px; background:var(--paper-2); border-radius:100px; overflow:hidden}
 .bar > i{display:block; height:100%; border-radius:100px; transition:width .45s cubic-bezier(.22,.61,.36,1)}
@@ -259,7 +352,23 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
 }
 @media print{
   .top,.tabs,.score .acts,.filters,footer,.wb-side{display:none !important}
-  .panel{display:block !important}
+  /* The compliance window, drawn as a measure rather than a progress bar. It is
+   the defining fact of the instrument, so it is the one loud object here. */
+.window{margin-top:52px; border-top:1px solid rgba(255,255,255,.16); padding:26px 0 40px}
+.window .count{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+.window .n{font-size:clamp(3.2rem,8vw,5.4rem); line-height:.86; letter-spacing:-.05em; font-weight:600;
+  font-variant-numeric:tabular-nums; color:var(--paper)}
+.window .unit{font-size:1.05rem; color:#9FB6BE; max-width:26ch; line-height:1.35}
+.window .pub{margin-inline-start:auto; text-align:end; color:#7E939B; font-size:.86rem; line-height:1.5}
+@media(max-width:720px){.window .pub{margin-inline-start:0; text-align:start; width:100%}}
+.window .measure{margin-top:26px}
+.tally{display:flex; gap:0; margin-top:30px; border-top:1px solid rgba(255,255,255,.16)}
+.tally div{flex:1; padding:15px 0 0}
+.tally .v{font-size:1.5rem; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1}
+.tally .k{color:#7E939B; font-size:.82rem; margin-top:6px; line-height:1.35}
+@media(max-width:640px){.tally{flex-wrap:wrap} .tally div{flex:1 1 45%; padding-bottom:12px}}
+
+.panel{display:block !important}
   body{background:#fff}
 }
 </style>
@@ -287,19 +396,17 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
 <section class="hero">
   <div class="wrap">
     <div class="kick" id="heroKick"></div>
-    <div class="split">
-      <div>
-        <h1 id="heroTitle">Kuwait now has a mandatory cybersecurity floor.</h1>
-        <p class="lede" id="heroLede">Every entity under the mandate of the National Cyber Security Center has to meet 44 controls. This tool holds all of them, scores where you stand, and never sends a byte anywhere.</p>
+    <h1 id="heroTitle">Kuwait now has a mandatory cybersecurity floor.</h1>
+    <p class="lede" id="heroLede">Every entity under the mandate of the National Cyber Security Center has to meet 44 controls. This tool holds all of them, scores where you stand, and never sends a byte anywhere.</p>
+
+    <div class="window">
+      <div class="count">
+        <span class="n" id="daysN"></span>
+        <span class="unit" id="daysUnit"></span>
+        <span class="pub" id="windowSub"></span>
       </div>
-      <div class="facts" id="facts"></div>
-    </div>
-    <div class="scale">
-      <div class="row">
-        <div class="big" id="daysLeft"></div>
-        <div class="sub" id="windowSub"></div>
-      </div>
-      <div id="scaleSvg"></div>
+      <div class="measure" id="scaleSvg"></div>
+      <div class="tally" id="facts"></div>
     </div>
   </div>
 </section>
@@ -315,11 +422,16 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
     </div>
     <div class="filters">
       <input type="search" id="q" placeholder="Search the baseline" aria-label="Search the baseline">
-      <span id="fnChips"></span>
-      <button class="chip" data-phase="1" aria-pressed="false"></button>
-      <button class="chip" data-phase="2" aria-pressed="false"></button>
-      <button class="chip" data-phase="3" aria-pressed="false"></button>
-      <button class="btn" id="expandAll"></button>
+      <span class="grp" id="fnChips"></span>
+      <span class="grp sep">
+        <button class="chip" data-phase="1" aria-pressed="false"></button>
+        <button class="chip" data-phase="2" aria-pressed="false"></button>
+        <button class="chip" data-phase="3" aria-pressed="false"></button>
+      </span>
+    </div>
+    <div class="tally-line">
+      <span id="count"></span>
+      <button class="linkbtn" id="expandAll"></button>
     </div>
     <div id="blCount" class="muted" style="font-size:.87rem; margin-bottom:12px"></div>
     <div id="blList"></div>
@@ -574,7 +686,8 @@ function scaleSVG(w, dark){
     <line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="${lineCol}" stroke-width="3.5" stroke-linecap="round"/>
     <line x1="${padL}" y1="${y}" x2="${x.toFixed(1)}" y2="${y}" stroke="#0B8B4B" stroke-width="3.5" stroke-linecap="round"/>
     ${ticks}
-    <g transform="translate(${x.toFixed(1)},${y})"><polygon points="0,-6 6,-16 -6,-16" fill="${markCol}"/><circle r="4.5" fill="${markCol}"/></g>
+    <line x1="${x.toFixed(1)}" y1="${y-15}" x2="${x.toFixed(1)}" y2="${y+15}" stroke="${markCol}" stroke-width="2"/>
+    <circle cx="${x.toFixed(1)}" cy="${y}" r="3.5" fill="${markCol}"/>
   </svg>`;
 }
 
@@ -583,9 +696,9 @@ const STR = {
   en:{
     heroTitle:'Kuwait now has a mandatory cybersecurity floor.',
     heroLede:'Every entity under the mandate of the National Cyber Security Center has to meet 44 controls. This tool holds all of them, scores where you stand, and never sends a byte anywhere.',
-    kick:'Decision No. 2 of 2026 · National Basic Cybersecurity Controls',
-    daysLeft:n=>`<b>${n}</b> days to full compliance`,
-    overdue:n=>`<b>${n}</b> days past the deadline`,
+    kick:'Annex (1) to Decision No. 2 of 2026',
+    daysUnit:'days remain before every control has to be in place',
+    overdueUnit:'days past the deadline for full compliance',
     windowSub:p=>`Published 5 April 2026, due 5 October 2027, ${p}% of the window elapsed`,
     controls:'controls', checks:'checks', functions:'CSF functions, plus Appendix A', months:'month window',
     blH:'Every control, in full',
@@ -629,9 +742,9 @@ const STR = {
   ar:{
     heroTitle:'أصبح للكويت حد أدنى إلزامي للأمن السيبراني.',
     heroLede:'على كل جهة تقع ضمن اختصاص المركز الوطني للأمن السيبراني تطبيق أربعة وأربعين ضابطا، وهذه الأداة تضمها جميعا وتقيس موقعك منها دون أن ترسل أي بيانات إلى أي جهة.',
-    kick:'قرار رقم 2 لسنة 2026 · الضوابط الوطنية الأساسية للأمن السيبراني',
-    daysLeft:n=>`<b>${n}</b> يوما حتى الامتثال الكامل`,
-    overdue:n=>`مضى <b>${n}</b> يوما على الموعد النهائي`,
+    kick:'الملحق الأول من القرار رقم 2 لسنة 2026',
+    daysUnit:'يوما تبقى قبل أن يكون كل ضابط قائما',
+    overdueUnit:'يوما مضت على موعد الامتثال الكامل',
     windowSub:p=>`نشر في 5 أبريل 2026 ويستحق في 5 أكتوبر 2027، وقد انقضى ${p}٪ من المدة`,
     controls:'ضابطا', checks:'بندا للتحقق', functions:'وظائف الإطار، ويضاف إليها الملحق الأول', months:'شهرا للمهلة',
     blH:'الضوابط كاملة',
@@ -805,7 +918,8 @@ function renderHero(){
   document.getElementById('heroKick').textContent = t('kick');
   document.getElementById('heroTitle').textContent = t('heroTitle');
   document.getElementById('heroLede').textContent = t('heroLede');
-  document.getElementById('daysLeft').innerHTML = s.remaining < 0 ? t('overdue', Math.abs(s.remaining)) : t('daysLeft', s.remaining);
+  document.getElementById('daysN').textContent = Math.abs(s.remaining);
+  document.getElementById('daysUnit').textContent = s.remaining < 0 ? t('overdueUnit') : t('daysUnit');
   document.getElementById('windowSub').textContent = t('windowSub', s.elapsedPct);
   document.getElementById('scaleSvg').innerHTML = scaleSVG(900, true);
   const checks = CONTROLS.reduce((n,c) => n + c.checks.length, 0);
@@ -838,10 +952,9 @@ function controlCard(c, open){
   const iso = ISO[c.id] || [];
   return `<details class="ctl" ${open?'open':''}>
     <summary>
-      <span class="fnbar" style="background:${f.color}"></span>
-      <span class="cid">${c.id}</span>
+      <span class="cid"><i class="fnd" style="background:${f.color}"></i>${c.id}</span>
       <span class="t">${esc(L(c,'title'))}</span>
-      <span class="muted" style="font-size:.82rem">${c.checks.length} ${t('checks')}</span>
+      <span class="kn">${c.checks.length}</span>
     </summary>
     <div class="body">
       <p class="muted" style="margin:0 0 13px">${purposeHTML(c)}</p>
@@ -850,14 +963,14 @@ function controlCard(c, open){
       <ul class="klist${ltx()}">${kchecks(c).map((k,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(k)}</span></li>`).join('')}</ul>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('evidenceL')}</h3>
       <ul class="evd${ltx()}">${kevidence(c).map(e=>`<li>${esc(e)}</li>`).join('')}</ul>
-      <div class="meta">
-        <span>${t('cadence')} <b>${esc(term('cadences', c.cadence))}</b></span>
-        <span>${t('effort')} <b>${esc(term('efforts', c.effort))}</b></span>
-        <span>${t('phase')} <b>${c.phase}</b></span>
-        <span>NIST CSF <b class="ltx">${c.crosswalk.csf.join(', ')}</b></span>
-        <span>CIS v8.1 <b class="ltx">${c.crosswalk.cis.join(', ')}</b></span>
-        <span>ISO 27001 <b class="ltx">${iso.join(', ')}</b></span>
-      </div>
+      <dl class="rec">
+        <div><dt>${t('cadence')}</dt><dd>${esc(term('cadences', c.cadence))}</dd></div>
+        <div><dt>${t('effort')}</dt><dd>${esc(term('efforts', c.effort))}</dd></div>
+        <div><dt>${t('phase')}</dt><dd>${c.phase}</dd></div>
+        <div><dt>NIST CSF 2.0</dt><dd class="f ltx">${c.crosswalk.csf.join(', ')}</dd></div>
+        <div><dt>CIS v8.1 IG1</dt><dd class="f ltx">${c.crosswalk.cis.join(', ')}</dd></div>
+        <div><dt>ISO 27001</dt><dd class="f ltx">${iso.join(', ')}</dd></div>
+      </dl>
     </div>
   </details>`;
 }
@@ -884,16 +997,14 @@ function renderScore(){
   const m = (v,k,col) => `<div class="m"><div class="mv" style="color:${col}">${v}</div><div class="mk">${k}</div></div>`;
   const col = p => p>=95?'#7FD4A4':p>=75?'#8FC2E8':p>=50?'#E5C169':p>=25?'#E39A6B':'#E58A92';
   box.innerHTML = `<div class="in">
-    ${m(s.implementation+'%', t('impl'), col(s.implementation))}
-    ${m(s.posture+'%', t('post'), col(s.posture))}
-    ${m(s.coverage+'%', t('cov'), '#B7CBD3')}
-    ${m(s.met+'/'+s.inScopeCount, t('metL'), '#B7CBD3')}
+    <div class="m lead"><div class="mv" style="color:${col(s.implementation)}">${s.implementation}%</div>
+      <div class="mk">${t('impl')} · ${band(s.implementation)}</div></div>
+    <div class="rule"></div>
+    ${m(s.posture+'%', t('post'), '#C6D6DC')}
+    ${m(evPercent()+'%', t('evL'), '#C6D6DC')}
+    ${m(s.coverage+'%', t('cov'), '#C6D6DC')}
+    ${m(s.met+'/'+s.inScopeCount, t('metL'), '#C6D6DC')}
     ${m(s.gap, t('gapL'), s.gap?'#E58A92':'#7FD4A4')}
-    ${m(evPercent()+'%', t('evL'), col(evPercent()))}
-    <div class="m" style="flex:1 1 110px; min-width:104px">
-      <div class="bar"><i style="width:${s.implementation}%; background:${col(s.implementation)}"></i></div>
-      <div class="mk" style="margin-top:5px">${t('bandL')} ${band(s.implementation)}</div>
-    </div>
     <div class="acts">
       <button class="btn" id="exp">${t('exportJson')}</button>
       <button class="btn" id="imp">${t('importJson')}</button>
@@ -932,8 +1043,9 @@ function renderMain(s){
   const c = r.c, e = state.controls[c.id];
   const f = FN.get(c.fn);
   const segs = [['met','Met','مستوفى'],['partial','Partial','جزئي'],['gap','Gap','فجوة'],['exception','Exc','استثناء'],['na','N/A','لا ينطبق']];
-  const checks = kchecks(c).map((k,i) => `<div class="check">
-    <div class="txt${ltx()}"><span class="mono muted" style="font-size:.76rem">${String(i+1).padStart(2,'0')}</span> ${esc(k)}</div>
+  const checks = kchecks(c).map((k,i) => `<div class="check${r.statuses[i] && r.statuses[i] !== 'unknown' ? ' answered' : ''}">
+    <span class="n">${String(i + 1).padStart(2, '0')}</span>
+    <div class="txt${ltx()}">${esc(k)}</div>
     <div class="seg" role="group" aria-label="${esc(k)}">
       ${segs.map(([v,en,ar]) => `<button data-set="${i}" data-v="${v}" aria-pressed="${r.statuses[i]===v}">${lang==='ar'?ar:en}</button>`).join('')}
     </div>
@@ -964,14 +1076,14 @@ function renderMain(s){
         </div>
         <label class="fld"><span>${t('notes')}</span><textarea id="f-notes">${esc(e.notes||'')}</textarea></label>
       </div>
-      <div class="meta">
-        <span>${t('cadence')} <b>${esc(term('cadences', c.cadence))}</b></span>
-        <span>${t('effort')} <b>${esc(term('efforts', c.effort))}</b></span>
-        <span>${t('phase')} <b>${c.phase}</b></span>
-        <span>NIST CSF <b class="ltx">${c.crosswalk.csf.join(', ')}</b></span>
-        <span>CIS v8.1 <b class="ltx">${c.crosswalk.cis.join(', ')}</b></span>
-        <span>ISO 27001 <b class="ltx">${(ISO[c.id]||[]).join(', ')}</b></span>
-      </div>
+      <dl class="rec">
+        <div><dt>${t('cadence')}</dt><dd>${esc(term('cadences', c.cadence))}</dd></div>
+        <div><dt>${t('effort')}</dt><dd>${esc(term('efforts', c.effort))}</dd></div>
+        <div><dt>${t('phase')}</dt><dd>${c.phase}</dd></div>
+        <div><dt>NIST CSF 2.0</dt><dd class="f ltx">${c.crosswalk.csf.join(', ')}</dd></div>
+        <div><dt>CIS v8.1 IG1</dt><dd class="f ltx">${c.crosswalk.cis.join(', ')}</dd></div>
+        <div><dt>ISO 27001</dt><dd class="f ltx">${(ISO[c.id]||[]).join(', ')}</dd></div>
+      </dl>
       <div class="evreg">
         <div class="evhead">
           <h3>${t('evidenceL')}</h3>
@@ -1084,14 +1196,14 @@ function renderPlan(){
       <div class="h">
         <span class="cid">${lang==='ar'?'مرحلة':'Phase'} ${st.id}</span>
         <span class="nm">${esc(lang==='ar'?st.nameAr:st.name)}</span>
-        <span class="muted" style="font-size:.86rem">${st.due} · ${st.passed ? (lang==='ar'?'انقضت':'passed') : st.daysRemaining + (lang==='ar'?' يوما':' days')}</span>
-        <span class="muted" style="margin-inline-start:auto; font-size:.86rem">${items.length} · ${items.reduce((n,x)=>n+x.ed,0)} ${lang==='ar'?'يوم عمل':'person days'}</span>
+        <span class="muted" style="font-size:.86rem">${st.due}, ${st.passed ? (lang==='ar'?'انقضت':'passed') : st.daysRemaining + (lang==='ar'?' يوما':' days')}</span>
+        <span class="muted" style="margin-inline-start:auto; font-size:.86rem">${items.length} ${lang==='ar'?'مفتوح':'open'}, ${items.reduce((n,x)=>n+x.ed,0)} ${lang==='ar'?'يوم عمل':'person days'}</span>
       </div>
       <div class="b">${items.length ? items.map(x => `<div class="prow">
         <span class="cid" style="justify-self:start">${x.r.c.id}</span>
         <span>${esc(L(x.r.c,'title'))}
-          ${x.waits.length?`<span class="muted" style="font-size:.8rem"> · ${t('waitsOn')} ${x.waits.join(', ')}</span>`:''}
-          ${x.unblocks.length?`<span style="font-size:.8rem; color:var(--ochre)"> · ${t('unblocks')} ${x.unblocks.length}</span>`:''}
+          ${x.waits.length?`<span class="muted" style="font-size:.8rem">&nbsp; ${t('waitsOn')} ${x.waits.join(', ')}</span>`:''}
+          ${x.unblocks.length?`<span style="font-size:.8rem; color:var(--ochre)">&nbsp; ${t('unblocks')} ${x.unblocks.length}</span>`:''}
         </span>
         <span style="display:flex; gap:9px; align-items:center">${pill(x.r.state)}<span class="muted" style="font-size:.8rem">${x.openChecks} ${t('openChecks')}</span></span>
       </div>`).join('') : `<p class="muted" style="margin:9px 0">${t('nothingOpen')}</p>`}</div>
