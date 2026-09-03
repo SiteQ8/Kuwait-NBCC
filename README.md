@@ -68,6 +68,25 @@ The scorer is deliberately unforgiving about the paper:
 - An exception **within 90 days of expiry** is surfaced before it lapses.
 - A control claimed met at the control level, with no per check answers behind it, still scores, but is recorded as unevidenced.
 
+## The evidence register
+
+Knowing which artifacts a control needs is only half of it. GOV-5 requires the record to be retained for three years and produced for NCSC on request, so the register tracks what is actually held, where it lives, when it was collected, and whether it is still current.
+
+**Freshness follows each control's own cadence** rather than one global expiry, because a weekly discovery review and a biennial policy approval go stale at very different rates. Controls that fire on an event rather than a schedule, such as vetting per hire, never go stale. They only have to exist.
+
+Six states per artifact: `held`, `unreferenced` (you have it but recorded no location, so you cannot produce it), `stale`, `undated` (freshness cannot be judged), `misdated` (collected in the future), and `missing`.
+
+The number that matters most is **claimed but unevidenced**: controls scored met or partial with nothing recorded to show for them. That is the gap an audit finds first, and it is reported separately from the score.
+
+```bash
+nbcc evidence entity.json            # the register, with what needs attention
+nbcc evidence entity.json --stale    # only what has aged out
+nbcc evidence entity.json --missing  # only what has no record
+nbcc evidence entity.json --csv      # export it to a spreadsheet
+```
+
+In the browser workbench each control carries the same register: tick what you hold, record where it lives and when it was collected, and stale or unlocatable artifacts flag themselves as you go.
+
 ## Use it
 
 ### In a browser
@@ -92,12 +111,12 @@ Measure an entity
   init [--out file]             Create a starter assessment file
   assess <file>                 Score an assessment and list gaps
   plan <file>                   Sequenced readiness plan to the deadline
-  evidence <file>               Evidence pack checklist
+  evidence <file>               Evidence register: what is held, where, how old
   diff <before> <after>         Posture change between two assessments
 
 Produce artifacts
   report <file> --out x.html    Self contained HTML report
-  export <file> --as md|csv|json
+  export <file> --as md|csv|json|register
   doctor                        Verify catalog integrity
 ```
 
@@ -178,7 +197,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 67 tests
+node --test test/*.test.js     # 85 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

@@ -3,6 +3,7 @@
 import { REGULATION, getControl, getFunction } from './catalog.js';
 import { assess } from './assess.js';
 import { buildPlan, deadlineStatus, evidencePack } from './plan.js';
+import { evidenceRegister, unevidencedClaims } from './evidence.js';
 import { mappingsFor } from './crosswalk.js';
 import { BASE_CSS, TOKENS, windowScaleSVG, statusPill, scoreColor } from './theme.js';
 
@@ -79,6 +80,12 @@ details.ctl[open] > summary{border-bottom:1px solid var(--line); background:var(
 .ctl .t{font-weight:600; flex:1; min-width:190px}
 .reqlist{margin:7px 0 0 0; padding-inline-start:19px}
 .reqlist li{margin:4px 0}
+.reg{width:100%; border-collapse:collapse; font-size:.88rem; margin-top:4px}
+.reg th{text-align:left; font-weight:600; color:var(--slate); border-bottom:1px solid var(--line-2); padding:7px 10px 7px 0; font-size:.8rem; letter-spacing:.02em; text-transform:uppercase}
+.reg td{padding:7px 10px 7px 0; border-bottom:1px solid var(--line); vertical-align:top}
+.reg tr:last-child td{border-bottom:none}
+.reg .num{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+.reg th.num{text-align:right}
 .edmark{font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:3px; padding:1px 5px; color:var(--slate); vertical-align:1px}
 .req{background:var(--paper-alt); border-left:3px solid var(--ink); padding:12px 15px; border-radius:0 var(--r) var(--r) 0; font-size:.9rem; margin:0 0 15px}
 .chk{list-style:none; padding:0; margin:0 0 15px}
@@ -223,8 +230,11 @@ function controlDetail(row) {
  */
 export function renderReport(assessment, options = {}) {
   const result = assess(assessment);
-  const plan = buildPlan(assessment, options.today || new Date());
+  const today = options.today || new Date();
+  const plan = buildPlan(assessment, today);
   const pack = evidencePack(assessment);
+  const reg = evidenceRegister(assessment, today);
+  const claims = unevidencedClaims(assessment, result, today);
   const status = plan.deadline;
   const entityName = (result.entity && result.entity.name) || 'Unnamed entity';
   const title = `${entityName} NBCC readiness report`;
@@ -320,10 +330,43 @@ export function renderReport(assessment, options = {}) {
 
 <section>
   <div class="section-head">
-    <h2>Evidence pack</h2>
-    <p>${pack.totalArtifacts} artifacts across ${result.scores.controlsInScope} applicable controls. GOV-5 requires the record to be produced for NCSC on request.</p>
+    <h2>Evidence register</h2>
+    <p>${reg.totalArtifacts} artifacts across ${result.scores.controlsInScope} applicable controls. GOV-5 requires the record to be retained for ${REGULATION.recordRetentionYears} years and produced for NCSC on request, so a score with nothing behind it is the gap an audit finds first.</p>
   </div>
-  <p class="muted" style="font-size:.9rem">Evidence references are recorded for ${pack.controlsWithEvidenceRecorded} of ${result.scores.controlsInScope} controls.</p>
+
+  <div class="headline">
+    <div><div class="v" style="color:${scoreColor(reg.producible)}">${reg.producible}%</div><div class="k">Recorded and locatable</div></div>
+    <div><div class="v">${reg.counts.held}<span style="color:var(--slate-soft);font-size:1.15rem">/${reg.totalArtifacts}</span></div><div class="k">Artifacts on file</div></div>
+    <div><div class="v" style="color:${reg.counts.stale ? TOKENS.ochre : TOKENS.ink}">${reg.counts.stale}</div><div class="k">Stale for their cadence</div></div>
+    <div><div class="v" style="color:${claims.length ? TOKENS.crimson : TOKENS.green}">${claims.length}</div><div class="k">Claimed but unevidenced</div></div>
+  </div>
+
+  ${reg.oldestCollected ? `<p class="muted" style="font-size:.9rem">Evidence on file was collected between ${fmtDate(reg.oldestCollected)} and ${fmtDate(reg.newestCollected)}. Freshness is judged against each control's own cadence, so a weekly review and a biennial policy approval are held to different standards.</p>` : '<p class="muted" style="font-size:.9rem">No evidence has been recorded against this assessment yet.</p>'}
+
+  ${claims.length > 0 ? `
+  <h3 style="margin:22px 0 8px; font-size:1rem">Controls claimed with nothing to show</h3>
+  <table class="reg">
+    <thead><tr><th>Control</th><th>Title</th><th class="num">Implementation</th><th class="num">Artifacts needed</th></tr></thead>
+    <tbody>${claims.map((c) => `<tr>
+      <td><span class="cid">${esc(c.control)}</span></td>
+      <td>${esc(c.title)}</td>
+      <td class="num">${c.implementation}%</td>
+      <td class="num">${c.artifactsNeeded}</td>
+    </tr>`).join('')}</tbody>
+  </table>` : ''}
+
+  ${reg.counts.stale > 0 ? `
+  <h3 style="margin:22px 0 8px; font-size:1rem">Evidence that has gone stale</h3>
+  <table class="reg">
+    <thead><tr><th>Control</th><th>Artifact</th><th>Collected</th><th class="num">Age</th><th>Cadence</th></tr></thead>
+    <tbody>${reg.items.filter((i) => i.state === 'stale').map((i) => `<tr>
+      <td><span class="cid">${esc(i.control)}</span></td>
+      <td>${esc(i.artifact)}</td>
+      <td>${fmtDate(i.collected)}</td>
+      <td class="num">${i.ageDays} days</td>
+      <td>${esc(i.cadence)}</td>
+    </tr>`).join('')}</tbody>
+  </table>` : ''}
 </section>
 
 </main>

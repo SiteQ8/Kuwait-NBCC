@@ -41,7 +41,8 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 | Start an assessment | `nbcc init --out entity.json` |
 | Score it | `nbcc assess entity.json` |
 | Sequence the work | `nbcc plan entity.json` |
-| Evidence checklist | `nbcc evidence entity.json` |
+| Evidence register | `nbcc evidence entity.json` |
+| Only what has gone stale | `nbcc evidence entity.json --stale` |
 | HTML report | `nbcc report entity.json --out report.html` |
 | Compare two points in time | `nbcc diff q1.json q3.json` |
 
@@ -88,6 +89,12 @@ When posture exceeds implementation, the difference is the part of the position 
 ```
 
 Check statuses: `met`, `partial`, `gap`, `exception`, `na`, `unknown`. A control level `"status"` fills in checks nobody answered but never overrides one that was answered.
+
+## Reading the evidence register
+
+The register tracks what the entity actually holds, not just what it needs. Freshness follows each control's own cadence, so evidence for a weekly control ages out in 45 days while a biennial one has 790. Event driven controls never go stale.
+
+Report the **claimed but unevidenced** count alongside the score. Controls scored met or partial with nothing recorded to show for them are the gap an audit finds first, and a high implementation percentage with a low producible percentage is a weaker position than it looks.
 
 ## Cautions
 

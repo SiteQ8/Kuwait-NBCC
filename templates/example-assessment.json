@@ -26,7 +26,34 @@
         "met"
       ],
       "evidence": [
-        "See GRC library reference GOV-1"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "DMS/SEC/2026/014",
+          "collected": "2026-08-12",
+          "collectedBy": "Internal audit"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "DMS/SEC/2026/015",
+          "collected": "2026-08-12",
+          "collectedBy": "Internal audit"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "HR/ORG/2026/003",
+          "collected": "2026-07-30",
+          "collectedBy": "HR"
+        },
+        {
+          "item": 3,
+          "held": true,
+          "reference": "DMS/SEC/2026/021",
+          "collected": "2026-08-20",
+          "collectedBy": "Internal audit"
+        }
       ],
       "targetDate": "2027-06-30",
       "notes": ""
@@ -47,7 +74,29 @@
         "unknown",
         "met"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "DMS/POL/2026/001",
+          "collected": "2026-06-15",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "DMS/POL/2026/002",
+          "collected": "2026-06-15",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "GRC/EXC/REGISTER",
+          "collected": "2026-08-28",
+          "collectedBy": "GRC"
+        }
+      ],
       "targetDate": "2026-12-31",
       "notes": ""
     },
@@ -66,7 +115,34 @@
         "met"
       ],
       "evidence": [
-        "See GRC library reference GOV-3"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "DMS/POL/2026/007",
+          "collected": "2026-05-04",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "NCSC/SUB/2026/112",
+          "collected": "2026-05-19",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "DATA/SAMPLES/Q2",
+          "collected": "2026-06-02",
+          "collectedBy": "Data office"
+        },
+        {
+          "item": 3,
+          "held": true,
+          "reference": "DMS/SEC/2026/030",
+          "collected": "2026-07-11",
+          "collectedBy": "GRC"
+        }
       ],
       "targetDate": "",
       "notes": ""
@@ -82,7 +158,6 @@
         "exception",
         "exception"
       ],
-      "evidence": [],
       "targetDate": "2026-12-31",
       "notes": "",
       "exception": {
@@ -104,7 +179,36 @@
         "met",
         "met"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "GRC/SA/2026",
+          "collected": "2026-08-30",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "GRC/SA/2026/GAPS",
+          "collected": "2026-08-30",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "DMS/RET/PROOF",
+          "collected": "2026-08-30",
+          "collectedBy": "GRC"
+        },
+        {
+          "item": 3,
+          "held": true,
+          "reference": "GRC/SA/CHANGELOG",
+          "collected": "2026-08-30",
+          "collectedBy": "GRC"
+        }
+      ],
       "targetDate": "2026-12-31",
       "notes": ""
     },
@@ -124,7 +228,22 @@
         "met",
         "met"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "PROC/VEND/REGISTER",
+          "collected": "2024-11-02",
+          "collectedBy": "Procurement"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "PROC/VEND/SCOPE",
+          "collected": "2024-11-02",
+          "collectedBy": "Procurement"
+        }
+      ],
       "targetDate": "",
       "notes": ""
     },
@@ -143,7 +262,22 @@
         "met",
         "met"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "item": 0,
+          "held": true,
+          "reference": "ITAM/EXPORT/2026-08",
+          "collected": "2026-08-25",
+          "collectedBy": "IT operations"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "ITAM/DISCOVERY/W34",
+          "collected": "2026-08-24",
+          "collectedBy": "IT operations"
+        }
+      ],
       "targetDate": "2027-03-31",
       "notes": ""
     },
@@ -163,7 +297,20 @@
         "gap"
       ],
       "evidence": [
-        "See GRC library reference ID-2"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "ITAM/SW/APPROVED",
+          "collected": "2026-08-01",
+          "collectedBy": "IT operations"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "PROC/VEND/REGISTER",
+          "collected": "2026-08-01",
+          "collectedBy": "Procurement"
+        }
       ],
       "targetDate": "",
       "notes": ""
@@ -183,7 +330,6 @@
         "met",
         "met"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -204,7 +350,20 @@
         "met"
       ],
       "evidence": [
-        "See GRC library reference PR-1"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "",
+          "collected": "2026-07-19",
+          "collectedBy": "IT operations"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "",
+          "collected": "2026-07-19",
+          "collectedBy": "IT operations"
+        }
       ],
       "targetDate": "2027-03-31",
       "notes": ""
@@ -223,9 +382,6 @@
         "unknown",
         "met",
         "gap"
-      ],
-      "evidence": [
-        "See GRC library reference PR-1.1"
       ],
       "targetDate": "",
       "notes": ""
@@ -247,7 +403,27 @@
         "met"
       ],
       "evidence": [
-        "See GRC library reference PR-1.2"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "SEC/VM/PROC/2026",
+          "collected": "2026-04-10",
+          "collectedBy": "Security"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "SEC/VM/SCANS/2026",
+          "collected": "2026-08-31",
+          "collectedBy": "Security"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "SEC/VM/TRACKER",
+          "collected": "2026-08-31",
+          "collectedBy": "Security"
+        }
       ],
       "targetDate": "2027-03-31",
       "notes": ""
@@ -269,7 +445,6 @@
         "met",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -282,9 +457,6 @@
         "partial",
         "unknown",
         "met"
-      ],
-      "evidence": [
-        "See GRC library reference PR-2.1"
       ],
       "targetDate": "",
       "notes": ""
@@ -299,7 +471,6 @@
         "gap",
         "met"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -318,7 +489,6 @@
         "met",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "2026-12-31",
       "notes": ""
     },
@@ -334,7 +504,6 @@
         "na",
         "na"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -355,9 +524,6 @@
         "met",
         "met"
       ],
-      "evidence": [
-        "See GRC library reference PR-4"
-      ],
       "targetDate": "",
       "notes": ""
     },
@@ -371,7 +537,6 @@
         "met",
         "met"
       ],
-      "evidence": [],
       "targetDate": "2026-12-31",
       "notes": ""
     },
@@ -383,9 +548,6 @@
         "exception",
         "exception",
         "exception"
-      ],
-      "evidence": [
-        "See GRC library reference PR-4.2"
       ],
       "targetDate": "",
       "notes": "",
@@ -411,7 +573,6 @@
         "met",
         "partial"
       ],
-      "evidence": [],
       "targetDate": "2027-06-30",
       "notes": ""
     },
@@ -427,7 +588,6 @@
         "partial",
         "met"
       ],
-      "evidence": [],
       "targetDate": "2027-06-30",
       "notes": ""
     },
@@ -450,7 +610,13 @@
         "met"
       ],
       "evidence": [
-        "See GRC library reference DE-1"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "SIEM/CONFIG/2026-04",
+          "collected": "2026-04-02",
+          "collectedBy": "Security"
+        }
       ],
       "targetDate": "",
       "notes": ""
@@ -464,7 +630,6 @@
         "met",
         "partial"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -485,7 +650,27 @@
         "met"
       ],
       "evidence": [
-        "See GRC library reference RS-1"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "IR/PROC/PUBLISHED",
+          "collected": "2026-07-07",
+          "collectedBy": "Security"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "IR/APPOINT/2026",
+          "collected": "2026-07-07",
+          "collectedBy": "Security"
+        },
+        {
+          "item": 2,
+          "held": true,
+          "reference": "IR/CONTACTS",
+          "collected": "2026-08-15",
+          "collectedBy": "Security"
+        }
       ],
       "targetDate": "",
       "notes": ""
@@ -507,7 +692,6 @@
         "gap",
         "met"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -523,7 +707,20 @@
         "gap"
       ],
       "evidence": [
-        "See GRC library reference RC-1"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "BCP/PLAN/v3",
+          "collected": "2026-06-20",
+          "collectedBy": "IT operations"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "BCP/RUNBOOKS",
+          "collected": "2026-06-20",
+          "collectedBy": "IT operations"
+        }
       ],
       "targetDate": "2027-06-30",
       "notes": ""
@@ -538,9 +735,6 @@
         "met",
         "partial"
       ],
-      "evidence": [
-        "See GRC library reference RC-2"
-      ],
       "targetDate": "2027-06-30",
       "notes": ""
     },
@@ -551,7 +745,6 @@
         "gap",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -563,7 +756,20 @@
         "gap"
       ],
       "evidence": [
-        "See GRC library reference CLD-2"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "PROC/CSP/CERTS",
+          "collected": "2026-03-12",
+          "collectedBy": "Procurement"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "PROC/CSP/DD/2026",
+          "collected": "2026-03-12",
+          "collectedBy": "Procurement"
+        }
       ],
       "targetDate": "2026-12-31",
       "notes": ""
@@ -575,7 +781,6 @@
         "gap",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -585,9 +790,6 @@
         "met",
         "gap",
         "met"
-      ],
-      "evidence": [
-        "See GRC library reference CLD-4"
       ],
       "targetDate": "2027-03-31",
       "notes": ""
@@ -599,7 +801,6 @@
         "unknown",
         "unknown"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -609,9 +810,6 @@
         "exception",
         "exception",
         "exception"
-      ],
-      "evidence": [
-        "See GRC library reference CLD-6"
       ],
       "targetDate": "2027-03-31",
       "notes": "",
@@ -629,7 +827,6 @@
         "gap",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -641,7 +838,6 @@
         "partial",
         "partial"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -652,7 +848,6 @@
         "met",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -662,9 +857,6 @@
         "partial",
         "partial",
         "gap"
-      ],
-      "evidence": [
-        "See GRC library reference CLD-10"
       ],
       "targetDate": "2027-03-31",
       "notes": ""
@@ -677,7 +869,6 @@
         "gap",
         "met"
       ],
-      "evidence": [],
       "targetDate": "2027-03-31",
       "notes": ""
     },
@@ -689,7 +880,6 @@
         "partial",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "2027-06-30",
       "notes": ""
     },
@@ -702,7 +892,6 @@
         "gap",
         "met"
       ],
-      "evidence": [],
       "targetDate": "",
       "notes": ""
     },
@@ -715,7 +904,20 @@
         "met"
       ],
       "evidence": [
-        "See GRC library reference CLD-14"
+        {
+          "item": 0,
+          "held": true,
+          "reference": "CLOUD/ORGPOL/PAB",
+          "collected": "2026-08-18",
+          "collectedBy": "Cloud team"
+        },
+        {
+          "item": 1,
+          "held": true,
+          "reference": "CLOUD/SCAN/2026-08",
+          "collected": "2026-08-18",
+          "collectedBy": "Cloud team"
+        }
       ],
       "targetDate": "",
       "notes": ""
@@ -728,7 +930,6 @@
         "met",
         "gap"
       ],
-      "evidence": [],
       "targetDate": "2027-03-31",
       "notes": ""
     },
@@ -739,9 +940,6 @@
         "met",
         "gap",
         "gap"
-      ],
-      "evidence": [
-        "See GRC library reference CLD-16"
       ],
       "targetDate": "2027-06-30",
       "notes": ""

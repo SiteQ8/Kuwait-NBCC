@@ -22,6 +22,7 @@ import { buildPlan, deadlineStatus, evidencePack, milestones } from '../src/plan
 import { crosswalkTable, reverseIndex, mappingsFor, coverageSummary, FRAMEWORKS } from '../src/crosswalk.js';
 import { renderReport, renderMarkdown, renderCSV } from '../src/report.js';
 import { diffAssessments } from '../src/diff.js';
+import { evidenceRegister, unevidencedClaims, renderRegisterCSV } from '../src/evidence.js';
 
 // Read from the manifest so the reported version can never drift from the
 // package that was actually published.
@@ -149,15 +150,18 @@ ${C.bold}Measure an entity${C.reset}
   init [--out file]           Create a starter assessment file
   assess <file>               Score an assessment and list gaps
   plan <file>                 Sequenced readiness plan to the deadline
-  evidence <file>             Evidence pack checklist
+  evidence <file>             Evidence register: what is held, where, how old
   diff <before> <after>       Posture change between two assessments
 
 ${C.bold}Produce a record${C.reset}
   report <file> [--out f]     Self contained HTML report
-  export <file> --as md|csv|json
+  export <file> --as md|csv|json|register
+                              register exports the evidence register as CSV
 
 ${C.bold}Options${C.reset}
   --ar                        Print the checks and evidence in Arabic
+  --csv                       Export the evidence register as CSV
+  --missing, --stale          Narrow the evidence register to one state
   --fn GOV|ID|PR|DE|RS|RC|CLD   Filter by function
   --phase 1|2|3                 Filter by readiness phase
   --gaps                        Show only controls that are not met
@@ -314,7 +318,8 @@ function cmdInit(flags) {
 
 function cmdAssess(positional, flags) {
   const data = loadAssessment(positional[0]);
-  const r = assess(data);
+  const asOf = flags.date ? new Date(`${flags.date}T00:00:00Z`) : new Date();
+  const r = assess(data, { asOf });
   if (flags.json) return out(JSON.stringify(r, null, 2));
 
   const s = r.scores;
@@ -352,6 +357,17 @@ function cmdAssess(positional, flags) {
     }
     if (r.findings.length > 12) out(`  ${C.dim}and ${r.findings.length - 12} more, see "nbcc report"${C.reset}`);
   }
+
+  // A score with nothing behind it is the gap an audit finds first, so the
+  // headline output says how much of this position can actually be shown.
+  const reg = evidenceRegister(data, asOf);
+  const claims = unevidencedClaims(data, r, asOf);
+  out(`\n${C.cyan}Evidence${C.reset}`);
+  out(`  ${padStart(`${reg.producible}%`, 6)} of the ${reg.totalArtifacts} artifacts are recorded and locatable`);
+  if (claims.length > 0) {
+    out(`  ${C.yellow}${padStart(String(claims.length), 6)}${C.reset} control(s) scored met or partial with nothing recorded to show for them`);
+  }
+  out(`  ${C.dim}Run "nbcc evidence ${positional[0]}" for the register.${C.reset}`);
 }
 
 function cmdPlan(positional, flags) {
@@ -392,17 +408,71 @@ function cmdPlan(positional, flags) {
 
 function cmdEvidence(positional, flags) {
   const data = loadAssessment(positional[0]);
-  const pack = evidencePack(data);
-  if (flags.json) return out(JSON.stringify(pack, null, 2));
+  const asOf = flags.date ? new Date(`${flags.date}T00:00:00Z`) : new Date();
+  const reg = evidenceRegister(data, asOf);
 
-  out(`${C.bold}Evidence pack${C.reset} ${C.dim}${pack.entity.name || 'Unnamed entity'}${C.reset}`);
-  out(`${C.dim}${pack.totalArtifacts} artifacts \u00b7 retain for ${pack.retentionYears} years \u00b7 produce for NCSC on request${C.reset}\n`);
-  for (const [id, items] of Object.entries(pack.byControl)) {
-    if (flags.fn && items[0].fn !== String(flags.fn).toUpperCase()) continue;
-    const col = STATE_COLOR[items[0].state] || '';
-    out(`${C.bold}${id}${C.reset} ${items[0].controlTitle} ${col}${items[0].state}${C.reset}`);
-    for (const i of items) out(`  ${items[0].collected ? C.green + '\u25a0' : C.dim + '\u25a1'}${C.reset} ${i.artifact}`);
+  if (flags.csv) return out(renderRegisterCSV(data, asOf));
+  if (flags.json) return out(JSON.stringify(reg, null, 2));
+
+  const MARK = {
+    held: `${C.green}\u25a0${C.reset}`,
+    unreferenced: `${C.yellow}\u25a0${C.reset}`,
+    stale: `${C.yellow}\u25a3${C.reset}`,
+    undated: `${C.yellow}\u25a3${C.reset}`,
+    misdated: `${C.red}\u25a3${C.reset}`,
+    missing: `${C.dim}\u25a1${C.reset}`
+  };
+
+  out(`${C.bold}Evidence register${C.reset} ${C.dim}${reg.entity}${C.reset}`);
+  out(`${C.dim}${reg.totalArtifacts} artifacts \u00b7 retain ${reg.retentionYears} years \u00b7 produce for NCSC on request${C.reset}\n`);
+
+  out(`  Recorded    ${bar(reg.coverage)}  ${padStart(`${reg.coverage}%`, 6)}`);
+  out(`  Producible  ${bar(reg.producible)}  ${padStart(`${reg.producible}%`, 6)}`);
+  const c = reg.counts;
+  out(`\n  ${C.green}${c.held} held${C.reset} \u00b7 ${C.yellow}${c.unreferenced} with no location${C.reset} \u00b7 ${C.yellow}${c.stale} stale${C.reset}` +
+      ` \u00b7 ${C.yellow}${c.undated} undated${C.reset} \u00b7 ${C.dim}${c.missing} missing${C.reset}`);
+  if (reg.oldestCollected) {
+    out(`  ${C.dim}Collected between ${reg.oldestCollected} and ${reg.newestCollected}${C.reset}`);
   }
+
+  const only = flags.missing ? 'missing' : flags.stale ? 'stale' : null;
+  out('');
+  for (const [id, items] of Object.entries(reg.byControl)) {
+    if (flags.fn && items[0].fn !== String(flags.fn).toUpperCase()) continue;
+    const shown = only ? items.filter((i) => i.state === only) : items;
+    if (shown.length === 0) continue;
+    const usable = items.filter((i) => i.state === 'held' || i.state === 'unreferenced').length;
+    out(`${C.bold}${id}${C.reset} ${items[0].controlTitle} ${C.dim}${usable}/${items.length}${C.reset}`);
+    for (const i of shown) {
+      const detail = i.state === 'missing' ? ''
+        : i.state === 'unreferenced' ? `${C.dim} no location recorded${C.reset}`
+        : i.state === 'undated' ? `${C.dim} no collection date${C.reset}`
+        : `${C.dim} ${i.reference || 'no reference'}${i.collected ? `, ${i.collected}` : ''}` +
+          `${i.state === 'stale' ? `, ${i.ageDays} days old` : ''}${C.reset}`;
+      out(`  ${MARK[i.state]} ${i.artifact}${detail}`);
+    }
+  }
+
+  if (reg.findings.length > 0 && !only) {
+    const high = reg.findings.filter((f) => f.severity === 'medium');
+    if (high.length > 0) {
+      out(`\n${C.bold}Needs attention${C.reset}`);
+      for (const f of high.slice(0, 10)) out(`  ${C.yellow}${pad(f.control, 9)}${C.reset} ${f.issue}`);
+      if (high.length > 10) out(`  ${C.dim}and ${high.length - 10} more, see "nbcc evidence ${positional[0]} --json"${C.reset}`);
+    }
+  }
+
+  const claims = only ? [] : unevidencedClaims(data, assess(data, { asOf }), asOf);
+  if (claims.length > 0) {
+    out(`\n${C.bold}Claimed but unevidenced${C.reset} ${C.dim}(${claims.length})${C.reset}`);
+    out(`${C.dim}Controls scored as met or partial with nothing recorded to show for them.${C.reset}`);
+    for (const c2 of claims.slice(0, 10)) {
+      out(`  ${C.yellow}${pad(c2.control, 9)}${C.reset} ${pad(c2.title, 44)} ${C.dim}${c2.implementation}%${C.reset}`);
+    }
+    if (claims.length > 10) out(`  ${C.dim}and ${claims.length - 10} more${C.reset}`);
+  }
+
+  out(`\n${C.dim}Add --csv to export the register, --missing or --stale to narrow it.${C.reset}`);
 }
 
 function cmdCrosswalk(flags) {
@@ -459,8 +529,11 @@ function cmdExport(positional, flags) {
   } else if (as === 'json') {
     body = JSON.stringify(assess(data), null, 2);
     ext = 'json';
+  } else if (as === 'register') {
+    body = renderRegisterCSV(data, flags.date ? new Date(`${flags.date}T00:00:00Z`) : new Date());
+    ext = 'csv';
   } else {
-    return fail(`unknown format "${as}". Use md, csv or json.`);
+    return fail(`unknown format "${as}". Use md, csv, json or register.`);
   }
   if (flags.out) {
     writeFileSync(resolve(process.cwd(), String(flags.out)), body + '\n', 'utf8');

@@ -111,6 +111,25 @@ body.working .hero{display:none}
 .fnbar{width:4px; align-self:stretch; border-radius:2px; flex:none}
 .req{background:var(--paper-2); border-inline-start:3px solid var(--ink); padding:13px 16px; border-radius:0 var(--r) var(--r) 0; font-size:.92rem; margin-bottom:16px}
 [dir=rtl] .req{border-radius:var(--r) 0 0 var(--r)}
+.evreg{margin-top:20px; padding-top:17px; border-top:1px solid var(--line)}
+.evhead{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:3px}
+.evhead h3{margin:0; font-size:.95rem}
+.evhead .muted{font-size:.82rem; font-family:var(--mono)}
+.evrow{display:flex; gap:11px; align-items:flex-start; padding:9px 0; border-bottom:1px solid var(--line)}
+.evrow:last-child{border-bottom:none}
+.evtick{flex:none; padding-top:1px; cursor:pointer}
+.evtick input{width:16px; height:16px; accent-color:var(--green); cursor:pointer; margin:0}
+.evbody{flex:1; min-width:0}
+.evlabel{font-size:.89rem; line-height:1.45}
+.evrow.on .evlabel{color:var(--ink)}
+.evrow .evlabel{color:var(--slate)}
+.evflag{font-size:.7rem; letter-spacing:.03em; text-transform:uppercase; border-radius:3px; padding:1px 5px; white-space:nowrap; margin-inline-start:4px}
+.evflag.warn{background:#FBF2DA; color:#7A5A08; border:1px solid #E6D08F}
+.evflag.bad{background:#FBE3E5; color:#8E1A24; border:1px solid #EDB6BB}
+.evfields{display:grid; grid-template-columns:1fr 150px; gap:8px; margin-top:7px}
+.evfields input{font:inherit; font-size:.85rem; padding:6px 9px; border:1px solid var(--line-2); border-radius:6px; background:var(--paper); color:var(--ink); width:100%}
+.evfields input:focus{outline:2px solid var(--green); outline-offset:-1px}
+@media(max-width:640px){.evfields{grid-template-columns:1fr}}
 .reqlist{margin:7px 0 0; padding-inline-start:20px}
 .reqlist li{margin:4px 0}
 .edmark{font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:3px; padding:1px 5px; color:var(--slate); white-space:nowrap}
@@ -408,7 +427,21 @@ function load() {
       t.owner = src.owner || '';
       t.targetDate = src.targetDate || '';
       t.notes = src.notes || '';
-      t.evidence = Array.isArray(src.evidence) ? src.evidence : [];
+      // Older files held evidence as free text. Keep the note rather than drop
+      // it, but it cannot claim a location or a date it never carried.
+      t.evidence = [];
+      if (Array.isArray(src.evidence)) {
+        let slot = 0;
+        for (const rec of src.evidence) {
+          if (typeof rec === 'string') {
+            if (slot < c.evidence.length) t.evidence.push({ item: slot++, held:true, reference:'', collected:'', note:rec });
+          } else if (rec && typeof rec === 'object' && Number.isInteger(Number(rec.item))) {
+            t.evidence.push({ item:Number(rec.item), held: rec.held !== false,
+              reference:String(rec.reference||''), collected:typeof rec.collected==='string'?rec.collected:'',
+              collectedBy:String(rec.collectedBy||''), note:String(rec.note||'') });
+          }
+        }
+      }
       if (src.exception) t.exception = src.exception;
       if (src.na) t.na = src.na;
       if (Array.isArray(src.checks)) {
@@ -557,7 +590,7 @@ const STR = {
     cwP:'Section 1 of the Annex aligns the baseline with CIS Controls v8.1 IG1 and the NIST Cybersecurity Framework. The ISO 27001 column is added here as a convenience for entities already certified.',
     phaseChip:n=>`Phase ${n}`, effortFit:'of the time available',
     impl:'Implementation', post:'Defensible posture', cov:'Coverage', bandL:'Band',
-    metL:'met', gapL:'no coverage',
+    metL:'met', gapL:'no coverage', evL:'evidenced',
     reqL:'Minimum requirement', checksL:'Checks', evidenceL:'Evidence to retain',
     edmark:'summary', edmarkT:'Appendix A prints no Purpose column, so this summary is not Annex text.',
     owner:'Owner', cadence:'Cadence', effort:'Effort', phase:'Phase', unassigned:'unassigned',
@@ -570,6 +603,10 @@ const STR = {
     confirmReset:'Clear the whole assessment and start over? This cannot be undone.',
     entityName:'Entity name', sector:'Sector', assessor:'Assessor', date:'Assessment date',
     notes:'Notes', targetDate:'Target date', evidenceRef:'Evidence reference',
+    evRecorded:'recorded', evWhere:'Where it is held, for example DMS/SEC/2026/014',
+    evWhen:'Date collected', evUndated:'no date', evNoRef:'no location',
+    evStale:n=>`${n} days old`, evFuture:'future date',
+    evNote:y=>`Tick what you hold and record where it lives. GOV-5 requires the record to be retained for ${y} years and produced for NCSC on request.`,
     nothingOpen:'Nothing open in this phase.',
     personDays:'person days of open work', workingDays:'working days remain',
     unblocks:'unblocks', waitsOn:'waits on', openChecks:'open checks',
@@ -598,7 +635,7 @@ const STR = {
     cwP:'يوائم البند الأول من الملحق هذه الضوابط مع ضوابط CIS الإصدار الثامن للمجموعة الأولى ومع إطار NIST للأمن السيبراني، أما عمود الأيزو فمضاف هنا تيسيرا على الجهات الحاصلة على الشهادة.',
     phaseChip:n=>`المرحلة ${n}`, effortFit:'من الوقت المتاح',
     impl:'نسبة التطبيق', post:'الوضع القابل للإثبات', cov:'نسبة التقييم', bandL:'المستوى',
-    metL:'مستوفى', gapL:'دون تغطية',
+    metL:'مستوفى', gapL:'دون تغطية', evL:'موثق بالأدلة',
     reqL:'الحد الأدنى المطلوب', checksL:'بنود التحقق', evidenceL:'الأدلة الواجب حفظها',
     owner:'المسؤول', cadence:'الدورية', effort:'الجهد', phase:'المرحلة', unassigned:'غير محدد',
     cadences:{ 'annual':'سنويا', 'biennial':'كل سنتين', 'per hire':'عند كل تعيين', 'weekly':'أسبوعيا',
@@ -613,6 +650,10 @@ const STR = {
     confirmReset:'هل تريد مسح التقييم بالكامل والبدء من جديد؟ لا يمكن التراجع عن ذلك.',
     entityName:'اسم الجهة', sector:'القطاع', assessor:'المقيّم', date:'تاريخ التقييم',
     notes:'ملاحظات', targetDate:'التاريخ المستهدف', evidenceRef:'مرجع الدليل',
+    evRecorded:'مسجل', evWhere:'موضع حفظه، مثلا DMS/SEC/2026/014',
+    evWhen:'تاريخ الجمع', evUndated:'دون تاريخ', evNoRef:'دون موضع',
+    evStale:n=>`مضى عليه ${n} يوما`, evFuture:'تاريخ مستقبلي',
+    evNote:y=>`أشر إلى ما لديك وسجل موضع حفظه، فالضابط GOV-5 يوجب حفظ السجل ${y} سنوات وتقديمه للمركز عند الطلب.`,
     nothingOpen:'لا يوجد عمل مفتوح في هذه المرحلة.',
     personDays:'يوم عمل مفتوح', workingDays:'يوم عمل متبق',
     unblocks:'يفتح الطريق أمام', waitsOn:'ينتظر', openChecks:'بندا مفتوحا',
@@ -663,6 +704,55 @@ function reqHTML(c){
 function term(kind, value){
   const map = STR[lang][kind] || {};
   return map[value] || value;
+}
+
+const REFRESH_DAYS = { weekly:45, monthly:75, quarterly:150, annual:400, biennial:790,
+  continuous:75, 'per hire':null, 'per incident':null, 'per engagement':null };
+
+function evRec(id, i){
+  const list = (state.controls[id] && state.controls[id].evidence) || [];
+  return list.find(r => r && Number(r.item) === i) || { item:i, held:false, reference:'', collected:'' };
+}
+function evSet(id, i, patch){
+  const c2 = state.controls[id];
+  if (!Array.isArray(c2.evidence)) c2.evidence = [];
+  let rec = c2.evidence.find(r => r && Number(r.item) === i);
+  if (!rec) { rec = { item:i, held:true, reference:'', collected:'' }; c2.evidence.push(rec); }
+  Object.assign(rec, patch);
+  if (!rec.held) c2.evidence = c2.evidence.filter(r => r !== rec);
+  c2.evidence.sort((a,b) => a.item - b.item);
+}
+// The share of every applicable artifact that is recorded with a location,
+// which is what "producible on request" actually means under GOV-5.
+function evPercent(){
+  let total = 0, ok = 0;
+  for (const c of CONTROLS) {
+    if (!inScope(c)) continue;
+    total += c.evidence.length;
+    for (let i = 0; i < c.evidence.length; i++) {
+      const r = evRec(c.id, i);
+      if (r.held && r.reference) ok++;
+    }
+  }
+  return total === 0 ? 0 : Math.round((ok / total) * 1000) / 10;
+}
+
+function evHeld(id){
+  const list = (state.controls[id] && state.controls[id].evidence) || [];
+  return list.filter(r => r && r.held).length;
+}
+// Freshness follows each control's own cadence, because a weekly review and a
+// biennial policy approval go stale at very different rates.
+function evState(c, i){
+  const rec = evRec(c.id, i);
+  if (!rec.held) return null;
+  if (!rec.collected) return { cls:'warn', text:t('evUndated') };
+  const age = Math.floor((Date.now() - Date.parse(rec.collected + 'T00:00:00Z')) / 86400000);
+  if (age < 0) return { cls:'bad', text:t('evFuture') };
+  const limit = REFRESH_DAYS[c.cadence];
+  if (limit !== null && age > limit) return { cls:'warn', text:t('evStale', age) };
+  if (!rec.reference) return { cls:'warn', text:t('evNoRef') };
+  return null;
 }
 
 function kchecks(c){ return lang === 'ar' && c.checksAr ? c.checksAr : c.checks; }
@@ -774,6 +864,7 @@ function renderScore(){
     ${m(s.coverage+'%', t('cov'), '#B7CBD3')}
     ${m(s.met+'/'+s.inScopeCount, t('metL'), '#B7CBD3')}
     ${m(s.gap, t('gapL'), s.gap?'#E58A92':'#7FD4A4')}
+    ${m(evPercent()+'%', t('evL'), col(evPercent()))}
     <div class="m" style="flex:1 1 110px; min-width:104px">
       <div class="bar"><i style="width:${s.implementation}%; background:${col(s.implementation)}"></i></div>
       <div class="mk" style="margin-top:5px">${t('bandL')} ${band(s.implementation)}</div>
@@ -846,7 +937,6 @@ function renderMain(s){
           <label class="fld"><span>${t('owner')}</span><input id="f-owner" value="${esc(e.owner||'')}" placeholder="${t('unassigned')}"></label>
           <label class="fld"><span>${t('targetDate')}</span><input id="f-target" type="date" value="${esc(e.targetDate||'')}"></label>
         </div>
-        <label class="fld"><span>${t('evidenceRef')}</span><input id="f-evd" value="${esc((e.evidence||[]).join('; '))}" placeholder="${esc(c.evidence[0])}"></label>
         <label class="fld"><span>${t('notes')}</span><textarea id="f-notes">${esc(e.notes||'')}</textarea></label>
       </div>
       <div class="meta">
@@ -857,8 +947,27 @@ function renderMain(s){
         <span class="ltx">CIS v8.1 <b>${c.crosswalk.cis.join(', ')}</b></span>
         <span class="ltx">ISO 27001 <b>${(ISO[c.id]||[]).join(', ')}</b></span>
       </div>
-      <details style="margin-top:14px"><summary class="muted" style="cursor:pointer; font-size:.88rem">${t('evidenceL')}</summary>
-        <ul class="evd${ltx()}" style="margin-top:9px">${kevidence(c).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>
+      <div class="evreg">
+        <div class="evhead">
+          <h3>${t('evidenceL')}</h3>
+          <span class="muted">${evHeld(c.id)}/${c.evidence.length} ${t('evRecorded')}</span>
+        </div>
+        <p class="muted" style="margin:0 0 11px; font-size:.85rem">${t('evNote', REG.recordRetentionYears)}</p>
+        ${kevidence(c).map((label, i) => {
+          const rec = evRec(c.id, i);
+          const st = evState(c, i);
+          return `<div class="evrow${rec.held ? ' on' : ''}">
+            <label class="evtick"><input type="checkbox" data-ev="${i}" ${rec.held ? 'checked' : ''} aria-label="${esc(label)}"><span></span></label>
+            <div class="evbody">
+              <div class="evlabel${ltx()}">${esc(label)}${st ? ` <span class="evflag ${st.cls}">${esc(st.text)}</span>` : ''}</div>
+              ${rec.held ? `<div class="evfields">
+                <input data-evref="${i}" value="${esc(rec.reference || '')}" placeholder="${t('evWhere')}">
+                <input data-evdate="${i}" type="date" value="${esc(rec.collected || '')}" aria-label="${t('evWhen')}">
+              </div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
     </div>
   </div>`;
 
@@ -875,7 +984,35 @@ function renderMain(s){
   bind('f-owner', v => state.controls[c.id].owner = v);
   bind('f-target', v => state.controls[c.id].targetDate = v);
   bind('f-notes', v => state.controls[c.id].notes = v);
-  bind('f-evd', v => state.controls[c.id].evidence = v.split(';').map(x=>x.trim()).filter(Boolean));
+  main.querySelectorAll('[data-ev]').forEach(b => b.onchange = () => {
+    evSet(c.id, Number(b.dataset.ev), { held: b.checked });
+    save(); renderWB();
+  });
+  const refreshEv = (i) => {
+    const row = main.querySelectorAll('.evrow')[i];
+    if (row) {
+      const label = row.querySelector('.evlabel');
+      const flag = label && label.querySelector('.evflag');
+      if (flag) flag.remove();
+      const st = evState(c, i);
+      if (st && label) {
+        label.insertAdjacentHTML('beforeend',
+          ` <span class="evflag ${st.cls}">${esc(st.text)}</span>`);
+      }
+    }
+    const counter = main.querySelector('.evhead .muted');
+    if (counter) counter.textContent = `${evHeld(c.id)}/${c.evidence.length} ${t('evRecorded')}`;
+  };
+  main.querySelectorAll('[data-evref]').forEach(b => b.onchange = () => {
+    const i = Number(b.dataset.evref);
+    evSet(c.id, i, { reference: b.value.trim() });
+    save(); refreshEv(i);
+  });
+  main.querySelectorAll('[data-evdate]').forEach(b => b.onchange = () => {
+    const i = Number(b.dataset.evdate);
+    evSet(c.id, i, { collected: b.value });
+    save(); refreshEv(i);
+  });
 }
 function renderWB(){
   const s = renderScore();

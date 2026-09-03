@@ -14,6 +14,7 @@ import { buildPlan, deadlineStatus, evidencePack, milestones, prioritize, DEPEND
 import { crosswalkTable, reverseIndex, mappingsFor, coverageSummary, validateCrosswalk, ISO_MAP } from '../src/crosswalk.js';
 import { renderReport, renderMarkdown, renderCSV } from '../src/report.js';
 import { diffAssessments } from '../src/diff.js';
+import { evidenceRegister, unevidencedClaims, renderRegisterCSV, readEvidenceRecords, REFRESH_DAYS } from '../src/evidence.js';
 import { buildSite, buildPayload } from '../scripts/build-site.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -457,6 +458,171 @@ test('the evidence pack covers every applicable control', () => {
   assert.equal(pack.retentionYears, 3);
   const noCloud = evidencePack(scaffold({ profile: { usesCloud: false } }));
   assert.ok(!Object.keys(noCloud.byControl).some((id) => id.startsWith('CLD')));
+});
+
+/* --------------------------------------------------- evidence register */
+
+function withEvidence(records) {
+  const doc = build();
+  doc.controls['GOV-1'].evidence = records;
+  return doc;
+}
+const SEP = new Date('2026-09-03T00:00:00Z');
+
+test('an empty register reports every artifact as missing', () => {
+  const reg = evidenceRegister(build(), SEP);
+  assert.equal(reg.totalArtifacts, CATALOG_STATS.evidenceItems);
+  assert.equal(reg.counts.missing, reg.totalArtifacts);
+  assert.equal(reg.coverage, 0);
+  assert.equal(reg.producible, 0);
+});
+
+test('a fully recorded artifact is held and producible', () => {
+  const reg = evidenceRegister(withEvidence([
+    { item: 0, held: true, reference: 'DMS/1', collected: '2026-08-01' }
+  ]), SEP);
+  const row = reg.byControl['GOV-1'][0];
+  assert.equal(row.state, 'held');
+  assert.equal(row.ageDays, 33);
+  assert.equal(row.retainUntil, '2029-08-01');
+});
+
+test('freshness is judged against the control cadence, not one global rule', () => {
+  // DE-1 is weekly and RC-1 is annual, so the same date ages differently.
+  const doc = build();
+  doc.controls['DE-1'].evidence = [{ item: 0, held: true, reference: 'x', collected: '2026-05-01' }];
+  doc.controls['RC-1'].evidence = [{ item: 0, held: true, reference: 'x', collected: '2026-05-01' }];
+  const reg = evidenceRegister(doc, SEP);
+  assert.equal(reg.byControl['DE-1'][0].state, 'stale');
+  assert.equal(reg.byControl['RC-1'][0].state, 'held');
+});
+
+test('event driven controls never go stale, they only have to exist', () => {
+  const doc = build();
+  // GOV-4 fires per hire rather than on a schedule.
+  assert.equal(getControl('GOV-4').cadence, 'per hire');
+  assert.equal(REFRESH_DAYS['per hire'], null);
+  doc.controls['GOV-4'].evidence = [{ item: 0, held: true, reference: 'x', collected: '2019-01-01' }];
+  assert.equal(evidenceRegister(doc, SEP).byControl['GOV-4'][0].state, 'held');
+});
+
+test('held without a location cannot be produced on request', () => {
+  const reg = evidenceRegister(withEvidence([
+    { item: 0, held: true, reference: '', collected: '2026-08-01' }
+  ]), SEP);
+  assert.equal(reg.byControl['GOV-1'][0].state, 'unreferenced');
+  assert.equal(reg.coverage, Math.round((1 / reg.totalArtifacts) * 1000) / 10);
+  assert.equal(reg.producible, 0);
+  assert.ok(reg.findings.some((f) => f.control === 'GOV-1' && f.issue.includes('no location')));
+});
+
+test('held without a date cannot be judged for freshness', () => {
+  const reg = evidenceRegister(withEvidence([{ item: 0, held: true, reference: 'x' }]), SEP);
+  assert.equal(reg.byControl['GOV-1'][0].state, 'undated');
+  assert.ok(reg.findings.some((f) => f.control === 'GOV-1' && f.issue.includes('no collection date')));
+});
+
+test('a collection date in the future is a data error, not evidence', () => {
+  const reg = evidenceRegister(withEvidence([
+    { item: 0, held: true, reference: 'x', collected: '2027-01-01' }
+  ]), SEP);
+  assert.equal(reg.byControl['GOV-1'][0].state, 'misdated');
+  assert.ok(reg.findings.some((f) => f.control === 'GOV-1' && f.issue.includes('future')));
+});
+
+test('a stale artifact names the threshold it passed', () => {
+  const doc = build();
+  doc.controls['DE-1'].evidence = [{ item: 0, held: true, reference: 'x', collected: '2026-01-01' }];
+  const f = evidenceRegister(doc, SEP).findings.find((x) => x.control === 'DE-1' && x.issue.includes('stale'));
+  assert.ok(f);
+  assert.ok(f.issue.includes('cadence of weekly'));
+  assert.ok(f.issue.includes(String(REFRESH_DAYS.weekly)));
+});
+
+test('the register ignores controls that are out of scope', () => {
+  const doc = scaffold({ profile: { usesCloud: false } });
+  const reg = evidenceRegister(doc, SEP);
+  assert.ok(!Object.keys(reg.byControl).some((id) => id.startsWith('CLD')));
+  assert.ok(reg.totalArtifacts < CATALOG_STATS.evidenceItems);
+});
+
+test('older free text evidence is kept but claims nothing it cannot show', () => {
+  const records = readEvidenceRecords({ evidence: ['See GRC library'] }, getControl('GOV-1'));
+  assert.equal(records[0].held, true);
+  assert.equal(records[0].legacy, true);
+  assert.equal(records[0].reference, '');
+  assert.equal(records[0].collected, null);
+  const reg = evidenceRegister(withEvidence(['See GRC library']), SEP);
+  assert.equal(reg.byControl['GOV-1'][0].state, 'undated');
+});
+
+test('a record pointing at an artifact the catalog does not have is ignored', () => {
+  const records = readEvidenceRecords({ evidence: [{ item: 99, held: true }] }, getControl('GOV-1'));
+  assert.equal(records.length, getControl('GOV-1').evidence.length);
+  assert.ok(records.every((r) => !r.held));
+});
+
+test('a claim with nothing behind it is surfaced separately', () => {
+  const doc = build({ 'RC-2': allChecks('RC-2', 'met') });
+  const claims = unevidencedClaims(doc, assess(doc), SEP);
+  assert.ok(claims.some((c) => c.control === 'RC-2'));
+  // Recording the evidence clears the claim.
+  doc.controls['RC-2'].evidence = getControl('RC-2').evidence.map((_, i) => ({
+    item: i, held: true, reference: `REF/${i}`, collected: '2026-08-01'
+  }));
+  assert.ok(!unevidencedClaims(doc, assess(doc), SEP).some((c) => c.control === 'RC-2'));
+});
+
+test('a control nobody claims is not listed as an unevidenced claim', () => {
+  const doc = build({ 'RC-2': allChecks('RC-2', 'gap') });
+  assert.ok(!unevidencedClaims(doc, assess(doc), SEP).some((c) => c.control === 'RC-2'));
+});
+
+test('the register CSV has one row per artifact and balanced quoting', () => {
+  const csv = renderRegisterCSV(build(), SEP);
+  const lines = csv.trim().split('\n');
+  assert.equal(lines.length - 1, CATALOG_STATS.evidenceItems);
+  assert.ok(lines[0].startsWith('control,control_title'));
+  for (const line of lines.slice(1)) {
+    const bare = line.replace(/"(?:[^"]|"")*"/g, '');
+    assert.equal(bare.split(',').length, 16, `unbalanced row: ${line.slice(0, 60)}`);
+  }
+  assert.ok(csv.includes('كتاب تكليف'), 'the register carries the Arabic artifact name');
+});
+
+test('the shipped example demonstrates each register state', () => {
+  const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
+  const reg = evidenceRegister(doc, SEP);
+  assert.ok(reg.counts.held > 0, 'expected held artifacts');
+  assert.ok(reg.counts.stale > 0, 'expected a stale artifact');
+  assert.ok(reg.counts.unreferenced > 0, 'expected one with no location');
+  assert.ok(reg.counts.missing > 0, 'expected missing artifacts');
+  assert.ok(unevidencedClaims(doc, assess(doc), SEP).length > 0);
+});
+
+test('cli evidence prints the register and its narrowed views', () => {
+  const full = cli(['evidence', EXAMPLE, '--date', '2026-09-03']);
+  assert.ok(full.includes('Evidence register'));
+  assert.ok(full.includes('Claimed but unevidenced'));
+  const stale = cli(['evidence', EXAMPLE, '--date', '2026-09-03', '--stale']);
+  assert.ok(stale.includes('GOV-6'));
+  assert.ok(!stale.includes('Claimed but unevidenced'));
+  assert.doesNotThrow(() => JSON.parse(cli(['evidence', EXAMPLE, '--json', '--date', '2026-09-03'])));
+});
+
+test('cli exports the register as CSV', () => {
+  const csv = cli(['export', EXAMPLE, '--as', 'register', '--date', '2026-09-03']);
+  assert.ok(csv.startsWith('control,control_title'));
+  assert.equal(csv.trim().split('\n').length - 1, CATALOG_STATS.evidenceItems);
+});
+
+test('the report carries the register and names unevidenced claims', () => {
+  const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
+  const html = renderReport(doc, { today: SEP });
+  assert.ok(html.includes('Evidence register'));
+  assert.ok(html.includes('Controls claimed with nothing to show'));
+  assert.ok(html.includes('Evidence that has gone stale'));
+  assert.ok(!html.includes('undefined'));
 });
 
 /* ---------------------------------------------------------- crosswalk */
