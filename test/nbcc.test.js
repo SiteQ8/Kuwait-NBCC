@@ -1371,6 +1371,27 @@ test('the Arabic report is Arabic throughout', () => {
   assert.ok(html.includes('The entity MUST designate an employee'), 'official text must survive');
 });
 
+test('the report is built to survive being printed', () => {
+  // The report reaches a board and eventually the regulator as a PDF. Without
+  // these rules a table row splits across a page boundary, a heading is
+  // stranded at the foot of one page with its table on the next, and the
+  // colour that carries meaning is dropped by the print pipeline.
+  const html = renderReport(JSON.parse(readFileSync(EXAMPLE, 'utf8')), { today: SEP });
+  const print = html.slice(html.indexOf('@media print'), html.indexOf('</style>'));
+  assert.ok(print.length > 200, 'the report has no print stylesheet');
+  for (const rule of [
+    'tr, .fnrow, .finding',            // a row must not split
+    'break-after: avoid',              // a heading stays with its content
+    'print-color-adjust: exact',       // pills and bars keep their meaning
+    'details.ctl { break-inside: avoid-page',
+    'table.backlog { table-layout: fixed'
+  ]) {
+    assert.ok(print.includes(rule), `the print stylesheet is missing: ${rule}`);
+  }
+  // Every control has to be open on paper, since a reader cannot expand one.
+  assert.ok(print.includes('details > div { display: block !important'));
+});
+
 test('the two reports differ only in language, not in numbers', () => {
   const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
   const en = renderReport(doc, { today: SEP });

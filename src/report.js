@@ -183,6 +183,63 @@ const isAr = () => L.dir === 'rtl';
 const cx = (c, field) => (isAr() && c[`${field}Ar`] ? c[`${field}Ar`] : c[field]);
 
 const REPORT_CSS = `
+/*
+ * Print rules. This report is the artifact that reaches a board and eventually
+ * the regulator, and it reaches them as a PDF. Without these a row splits
+ * across a page boundary, a heading is left stranded at the foot of one page
+ * with its table on the next, and the colour that carries meaning is dropped.
+ */
+@media print {
+  html, body { background: #fff; }
+  .wrap { max-width: none; padding: 0; }
+  section { padding: 20px 0 14px; }
+
+  /* Keep the colour that carries meaning, since a pill with no fill says
+     nothing and a function bar with no colour is an empty rule. */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* A row broken in half is unreadable and looks like a fault in the record. */
+  tr, .fnrow, .finding, .chk li, .rec > div { break-inside: avoid; }
+
+  /* A heading belongs with what it introduces. */
+  h1, h2, h3, h4, .section-head { break-after: avoid; }
+  .section-head { break-inside: avoid; }
+
+  /* Keep a control entry whole where it fits on one page, and never start one
+     in the last few lines of a page. */
+  details.ctl { break-inside: avoid-page; }
+  details.ctl > summary { break-after: avoid; }
+
+  /* The masthead opens the document, so it stays on the first page. */
+  .masthead { break-after: avoid; }
+  .headline { break-inside: avoid; }
+  .window { break-inside: avoid; }
+
+  /* Give the readable columns the room and the reference columns the rest, or
+     a title wraps to five lines beside a half empty column of codes. */
+  table.backlog { table-layout: fixed; width: 100%; }
+  table.backlog th:nth-child(1), table.backlog td:nth-child(1) { width: 4.6rem; }
+  table.backlog th:nth-child(2), table.backlog td:nth-child(2) { width: auto; }
+  table.backlog th:nth-child(3), table.backlog td:nth-child(3) { width: 5.4rem; }
+  table.backlog th:nth-child(4), table.backlog td:nth-child(4) { width: 4.2rem; }
+  table.backlog th:nth-child(5), table.backlog td:nth-child(5) { width: 4.6rem; }
+  table.backlog th:nth-child(6), table.backlog td:nth-child(6) { width: 3.6rem; }
+  table.backlog th:nth-child(7), table.backlog td:nth-child(7) { width: 8.5rem; }
+  table.backlog th, table.backlog td { padding-inline-end: 10px; }
+  table.reg { table-layout: fixed; width: 100%; }
+
+  /* Every control is open on paper, since a reader cannot expand one. */
+  details { display: block; }
+  details > div { display: block !important; }
+
+  footer { break-before: avoid; }
+  a { text-decoration: none; color: inherit; }
+}
+
+
 ${BASE_CSS}
 .masthead{background:var(--ink); color:var(--paper); padding:34px 0 30px}
 .masthead .wrap{display:flex; flex-wrap:wrap; gap:26px; justify-content:space-between; align-items:flex-end}
@@ -321,7 +378,7 @@ function backlogBlock(plan) {
     </tr>`
     )
     .join('');
-  return `<table>
+  return `<table class="backlog">
     <thead><tr><th>${tr('thControl')}</th><th>${tr('thTitle')}</th><th>${tr('thState')}</th><th>${tr('phase')}</th><th>${tr('effort')}</th><th>${tr('thOpen')}</th><th>${tr('unblocks')}</th></tr></thead>
     <tbody>${rows || `<tr><td colspan="7" class="muted">${tr('noOpen')}</td></tr>`}</tbody>
   </table>`;
