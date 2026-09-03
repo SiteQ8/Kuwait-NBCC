@@ -616,6 +616,17 @@ test('cli exports the register as CSV', () => {
   assert.equal(csv.trim().split('\n').length - 1, CATALOG_STATS.evidenceItems);
 });
 
+test('a generated document is not given a second trailing newline', () => {
+  // A doubled newline becomes a phantom empty row when a spreadsheet opens it.
+  for (const as of ['csv', 'register', 'md', 'json']) {
+    const body = cli(['export', EXAMPLE, '--as', as, '--date', '2026-09-03']);
+    assert.ok(!body.endsWith('\n\n'), `${as} export ends with a blank line`);
+    assert.ok(body.endsWith('\n'), `${as} export has no trailing newline`);
+  }
+  const reg = cli(['evidence', EXAMPLE, '--csv', '--date', '2026-09-03']);
+  assert.ok(!reg.endsWith('\n\n'));
+});
+
 test('the report carries the register and names unevidenced claims', () => {
   const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
   const html = renderReport(doc, { today: SEP });

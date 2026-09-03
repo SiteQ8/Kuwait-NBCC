@@ -51,6 +51,13 @@ const C = {
 function out(s = '') {
   process.stdout.write(s + '\n');
 }
+// For generated documents, which carry their own trailing newline.
+function emit(body) {
+  process.stdout.write(body.endsWith('\n') ? body : `${body}\n`);
+}
+function writeOut(path, body) {
+  writeFileSync(resolve(process.cwd(), String(path)), body.endsWith('\n') ? body : `${body}\n`, 'utf8');
+}
 function fail(message) {
   process.stderr.write(`${C.red}error${C.reset} ${message}\n`);
   process.exit(1);
@@ -411,7 +418,7 @@ function cmdEvidence(positional, flags) {
   const asOf = flags.date ? new Date(`${flags.date}T00:00:00Z`) : new Date();
   const reg = evidenceRegister(data, asOf);
 
-  if (flags.csv) return out(renderRegisterCSV(data, asOf));
+  if (flags.csv) return emit(renderRegisterCSV(data, asOf));
   if (flags.json) return out(JSON.stringify(reg, null, 2));
 
   const MARK = {
@@ -536,10 +543,10 @@ function cmdExport(positional, flags) {
     return fail(`unknown format "${as}". Use md, csv, json or register.`);
   }
   if (flags.out) {
-    writeFileSync(resolve(process.cwd(), String(flags.out)), body + '\n', 'utf8');
+    writeOut(flags.out, body);
     out(`${C.green}Wrote${C.reset} ${flags.out}`);
   } else {
-    out(body);
+    emit(body);
   }
   void ext;
 }
