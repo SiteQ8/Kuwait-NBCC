@@ -1392,14 +1392,43 @@ test('the report is built to survive being printed', () => {
   assert.ok(print.includes('details > div { display: block !important'));
 });
 
+test('each language keeps one numeral system and one percent sign', () => {
+  // The Arabic report was mixing eighteen Arabic Indic numerals into fifteen
+  // hundred Western ones, because the long form dates came from a locale that
+  // formats digits while every other figure in the document is Western.
+  const strip = (html) => html
+    .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/g, '')
+    .replace(/<[^>]+>/g, ' ');
+  const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
+
+  const ar = strip(renderReport(doc, { today: SEP, lang: 'ar' }));
+  assert.equal((ar.match(/[\u0660-\u0669]/g) || []).length, 0,
+    'the Arabic report must not mix Arabic Indic digits into Western ones');
+  assert.equal((ar.match(/\d%/g) || []).length, 0,
+    'Arabic takes the Arabic percent sign');
+  assert.ok((ar.match(/\u066A/g) || []).length > 20, 'the Arabic sign should be in use');
+
+  const en = strip(renderReport(doc, { today: SEP }));
+  assert.equal((en.match(/\u066A/g) || []).length, 0,
+    'the English report must not carry the Arabic percent sign');
+  assert.ok((en.match(/\d%/g) || []).length > 20);
+
+  // The workbench needs the same rule, and it has its own renderer.
+  assert.ok(buildSite().includes('function pctSign'),
+    'the workbench must pick its percent sign by language');
+});
+
 test('the two reports differ only in language, not in numbers', () => {
   const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
   const en = renderReport(doc, { today: SEP });
   const ar = renderReport(doc, { today: SEP, lang: 'ar' });
   const r = assess(doc);
-  for (const html of [en, ar]) {
-    assert.ok(html.includes(`${r.scores.implementation}%`));
-    assert.ok(html.includes(`${r.scores.posture}%`));
+  // The sign differs by language now, so compare the figures themselves.
+  for (const [html, sign] of [[en, '%'], [ar, '\u066A']]) {
+    assert.ok(html.includes(`${r.scores.implementation}${sign}`),
+      `implementation is missing or carries the wrong percent sign`);
+    assert.ok(html.includes(`${r.scores.posture}${sign}`),
+      `posture is missing or carries the wrong percent sign`);
   }
 });
 

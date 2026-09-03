@@ -929,6 +929,9 @@ function evState(c, i){
   return null;
 }
 
+// A figure and its sign belong to the same script.
+function pctSign(n){ return `${n}${lang === 'ar' ? '\u066A' : '%'}`; }
+
 function kchecks(c){ return lang === 'ar' && c.checksAr ? c.checksAr : c.checks; }
 function kevidence(c){ return lang === 'ar' && c.evidenceAr ? c.evidenceAr : c.evidence; }
 function ltx(){ return lang === 'ar' ? '' : ' ltx'; }
@@ -1049,12 +1052,12 @@ function renderScore(){
   const m = (v,k,col) => `<div class="m"><div class="mv" style="color:${col}">${v}</div><div class="mk">${k}</div></div>`;
   const col = p => p>=95?'#7FD4A4':p>=75?'#8FC2E8':p>=50?'#E5C169':p>=25?'#E39A6B':'#E58A92';
   box.innerHTML = `<div class="in">
-    <div class="m lead"><div class="mv" style="color:${col(s.implementation)}">${s.implementation}%</div>
+    <div class="m lead"><div class="mv" style="color:${col(s.implementation)}">${pctSign(s.implementation)}</div>
       <div class="mk">${t('impl')} · ${band(s.implementation)}</div></div>
     <div class="rule"></div>
-    ${m(s.posture+'%', t('post'), '#C6D6DC')}
-    ${m(evPercent()+'%', t('evL'), '#C6D6DC')}
-    ${m(s.coverage+'%', t('cov'), '#C6D6DC')}
+    ${m(pctSign(s.posture), t('post'), '#C6D6DC')}
+    ${m(pctSign(evPercent()), t('evL'), '#C6D6DC')}
+    ${m(pctSign(s.coverage), t('cov'), '#C6D6DC')}
     ${m(s.met+'/'+s.inScopeCount, t('metL'), '#C6D6DC')}
     ${m(s.gap, t('gapL'), s.gap?'#E58A92':'#7FD4A4')}
     <div class="acts">
@@ -1110,7 +1113,7 @@ function renderMain(s){
         <span class="cid">${c.id}</span>
         <h3 style="flex:1">${esc(L(c,'title'))}</h3>
         ${pill(r.state)}
-        <span class="mono muted">${r.iP===null?'':r.iP+'%'}</span>
+        <span class="mono muted">${r.iP===null?'':pctSign(r.iP)}</span>
       </div>
       <p class="muted" style="margin:0; font-size:.9rem">${purposeHTML(c)}</p>
     </div>

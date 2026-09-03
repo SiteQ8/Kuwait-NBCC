@@ -115,7 +115,7 @@ const T = {
     edmark: 'summary', edmarkT: 'Appendix A prints no Purpose column. This summary is not Annex text.'
   },
   ar: {
-    dir: 'rtl', locale: 'ar-KW',
+    dir: 'rtl', locale: 'ar-KW-u-nu-latn',
     reportTitle: (n) => `تقرير جاهزية ${n} للضوابط الوطنية الأساسية`,
     kicker: (d) => `الملحق الأول من ${d}`,
     subtitle: 'الجاهزية مقابل الحد الأدنى الوطني الصادر عن المركز الوطني للأمن السيبراني.',
@@ -179,6 +179,8 @@ function tr(k, ...a) {
   return typeof v === 'function' ? v(...a) : v;
 }
 const isAr = () => L.dir === 'rtl';
+// A figure and its sign belong to the same script.
+const pct = (n) => `${n}${isAr() ? '\u066A' : '%'}`;
 // Control text that exists in both languages.
 const cx = (c, field) => (isAr() && c[`${field}Ar`] ? c[`${field}Ar`] : c[field]);
 
@@ -312,11 +314,11 @@ footer a{color:#9FD5B4}
 function headline(result) {
   const s = result.scores;
   return `<div class="headline">
-    <div><div class="v" style="color:${scoreColor(s.implementation)}">${s.implementation}%</div><div class="k">${tr('implementation')}</div></div>
-    <div><div class="v" style="color:${scoreColor(s.posture)}">${s.posture}%</div><div class="k">${tr('posture')}</div></div>
+    <div><div class="v" style="color:${scoreColor(s.implementation)}">${pct(s.implementation)}</div><div class="k">${tr('implementation')}</div></div>
+    <div><div class="v" style="color:${scoreColor(s.posture)}">${pct(s.posture)}</div><div class="k">${tr('posture')}</div></div>
     <div><div class="v">${s.controlsMet}<span style="color:var(--slate-soft);font-size:1.15rem">/${s.controlsInScope}</span></div><div class="k">${tr('controlsMet')}</div></div>
     <div><div class="v" style="color:${s.controlsGap ? TOKENS.crimson : TOKENS.green}">${s.controlsGap}</div><div class="k">${tr('controlsGap')}</div></div>
-    <div><div class="v">${s.coverage}%</div><div class="k">${tr('coverage')}</div></div>
+    <div><div class="v">${pct(s.coverage)}</div><div class="k">${tr('coverage')}</div></div>
   </div>`;
 }
 
@@ -341,7 +343,7 @@ function functionBlock(result) {
         <div class="nm">${esc(isAr() ? f.nameAr : f.name)}</div>
         <div><div class="bar"><i style="width:${f.implementation}%;background:${f.color}"></i></div>
           <div class="muted" style="font-size:.78rem;margin-top:4px">${tr('functionMet', f.met, f.controls, f.scoredChecks)}</div></div>
-        <div class="pc">${f.implementation}%</div>
+        <div class="pc">${pct(f.implementation)}</div>
       </div>`;
     })
     .join('');
@@ -401,7 +403,7 @@ function controlDetail(row) {
       <span class="cid">${esc(row.id)}</span>
       <span class="t">${esc(isAr() ? row.titleAr || row.title : row.title)}</span>
       ${statusPill(row.state, L.dir === 'rtl' ? 'ar' : 'en')}
-      <span class="num muted" style="font-size:.85rem">${row.implementation === null ? '' : row.implementation + '%'}</span>
+      <span class="num muted" style="font-size:.85rem">${row.implementation === null ? '' : pct(row.implementation)}</span>
     </summary>
     <div class="body">
       <p class="muted" style="margin:0 0 12px">${esc(cx(control, 'purpose'))}${
@@ -541,7 +543,7 @@ export function renderReport(assessment, options = {}) {
   </div>
 
   <div class="headline">
-    <div><div class="v" style="color:${scoreColor(reg.producible)}">${reg.producible}%</div><div class="k">${tr('regProducible')}</div></div>
+    <div><div class="v" style="color:${scoreColor(reg.producible)}">${pct(reg.producible)}</div><div class="k">${tr('regProducible')}</div></div>
     <div><div class="v">${reg.counts.held}<span style="color:var(--slate-soft);font-size:1.15rem">/${reg.totalArtifacts}</span></div><div class="k">${tr('regOnFile')}</div></div>
     <div><div class="v" style="color:${reg.counts.stale ? TOKENS.ochre : TOKENS.ink}">${reg.counts.stale}</div><div class="k">${tr('regStale')}</div></div>
     <div><div class="v" style="color:${claims.length ? TOKENS.crimson : TOKENS.green}">${claims.length}</div><div class="k">${tr('regClaims')}</div></div>
@@ -556,7 +558,7 @@ export function renderReport(assessment, options = {}) {
     <tbody>${claims.map((c) => `<tr>
       <td><span class="cid">${esc(c.control)}</span></td>
       <td>${esc(isAr() ? getControl(c.control).titleAr : c.title)}</td>
-      <td class="num">${c.implementation}%</td>
+      <td class="num">${pct(c.implementation)}</td>
       <td class="num">${c.artifactsNeeded}</td>
     </tr>`).join('')}</tbody>
   </table>` : ''}
