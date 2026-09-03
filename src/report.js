@@ -11,10 +11,10 @@ import { BASE_CSS, TOKENS, windowScaleSVG, statusPill, scoreColor } from './them
  * Some minimum requirements are bulleted in the Annex, and the bullets carry
  * meaning, so they are reproduced as a list rather than flattened into prose.
  */
-function renderRequirement(control) {
-  let html = '<b>Minimum requirement.</b> ';
+function reqParas(text) {
+  let html = '';
   let open = false;
-  for (const para of control.requirement.split('\n')) {
+  for (const para of text.split('\n')) {
     if (para.startsWith('\u2022')) {
       if (!open) { html += '<ul class="reqlist">'; open = true; }
       html += `<li>${esc(para.slice(1).trim())}</li>`;
@@ -24,6 +24,18 @@ function renderRequirement(control) {
     }
   }
   return open ? html + '</ul>' : html;
+}
+
+/*
+ * Article 6 makes the English Annex authoritative, so an Arabic report leads
+ * with the working translation and prints the official wording beneath it.
+ */
+function renderRequirement(control) {
+  if (!isAr()) return `<b>${tr('reqL')}</b> ${reqParas(control.requirement)}`;
+  return `<b>${tr('reqL')} <span class="edmark">${tr('reqWorking')}</span></b> ` +
+    reqParas(control.requirementAr) +
+    `<div class="official"><b>${tr('officialL')}</b><div dir="ltr" style="text-align:left">` +
+    `${reqParas(control.requirement)}</div></div>`;
 }
 
 function esc(value) {
@@ -38,8 +50,133 @@ function fmtDate(iso) {
   if (!iso) return '';
   const d = new Date(iso + (iso.length === 10 ? 'T00:00:00Z' : ''));
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  return d.toLocaleDateString(L.locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 }
+
+
+/*
+ * The report is the artifact that circulates, so it exists whole in either
+ * language rather than as an English document with Arabic decoration.
+ */
+const T = {
+  en: {
+    dir: 'ltr', locale: 'en-GB',
+    reportTitle: (n) => `${n} NBCC readiness report`,
+    kicker: (d, t) => `${d} \u00b7 ${t}`,
+    subtitle: 'Readiness against the national minimum baseline issued by the National Cyber Security Center (NCSC).',
+    assessed: 'Assessed', assessor: 'Assessor', deadline: 'Deadline', band: 'Band',
+    unnamed: 'Unnamed entity', notRecorded: 'Not recorded',
+    standsH: 'Where the entity stands',
+    standsP: 'Implementation counts only what is built. Defensible posture adds requirements sheltered by a valid, in date exception under GOV-2.',
+    implementation: 'Implementation', posture: 'Defensible posture',
+    controlsMet: 'Controls fully met', controlsGap: 'Controls with no coverage',
+    coverage: 'Assessment coverage',
+    windowLead: (n) => `${n} days remain in the compliance window.`,
+    windowOver: (n) => `The deadline passed ${n} days ago.`,
+    windowSub: (p, d, e) => `Published ${p}, due ${d}, ${e}% elapsed`,
+    functionH: 'By function',
+    functionP: 'Section 5 of the Annex groups the baseline by the six framework functions, with the cloud appendix carried alongside.',
+    functionMet: (m, t, c) => `${m} of ${t} controls met, ${c} checks scored`,
+    fixH: 'What to fix first',
+    fixP: 'Ranked by what each control unblocks, how early its phase falls, how much of it is still open, and how little it costs to start.',
+    unblocks: 'Unblocks', noOpen: 'No open work. Every applicable control is fully met.',
+    findingsH: 'Findings',
+    findingsP: 'Problems with the assessment record itself, separate from the state of the controls. An auditor reads these first.',
+    effortLine: (d, w, p) => `Roughly ${d} person days of open work against ${w} working days before the deadline` +
+      (p ? `, which needs about ${p} parallel stream${p > 1 ? 's' : ''}` : '') + '.',
+    detailH: 'Control detail',
+    detailP: (y) => `Every applicable control with its official minimum requirement, the checks behind the score, and the evidence to keep for ${y} years.`,
+    reqL: 'Minimum requirement.', reqWorking: 'working translation',
+    officialL: 'Official English text',
+    checksL: 'Checks', evidenceL: 'Evidence to retain',
+    cadence: 'Cadence', effort: 'Effort', phase: 'Phase',
+    registerH: 'Evidence register',
+    registerP: (n, c, y) => `${n} artifacts across ${c} applicable controls. GOV-5 requires the record to be retained for ${y} years and produced for NCSC on request, so a score with nothing behind it is the gap an audit finds first.`,
+    regProducible: 'Recorded and locatable', regOnFile: 'Artifacts on file',
+    regStale: 'Stale for their cadence', regClaims: 'Claimed but unevidenced',
+    regRange: (a, b) => `Evidence on file was collected between ${a} and ${b}. Freshness is judged against each control's own cadence, so a weekly review and a biennial policy approval are held to different standards.`,
+    regNone: 'No evidence has been recorded against this assessment yet.',
+    claimsH: 'Controls claimed with nothing to show',
+    staleH: 'Evidence that has gone stale',
+    thControl: 'Control', thTitle: 'Title', thImpl: 'Implementation',
+    thNeeded: 'Artifacts needed', thArtifact: 'Artifact', thCollected: 'Collected',
+    thAge: 'Age', thCadence: 'Cadence', days: 'days',
+    footGen: 'generated this report from a local assessment file. No data left the machine that produced it.',
+    footSrc: (d, g, p) => `Source of truth is Annex (1) to ${d}, published in ${g} on ${p}.`,
+    footNot: (a) => `This report is a readiness aid and is not a determination of compliance by the ${a}.`,
+    severity: { high: 'high', medium: 'medium', low: 'low' },
+    efforts: { low: 'low', medium: 'medium', high: 'high' },
+    cadences: {},
+    noFindings: 'No findings. Every applicable control carries an owner, an assessed status, and a valid exception record where one is claimed.',
+    waitsOn: 'waits on', none: 'none', thState: 'State', thOpen: 'Open',
+    owner: 'Owner', unassigned: 'unassigned', target: 'Target',
+    edmark: 'summary', edmarkT: 'Appendix A prints no Purpose column. This summary is not Annex text.'
+  },
+  ar: {
+    dir: 'rtl', locale: 'ar-KW',
+    reportTitle: (n) => `تقرير جاهزية ${n} للضوابط الوطنية الأساسية`,
+    kicker: (d, t) => `${d} \u00b7 ${t}`,
+    subtitle: 'الجاهزية مقابل الحد الأدنى الوطني الصادر عن المركز الوطني للأمن السيبراني.',
+    assessed: 'تاريخ التقييم', assessor: 'جهة التقييم', deadline: 'الموعد النهائي', band: 'المستوى',
+    unnamed: 'جهة دون اسم', notRecorded: 'غير مسجل',
+    standsH: 'موقع الجهة اليوم',
+    standsP: 'نسبة التطبيق تحسب ما بني فعلا وحده، أما الوضع القابل للإثبات فيضيف إليه ما يستره استثناء صحيح ساري المفعول وفق الضابط GOV-2.',
+    implementation: 'نسبة التطبيق', posture: 'الوضع القابل للإثبات',
+    controlsMet: 'ضوابط مستوفاة بالكامل', controlsGap: 'ضوابط دون تغطية',
+    coverage: 'نسبة تغطية التقييم',
+    windowLead: (n) => `بقي ${n} يوما من مهلة الامتثال.`,
+    windowOver: (n) => `مضى ${n} يوما على الموعد النهائي.`,
+    windowSub: (p, d, e) => `نشر في ${p} ويستحق في ${d}، وقد انقضى ${e}٪ من المدة`,
+    functionH: 'بحسب الوظيفة',
+    functionP: 'يصنف البند الخامس من الملحق هذه الضوابط في ست وظائف للإطار، ويقابلها ملحق الحوسبة السحابية.',
+    functionMet: (m, t, c) => `${m} من ${t} ضابطا مستوفاة، و${c} بندا مقيسا`,
+    fixH: 'ما يعالج أولا',
+    fixP: 'مرتبة بحسب ما يفتحه كل ضابط من طريق أمام غيره وقرب مرحلته وحجم ما تبقى منه وقلة كلفة البدء فيه.',
+    unblocks: 'يفتح الطريق أمام', noOpen: 'لا عمل مفتوح، فكل ضابط منطبق مستوفى بالكامل.',
+    findingsH: 'الملاحظات',
+    findingsP: 'مسائل تتعلق بسجل التقييم نفسه لا بحالة الضوابط، والمدقق يقرأها أولا.',
+    effortLine: (d, w, p) => `نحو ${d} يوم عمل مفتوح مقابل ${w} يوم عمل قبل الموعد النهائي` +
+      (p ? `، وهو ما يحتاج نحو ${p} من مسارات العمل المتوازية` : '') + '.',
+    detailH: 'تفصيل الضوابط',
+    detailP: (y) => `كل ضابط منطبق مع الحد الأدنى المطلوب وبنود التحقق التي بني عليها التقييم والأدلة الواجب حفظها ${y} سنوات.`,
+    reqL: 'الحد الأدنى المطلوب.', reqWorking: 'ترجمة عاملة',
+    officialL: 'النص الرسمي بالإنجليزية',
+    checksL: 'بنود التحقق', evidenceL: 'الأدلة الواجب حفظها',
+    cadence: 'الدورية', effort: 'الجهد', phase: 'المرحلة',
+    registerH: 'سجل الأدلة',
+    registerP: (n, c, y) => `${n} دليلا موزعة على ${c} ضابطا منطبقا، ويوجب الضابط GOV-5 حفظ السجل ${y} سنوات وتقديمه للمركز عند الطلب، لذا فالنتيجة التي لا يقوم خلفها دليل هي أول ثغرة يجدها التدقيق.`,
+    regProducible: 'مسجل ويمكن بلوغه', regOnFile: 'أدلة محفوظة',
+    regStale: 'تجاوزت دوريتها', regClaims: 'مدعاة دون دليل',
+    regRange: (a, b) => `جمعت الأدلة المحفوظة بين ${a} و${b}، وتقاس حداثتها بدورية كل ضابط على حدة، فالمراجعة الأسبوعية واعتماد السياسة كل سنتين لا يخضعان لمعيار واحد.`,
+    regNone: 'لم يسجل أي دليل على هذا التقييم بعد.',
+    claimsH: 'ضوابط مدعاة دون ما يثبتها',
+    staleH: 'أدلة تجاوزت دوريتها',
+    thControl: 'الضابط', thTitle: 'العنوان', thImpl: 'نسبة التطبيق',
+    thNeeded: 'الأدلة المطلوبة', thArtifact: 'الدليل', thCollected: 'تاريخ الجمع',
+    thAge: 'العمر', thCadence: 'الدورية', days: 'يوما',
+    footGen: 'أنتجت هذا التقرير من ملف تقييم محلي، ولم تغادر أي بيانات الجهاز الذي أنتجه.',
+    footSrc: (d, g, p) => `المرجع هو الملحق الأول من ${d} المنشور في ${g} بتاريخ ${p}.`,
+    footNot: (a) => `هذا التقرير أداة للاستعداد وليس حكما بالامتثال من ${a}.`,
+    severity: { high: 'مرتفعة', medium: 'متوسطة', low: 'منخفضة' },
+    efforts: { low: 'منخفض', medium: 'متوسط', high: 'مرتفع' },
+    cadences: { annual:'سنويا', biennial:'كل سنتين', 'per hire':'عند كل تعيين', weekly:'أسبوعيا',
+      monthly:'شهريا', quarterly:'ربع سنوي', continuous:'مستمر', 'per incident':'عند كل حادث',
+      'per engagement':'عند كل تعاقد' },
+    noFindings: 'لا ملاحظات، فكل ضابط منطبق له مسؤول وحالة مقيمة وسجل استثناء صحيح حيثما ادعي.',
+    waitsOn: 'ينتظر', none: 'لا شيء', thState: 'الحالة', thOpen: 'المفتوح',
+    owner: 'المسؤول', unassigned: 'غير محدد', target: 'التاريخ المستهدف',
+    edmark: 'تلخيص', edmarkT: 'لا يتضمن الملحق الأول عمود الغرض، فهذا التلخيص ليس من نص الملحق.'
+  }
+};
+
+let L = T.en;
+function tr(k, ...a) {
+  const v = L[k] !== undefined ? L[k] : T.en[k];
+  return typeof v === 'function' ? v(...a) : v;
+}
+const isAr = () => L.dir === 'rtl';
+// Control text that exists in both languages.
+const cx = (c, field) => (isAr() && c[`${field}Ar`] ? c[`${field}Ar`] : c[field]);
 
 const REPORT_CSS = `
 ${BASE_CSS}
@@ -86,6 +223,9 @@ details.ctl[open] > summary{border-bottom:1px solid var(--line); background:var(
 .reg tr:last-child td{border-bottom:none}
 .reg .num{text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
 .reg th.num{text-align:right}
+.official{margin-top:11px; border-top:1px dashed var(--line-2); padding-top:9px}
+.official > b{display:block; font-size:.8rem; color:var(--slate); margin-bottom:5px}
+.official > div{font-size:.86rem; color:var(--slate)}
 .edmark{font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:3px; padding:1px 5px; color:var(--slate); vertical-align:1px}
 .req{background:var(--paper-alt); border-left:3px solid var(--ink); padding:12px 15px; border-radius:0 var(--r) var(--r) 0; font-size:.9rem; margin:0 0 15px}
 .chk{list-style:none; padding:0; margin:0 0 15px}
@@ -108,24 +248,24 @@ footer a{color:#9FD5B4}
 function headline(result) {
   const s = result.scores;
   return `<div class="headline">
-    <div><div class="v" style="color:${scoreColor(s.implementation)}">${s.implementation}%</div><div class="k">Implementation</div></div>
-    <div><div class="v" style="color:${scoreColor(s.posture)}">${s.posture}%</div><div class="k">Defensible posture</div></div>
-    <div><div class="v">${s.controlsMet}<span style="color:var(--slate-soft);font-size:1.15rem">/${s.controlsInScope}</span></div><div class="k">Controls fully met</div></div>
-    <div><div class="v" style="color:${s.controlsGap ? TOKENS.crimson : TOKENS.green}">${s.controlsGap}</div><div class="k">Controls with no coverage</div></div>
-    <div><div class="v">${s.coverage}%</div><div class="k">Assessment coverage</div></div>
+    <div><div class="v" style="color:${scoreColor(s.implementation)}">${s.implementation}%</div><div class="k">${tr('implementation')}</div></div>
+    <div><div class="v" style="color:${scoreColor(s.posture)}">${s.posture}%</div><div class="k">${tr('posture')}</div></div>
+    <div><div class="v">${s.controlsMet}<span style="color:var(--slate-soft);font-size:1.15rem">/${s.controlsInScope}</span></div><div class="k">${tr('controlsMet')}</div></div>
+    <div><div class="v" style="color:${s.controlsGap ? TOKENS.crimson : TOKENS.green}">${s.controlsGap}</div><div class="k">${tr('controlsGap')}</div></div>
+    <div><div class="v">${s.coverage}%</div><div class="k">${tr('coverage')}</div></div>
   </div>`;
 }
 
 function windowBlock(status) {
   const label = status.overdue
-    ? `The compliance deadline passed ${Math.abs(status.remainingDays)} days ago.`
-    : `${status.remainingDays} days remain in the compliance window.`;
+    ? tr('windowOver', Math.abs(status.remainingDays))
+    : tr('windowLead', status.remainingDays);
   return `<div class="window">
     <div class="lead">
       <span><b>${label}</b></span>
-      <span class="muted">Published ${fmtDate(status.publishedOn)}, due ${fmtDate(status.deadline)}, ${status.elapsedPercent}% elapsed</span>
+      <span class="muted">${tr('windowSub', fmtDate(status.publishedOn), fmtDate(status.deadline), status.elapsedPercent)}</span>
     </div>
-    ${windowScaleSVG(status)}
+    ${windowScaleSVG(status, { lang: L.dir === 'rtl' ? 'ar' : 'en' })}
   </div>`;
 }
 
@@ -134,9 +274,9 @@ function functionBlock(result) {
     .map((f) => {
       const fn = getFunction(f.id);
       return `<div class="fnrow">
-        <div class="nm">${esc(f.name)}</div>
+        <div class="nm">${esc(isAr() ? f.nameAr : f.name)}</div>
         <div><div class="bar"><i style="width:${f.implementation}%;background:${f.color}"></i></div>
-          <div class="muted" style="font-size:.78rem;margin-top:4px">${f.met} of ${f.controls} controls met, ${f.scoredChecks} checks scored</div></div>
+          <div class="muted" style="font-size:.78rem;margin-top:4px">${tr('functionMet', f.met, f.controls, f.scoredChecks)}</div></div>
         <div class="pc">${f.implementation}%</div>
       </div>`;
     })
@@ -145,15 +285,15 @@ function functionBlock(result) {
 
 function findingsBlock(result) {
   if (!result.findings.length) {
-    return '<p class="muted">No findings. Every applicable control carries an owner, an assessed status, and a valid exception record where one is claimed.</p>';
+    return `<p class="muted">${tr('noFindings')}</p>`;
   }
   return result.findings
     .slice(0, 40)
     .map(
       (f) => `<div class="finding">
       <span class="cid">${esc(f.control)}</span>
-      <span class="sev sev-${f.severity}">${f.severity}</span>
-      <div><div>${esc(f.issue)}</div><div class="fix">${esc(f.fix)}</div></div>
+      <span class="sev sev-${f.severity}">${esc(L.severity[f.severity] || f.severity)}</span>
+      <div><div>${esc(isAr() && f.issueAr ? f.issueAr : f.issue)}</div><div class="fix">${esc(isAr() && f.fixAr ? f.fixAr : f.fix)}</div></div>
     </div>`
     )
     .join('');
@@ -165,58 +305,58 @@ function backlogBlock(plan) {
     .map(
       (b) => `<tr>
       <td><span class="cid">${esc(b.id)}</span></td>
-      <td>${esc(b.title)}${b.waitingOn.length ? `<div class="muted" style="font-size:.79rem">waits on ${b.waitingOn.map(esc).join(', ')}</div>` : ''}</td>
-      <td>${statusPill(b.state)}</td>
+      <td>${esc(isAr() ? b.titleAr || b.title : b.title)}${b.waitingOn.length ? `<div class="muted" style="font-size:.79rem">${tr('waitsOn')} ${b.waitingOn.map(esc).join(', ')}</div>` : ''}</td>
+      <td>${statusPill(b.state, L.dir === 'rtl' ? 'ar' : 'en')}</td>
       <td class="num">${b.phase}</td>
-      <td>${esc(b.effort)}</td>
+      <td>${esc(tr('efforts')[b.effort] || b.effort)}</td>
       <td class="num">${b.openChecks}</td>
-      <td>${b.unblocks.length ? b.unblocks.map(esc).join(', ') : '<span class="muted">none</span>'}</td>
+      <td>${b.unblocks.length ? b.unblocks.map(esc).join(', ') : `<span class="muted">${tr('none')}</span>`}</td>
     </tr>`
     )
     .join('');
   return `<table>
-    <thead><tr><th>Control</th><th>Title</th><th>State</th><th>Phase</th><th>Effort</th><th>Open</th><th>Unblocks</th></tr></thead>
-    <tbody>${rows || '<tr><td colspan="7" class="muted">No open work. Every applicable control is fully met.</td></tr>'}</tbody>
+    <thead><tr><th>${tr('thControl')}</th><th>${tr('thTitle')}</th><th>${tr('thState')}</th><th>${tr('phase')}</th><th>${tr('effort')}</th><th>${tr('thOpen')}</th><th>${tr('unblocks')}</th></tr></thead>
+    <tbody>${rows || `<tr><td colspan="7" class="muted">${tr('noOpen')}</td></tr>`}</tbody>
   </table>`;
 }
 
 function controlDetail(row) {
   const control = getControl(row.id);
   const map = mappingsFor(row.id);
-  const checks = control.checks
+  const checks = cx(control, 'checks')
     .map(
       (text, i) => `<li><span class="i">${String(i + 1).padStart(2, '0')}</span>
-      <span>${esc(text)}</span>${statusPill(row.statuses[i])}</li>`
+      <span>${esc(text)}</span>${statusPill(row.statuses[i], L.dir === 'rtl' ? 'ar' : 'en')}</li>`
     )
     .join('');
-  const evidence = control.evidence.map((e) => `<li>${esc(e)}</li>`).join('');
+  const evidence = cx(control, 'evidence').map((e) => `<li>${esc(e)}</li>`).join('');
 
   return `<details class="ctl">
     <summary>
       <span class="cid">${esc(row.id)}</span>
-      <span class="t">${esc(row.title)}</span>
-      ${statusPill(row.state)}
+      <span class="t">${esc(isAr() ? row.titleAr || row.title : row.title)}</span>
+      ${statusPill(row.state, L.dir === 'rtl' ? 'ar' : 'en')}
       <span class="num muted" style="font-size:.85rem">${row.implementation === null ? '' : row.implementation + '%'}</span>
     </summary>
     <div class="body">
-      <p class="muted" style="margin:0 0 12px">${esc(control.purpose)}${
+      <p class="muted" style="margin:0 0 12px">${esc(cx(control, 'purpose'))}${
         control.purposeSource === 'editorial'
-          ? ' <span class="edmark" title="Appendix A prints no Purpose column. This summary is not Annex text.">summary</span>'
+          ? ` <span class="edmark" title="${esc(tr('edmarkT'))}">${esc(tr('edmark'))}</span>`
           : ''}</p>
       <div class="req">${renderRequirement(control)}</div>
-      <h4 style="margin:0 0 8px">Checks</h4>
+      <h4 style="margin:0 0 8px">${tr('checksL')}</h4>
       <ul class="chk">${checks}</ul>
-      <h4 style="margin:0 0 8px">Evidence to retain</h4>
-      <ul style="margin:0; padding-left:20px; font-size:.88rem; color:var(--slate)">${evidence}</ul>
+      <h4 style="margin:0 0 8px">${tr('evidenceL')}</h4>
+      <ul style="margin:0; padding-inline-start:20px; font-size:.88rem; color:var(--slate)">${evidence}</ul>
       <div class="meta">
-        <span>Owner <b>${esc(row.owner || 'unassigned')}</b></span>
-        <span>Cadence <b>${esc(control.cadence)}</b></span>
-        <span>Effort <b>${esc(control.effort)}</b></span>
-        <span>Phase <b>${control.phase}</b></span>
-        <span>NIST CSF <b>${map.csf.map(esc).join(', ')}</b></span>
-        <span>CIS v8.1 <b>${map.cis.map(esc).join(', ')}</b></span>
-        <span>ISO 27001 <b>${map.iso.map(esc).join(', ')}</b></span>
-        ${row.targetDate ? `<span>Target <b>${esc(row.targetDate)}</b></span>` : ''}
+        <span>${tr('owner')} <b>${esc(row.owner || tr('unassigned'))}</b></span>
+        <span>${tr('cadence')} <b>${esc(tr('cadences')[control.cadence] || control.cadence)}</b></span>
+        <span>${tr('effort')} <b>${esc(tr('efforts')[control.effort] || control.effort)}</b></span>
+        <span>${tr('phase')} <b>${control.phase}</b></span>
+        <span>NIST CSF <b dir="ltr">${map.csf.map(esc).join(', ')}</b></span>
+        <span>CIS v8.1 <b dir="ltr">${map.cis.map(esc).join(', ')}</b></span>
+        <span>ISO 27001 <b dir="ltr">${map.iso.map(esc).join(', ')}</b></span>
+        ${row.targetDate ? `<span>${tr('target')} <b dir="ltr">${esc(row.targetDate)}</b></span>` : ''}
       </div>
       ${row.notes ? `<p class="muted" style="margin:12px 0 0;font-size:.87rem">${esc(row.notes)}</p>` : ''}
     </div>
@@ -229,6 +369,7 @@ function controlDetail(row) {
  * GOV-5, or printed without anything breaking.
  */
 export function renderReport(assessment, options = {}) {
+  L = options.lang === 'ar' ? T.ar : T.en;
   const result = assess(assessment);
   const today = options.today || new Date();
   const plan = buildPlan(assessment, today);
@@ -236,8 +377,8 @@ export function renderReport(assessment, options = {}) {
   const reg = evidenceRegister(assessment, today);
   const claims = unevidencedClaims(assessment, result, today);
   const status = plan.deadline;
-  const entityName = (result.entity && result.entity.name) || 'Unnamed entity';
-  const title = `${entityName} NBCC readiness report`;
+  const entityName = (result.entity && result.entity.name) || tr('unnamed');
+  const title = tr('reportTitle', entityName);
 
   const grouped = result.byFunction
     .map((f) => {
@@ -246,18 +387,18 @@ export function renderReport(assessment, options = {}) {
       const fn = getFunction(f.id);
       return `<h3 style="margin:22px 0 10px;display:flex;gap:10px;align-items:baseline">
         <span style="width:9px;height:9px;border-radius:2px;background:${f.color};display:inline-block"></span>
-        ${esc(f.name)}
+        ${esc(isAr() ? fn.nameAr : fn.name)}
       </h3>${rows.map(controlDetail).join('')}`;
     })
     .join('');
 
   return `<!doctype html>
-<html lang="en">
+<html lang="${L.dir === 'rtl' ? 'ar' : 'en'}" dir="${L.dir}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
-<meta name="description" content="Readiness assessment against the Kuwait National Basic Cybersecurity Controls, Annex 1 to NCSC Decision No. 2 of 2026.">
+<meta name="description" content="${esc(tr('subtitle'))}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
@@ -267,17 +408,17 @@ export function renderReport(assessment, options = {}) {
 <header class="masthead">
   <div class="wrap">
     <div>
-      <div class="kicker">${esc(REGULATION.decision)} &middot; ${esc(REGULATION.title)}</div>
+      <div class="kicker">${esc(tr('kicker', isAr() ? REGULATION.decisionAr : REGULATION.decision, isAr() ? REGULATION.titleAr : REGULATION.title))}</div>
       <h1>${esc(entityName)}</h1>
       <p style="color:#B9CDD5;margin:10px 0 0;max-width:56ch;font-size:.95rem">
-        Readiness against the national minimum baseline issued by the ${esc(REGULATION.authority)}.
+        ${esc(tr('subtitle'))}
       </p>
     </div>
     <dl>
-      <dt>Assessed</dt><dd>${esc(result.assessmentDate)}</dd>
-      <dt>Assessor</dt><dd>${esc(result.assessor || 'not recorded')}</dd>
-      <dt>Deadline</dt><dd>${esc(REGULATION.deadline)}</dd>
-      <dt>Band</dt><dd>${esc(result.scores.band.label)}</dd>
+      <dt>${tr('assessed')}</dt><dd dir="ltr">${esc(result.assessmentDate)}</dd>
+      <dt>${tr('assessor')}</dt><dd>${esc(result.assessor || tr('notRecorded'))}</dd>
+      <dt>${tr('deadline')}</dt><dd dir="ltr">${esc(REGULATION.deadline)}</dd>
+      <dt>${tr('band')}</dt><dd>${esc(isAr() ? result.scores.band.labelAr : result.scores.band.label)}</dd>
     </dl>
   </div>
 </header>
@@ -286,8 +427,8 @@ export function renderReport(assessment, options = {}) {
 
 <section>
   <div class="section-head">
-    <h2>Where the entity stands</h2>
-    <p>Implementation counts only what is built. Defensible posture adds requirements sheltered by a valid, in date exception under GOV-2.</p>
+    <h2>${tr('standsH')}</h2>
+    <p>${tr('standsP')}</p>
   </div>
   ${headline(result)}
   <div style="margin-top:20px">${windowBlock(status)}</div>
@@ -295,76 +436,76 @@ export function renderReport(assessment, options = {}) {
 
 <section>
   <div class="section-head">
-    <h2>By function</h2>
-    <p>Section 5 of the Annex groups the baseline by the six NIST CSF functions, with the cloud appendix carried alongside.</p>
+    <h2>${tr('functionH')}</h2>
+    <p>${tr('functionP')}</p>
   </div>
   ${functionBlock(result)}
 </section>
 
 <section>
   <div class="section-head">
-    <h2>What to fix first</h2>
-    <p>Ranked by how much a control unblocks, how early its phase falls, how much of it is open, and how little it costs to start.</p>
+    <h2>${tr('fixH')}</h2>
+    <p>${tr('fixP')}</p>
   </div>
   ${backlogBlock(plan)}
   <p class="muted" style="margin-top:14px;font-size:.88rem">
-    Roughly ${plan.effort.totalPersonDays} person days of open work against ${plan.effort.workingDaysRemaining} working days before the deadline${plan.effort.parallelStreamsNeeded ? `, which needs about ${plan.effort.parallelStreamsNeeded} parallel stream${plan.effort.parallelStreamsNeeded > 1 ? 's' : ''}` : ''}.
+    ${tr('effortLine', plan.effort.totalPersonDays, plan.effort.workingDaysRemaining, plan.effort.parallelStreamsNeeded)}
   </p>
 </section>
 
 <section>
   <div class="section-head">
-    <h2>Findings</h2>
-    <p>Problems with the assessment record itself, separate from the state of the controls. An auditor reads these first.</p>
+    <h2>${tr('findingsH')}</h2>
+    <p>${tr('findingsP')}</p>
   </div>
   ${findingsBlock(result)}
 </section>
 
 <section>
   <div class="section-head">
-    <h2>Control detail</h2>
-    <p>Every applicable control with its official minimum requirement, the checks behind the score, and the evidence to keep for ${REGULATION.recordRetentionYears} years.</p>
+    <h2>${tr('detailH')}</h2>
+    <p>${tr('detailP', REGULATION.recordRetentionYears)}</p>
   </div>
   ${grouped}
 </section>
 
 <section>
   <div class="section-head">
-    <h2>Evidence register</h2>
-    <p>${reg.totalArtifacts} artifacts across ${result.scores.controlsInScope} applicable controls. GOV-5 requires the record to be retained for ${REGULATION.recordRetentionYears} years and produced for NCSC on request, so a score with nothing behind it is the gap an audit finds first.</p>
+    <h2>${tr('registerH')}</h2>
+    <p>${tr('registerP', reg.totalArtifacts, result.scores.controlsInScope, REGULATION.recordRetentionYears)}</p>
   </div>
 
   <div class="headline">
-    <div><div class="v" style="color:${scoreColor(reg.producible)}">${reg.producible}%</div><div class="k">Recorded and locatable</div></div>
-    <div><div class="v">${reg.counts.held}<span style="color:var(--slate-soft);font-size:1.15rem">/${reg.totalArtifacts}</span></div><div class="k">Artifacts on file</div></div>
-    <div><div class="v" style="color:${reg.counts.stale ? TOKENS.ochre : TOKENS.ink}">${reg.counts.stale}</div><div class="k">Stale for their cadence</div></div>
-    <div><div class="v" style="color:${claims.length ? TOKENS.crimson : TOKENS.green}">${claims.length}</div><div class="k">Claimed but unevidenced</div></div>
+    <div><div class="v" style="color:${scoreColor(reg.producible)}">${reg.producible}%</div><div class="k">${tr('regProducible')}</div></div>
+    <div><div class="v">${reg.counts.held}<span style="color:var(--slate-soft);font-size:1.15rem">/${reg.totalArtifacts}</span></div><div class="k">${tr('regOnFile')}</div></div>
+    <div><div class="v" style="color:${reg.counts.stale ? TOKENS.ochre : TOKENS.ink}">${reg.counts.stale}</div><div class="k">${tr('regStale')}</div></div>
+    <div><div class="v" style="color:${claims.length ? TOKENS.crimson : TOKENS.green}">${claims.length}</div><div class="k">${tr('regClaims')}</div></div>
   </div>
 
-  ${reg.oldestCollected ? `<p class="muted" style="font-size:.9rem">Evidence on file was collected between ${fmtDate(reg.oldestCollected)} and ${fmtDate(reg.newestCollected)}. Freshness is judged against each control's own cadence, so a weekly review and a biennial policy approval are held to different standards.</p>` : '<p class="muted" style="font-size:.9rem">No evidence has been recorded against this assessment yet.</p>'}
+  ${reg.oldestCollected ? `<p class="muted" style="font-size:.9rem">${tr('regRange', fmtDate(reg.oldestCollected), fmtDate(reg.newestCollected))}</p>` : `<p class="muted" style="font-size:.9rem">${tr('regNone')}</p>`}
 
   ${claims.length > 0 ? `
-  <h3 style="margin:22px 0 8px; font-size:1rem">Controls claimed with nothing to show</h3>
+  <h3 style="margin:22px 0 8px; font-size:1rem">${tr('claimsH')}</h3>
   <table class="reg">
-    <thead><tr><th>Control</th><th>Title</th><th class="num">Implementation</th><th class="num">Artifacts needed</th></tr></thead>
+    <thead><tr><th>${tr('thControl')}</th><th>${tr('thTitle')}</th><th class="num">${tr('thImpl')}</th><th class="num">${tr('thNeeded')}</th></tr></thead>
     <tbody>${claims.map((c) => `<tr>
       <td><span class="cid">${esc(c.control)}</span></td>
-      <td>${esc(c.title)}</td>
+      <td>${esc(isAr() ? getControl(c.control).titleAr : c.title)}</td>
       <td class="num">${c.implementation}%</td>
       <td class="num">${c.artifactsNeeded}</td>
     </tr>`).join('')}</tbody>
   </table>` : ''}
 
   ${reg.counts.stale > 0 ? `
-  <h3 style="margin:22px 0 8px; font-size:1rem">Evidence that has gone stale</h3>
+  <h3 style="margin:22px 0 8px; font-size:1rem">${tr('staleH')}</h3>
   <table class="reg">
-    <thead><tr><th>Control</th><th>Artifact</th><th>Collected</th><th class="num">Age</th><th>Cadence</th></tr></thead>
+    <thead><tr><th>${tr('thControl')}</th><th>${tr('thArtifact')}</th><th>${tr('thCollected')}</th><th class="num">${tr('thAge')}</th><th>${tr('thCadence')}</th></tr></thead>
     <tbody>${reg.items.filter((i) => i.state === 'stale').map((i) => `<tr>
       <td><span class="cid">${esc(i.control)}</span></td>
-      <td>${esc(i.artifact)}</td>
+      <td>${esc(isAr() ? i.artifactAr : i.artifact)}</td>
       <td>${fmtDate(i.collected)}</td>
-      <td class="num">${i.ageDays} days</td>
-      <td>${esc(i.cadence)}</td>
+      <td class="num">${i.ageDays} ${tr('days')}</td>
+      <td>${esc(tr('cadences')[i.cadence] || i.cadence)}</td>
     </tr>`).join('')}</tbody>
   </table>` : ''}
 </section>
@@ -373,10 +514,10 @@ export function renderReport(assessment, options = {}) {
 
 <footer>
   <div class="wrap">
-    <p style="margin:0 0 6px"><b style="color:var(--paper)">Kuwait NBCC Toolkit</b> generated this report from a local assessment file. No data left the machine that produced it.</p>
+    <p style="margin:0 0 6px"><b style="color:var(--paper)">${isAr() ? 'أدوات الضوابط الوطنية الأساسية للأمن السيبراني' : 'Kuwait NBCC Toolkit'}</b> ${tr('footGen')}</p>
     <p style="margin:0">
-      Source of truth is Annex (1) to ${esc(REGULATION.decision)}, published in ${esc(REGULATION.gazette)} on ${fmtDate(REGULATION.publishedOn)}.
-      This report is a readiness aid and is not a determination of compliance by the ${esc(REGULATION.authority)}.
+      ${esc(tr('footSrc', isAr() ? REGULATION.decisionAr : REGULATION.decision, isAr() ? REGULATION.gazetteAr || REGULATION.gazette : REGULATION.gazette, fmtDate(REGULATION.publishedOn)))}
+      ${esc(tr('footNot', isAr() ? REGULATION.authorityAr : REGULATION.authority))}
     </p>
   </div>
 </footer>

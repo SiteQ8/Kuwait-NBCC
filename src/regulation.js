@@ -23,6 +23,7 @@ export const REGULATION = {
   authority: 'National Cyber Security Center (NCSC)',
   authorityAr: 'المركز الوطني للأمن السيبراني',
   gazette: 'Kuwait Al Youm, issue 1785, year 72',
+  gazetteAr: 'جريدة الكويت اليوم، العدد 1785، السنة الثانية والسبعون',
   signedOn: '2026-03-31',
   publishedOn: '2026-04-05',
   complianceWindowMonths: 18,

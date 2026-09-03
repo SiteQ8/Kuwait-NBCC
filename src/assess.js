@@ -89,11 +89,19 @@ function exceptionState(entry, asOf) {
   if (!ex) return { present: false, valid: false, expired: false, reasons: ['No exception record.'] };
   const reasons = [];
   const expiry = isoDate(ex.expiry);
-  if (!ex.reason || !String(ex.reason).trim()) reasons.push('Exception has no documented reason.');
-  if (ex.riskAccepted !== true) reasons.push('Exception has no recorded risk acceptance.');
-  if (!expiry) reasons.push('Exception has no valid expiry date.');
+  if (!ex.reason || !String(ex.reason).trim()) {
+    reasons.push({ en: 'Exception has no documented reason.', ar: 'الاستثناء دون سبب موثق.' });
+  }
+  if (ex.riskAccepted !== true) {
+    reasons.push({ en: 'Exception has no recorded risk acceptance.', ar: 'الاستثناء دون قبول مسجل للمخاطر.' });
+  }
+  if (!expiry) {
+    reasons.push({ en: 'Exception has no valid expiry date.', ar: 'الاستثناء دون تاريخ انتهاء صحيح.' });
+  }
   const expired = Boolean(expiry && expiry < asOf);
-  if (expired) reasons.push(`Exception expired on ${ex.expiry}.`);
+  if (expired) {
+    reasons.push({ en: `Exception expired on ${ex.expiry}.`, ar: `انتهى الاستثناء بتاريخ ${ex.expiry}.` });
+  }
   return { present: true, valid: reasons.length === 0, expired, expiry: ex.expiry || null, reasons };
 }
 
@@ -155,7 +163,9 @@ export function assess(assessment = {}, options = {}) {
           severity: 'high',
           control: control.id,
           issue: `${naCount} check(s) marked not applicable without a written justification.`,
-          fix: 'Add a na.justification field recording why the requirement does not apply to this entity.'
+          issueAr: `${naCount} من البنود موسومة بأنها لا تنطبق دون تبرير مكتوب.`,
+          fix: 'Add a na.justification field recording why the requirement does not apply to this entity.',
+          fixAr: 'أضف حقل na.justification يسجل سبب عدم انطباق المتطلب على هذه الجهة.'
         });
       }
       if (ex.present && !ex.valid) {
@@ -163,8 +173,10 @@ export function assess(assessment = {}, options = {}) {
           findings.push({
             severity: ex.expired ? 'high' : 'medium',
             control: control.id,
-            issue: reason,
-            fix: 'GOV-2 requires every deviation to carry a documented risk acceptance and an expiry date.'
+            issue: reason.en || reason,
+            issueAr: reason.ar || reason,
+            fix: 'GOV-2 requires every deviation to carry a documented risk acceptance and an expiry date.',
+            fixAr: 'يوجب الضابط GOV-2 أن يحمل كل خروج عن السياسة قبولا موثقا للمخاطر وتاريخ انتهاء.'
           });
         }
       }
@@ -175,7 +187,9 @@ export function assess(assessment = {}, options = {}) {
             severity: days <= 30 ? 'medium' : 'low',
             control: control.id,
             issue: `Exception expires in ${days} day(s) on ${ex.expiry}.`,
-            fix: 'Close the underlying gap or renew the exception with a fresh risk acceptance before expiry.'
+            issueAr: `ينتهي الاستثناء خلال ${days} يوما بتاريخ ${ex.expiry}.`,
+            fix: 'Close the underlying gap or renew the exception with a fresh risk acceptance before expiry.',
+            fixAr: 'أغلق الفجوة الأساسية أو جدد الاستثناء بقبول جديد للمخاطر قبل انتهائه.'
           });
         }
       }
@@ -184,7 +198,9 @@ export function assess(assessment = {}, options = {}) {
           severity: 'low',
           control: control.id,
           issue: `${claimedChecks} check(s) scored from a control level status of "${claimed}" rather than an individual answer.`,
-          fix: 'Answer each check separately so the self assessment required by GOV-5 shows its working.'
+          issueAr: `${claimedChecks} من البنود قيمت من حالة عامة على مستوى الضابط هي "${claimed}" لا من إجابة مستقلة لكل بند.`,
+          fix: 'Answer each check separately so the self assessment required by GOV-5 shows its working.',
+          fixAr: 'أجب عن كل بند على حدة ليظهر التقييم الذاتي الذي يوجبه الضابط GOV-5 أساس نتيجته.'
         });
       }
       if (state === 'unassessed') {
@@ -192,7 +208,9 @@ export function assess(assessment = {}, options = {}) {
           severity: 'medium',
           control: control.id,
           issue: 'Control has not been assessed.',
-          fix: 'Record a status for each check so the self assessment under GOV-5 is complete.'
+          issueAr: 'لم يقيم هذا الضابط.',
+          fix: 'Record a status for each check so the self assessment under GOV-5 is complete.',
+          fixAr: 'سجل حالة لكل بند حتى يكتمل التقييم الذاتي وفق الضابط GOV-5.'
         });
       }
       if (!entry || !entry.owner) {
@@ -200,7 +218,9 @@ export function assess(assessment = {}, options = {}) {
           severity: 'low',
           control: control.id,
           issue: 'No owner recorded.',
-          fix: 'GOV-1 requires documented responsibilities, so name an owner for the control.'
+          issueAr: 'لم يسجل مسؤول لهذا الضابط.',
+          fix: 'GOV-1 requires documented responsibilities, so name an owner for the control.',
+          fixAr: 'يوجب الضابط GOV-1 توثيق المسؤوليات، فسم مسؤولا عن هذا الضابط.'
         });
       }
     }

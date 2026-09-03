@@ -44,6 +44,7 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 | Evidence register | `nbcc evidence entity.json` |
 | Only what has gone stale | `nbcc evidence entity.json --stale` |
 | HTML report | `nbcc report entity.json --out report.html` |
+| Arabic HTML report | `nbcc report entity.json --out report.html --ar` |
 | Compare two points in time | `nbcc diff q1.json q3.json` |
 | Will we make the deadline | `nbcc trend snapshots/*.json` |
 | Roll several entities up | `nbcc portfolio entities/*.json` |

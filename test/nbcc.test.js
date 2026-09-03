@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, unlinkSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -966,6 +966,62 @@ test('English output carries no Arabic anywhere', () => {
 test('the English report carries no Arabic', () => {
   const html = renderReport(JSON.parse(readFileSync(EXAMPLE, 'utf8')), { today: SEP });
   assert.ok(!ARABIC.test(html), 'the English report leaked Arabic');
+});
+
+test('the Arabic report is Arabic throughout', () => {
+  const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
+  const html = renderReport(doc, { today: SEP, lang: 'ar' });
+  assert.ok(html.includes('dir="rtl"'), 'the document direction must flip');
+  assert.ok(html.includes('lang="ar"'));
+  assert.ok(html.includes('سجل الأدلة'), 'section headings should be Arabic');
+  assert.ok(html.includes('نسبة التطبيق'));
+  assert.ok(html.includes('مستوفى') || html.includes('جزئي'), 'status pills should be Arabic');
+  assert.ok(html.includes('التأسيس'), 'milestone labels should be Arabic');
+  assert.ok(!html.includes('>Where the entity stands<'));
+  assert.ok(!html.includes('>Evidence register<'));
+  assert.ok(!html.includes('undefined'));
+
+  // Article 6 keeps the English authoritative, so it must still be present.
+  assert.ok(html.includes('ترجمة عاملة'), 'the Arabic requirement must be labelled a translation');
+  assert.ok(html.includes('النص الرسمي بالإنجليزية'));
+  assert.ok(html.includes('The entity MUST designate an employee'), 'official text must survive');
+});
+
+test('the two reports differ only in language, not in numbers', () => {
+  const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
+  const en = renderReport(doc, { today: SEP });
+  const ar = renderReport(doc, { today: SEP, lang: 'ar' });
+  const r = assess(doc);
+  for (const html of [en, ar]) {
+    assert.ok(html.includes(`${r.scores.implementation}%`));
+    assert.ok(html.includes(`${r.scores.posture}%`));
+  }
+});
+
+test('report findings carry both languages', () => {
+  const doc = JSON.parse(readFileSync(EXAMPLE, 'utf8'));
+  const r = assess(doc);
+  assert.ok(r.findings.length > 0);
+  for (const f of r.findings) {
+    assert.ok(f.issueAr && ARABIC.test(f.issueAr), `finding on ${f.control} has no Arabic issue`);
+    assert.ok(f.fixAr && ARABIC.test(f.fixAr), `finding on ${f.control} has no Arabic fix`);
+  }
+  const reg = evidenceRegister(doc, SEP);
+  for (const f of reg.findings) {
+    assert.ok(f.issueAr && ARABIC.test(f.issueAr), `evidence finding on ${f.control} has no Arabic`);
+  }
+});
+
+test('cli report takes the language flag', () => {
+  const outPath = resolve(root, 'test-ar-report.html');
+  try {
+    cli(['report', EXAMPLE, '--out', outPath, '--date', '2026-09-03', '--ar']);
+    const html = readFileSync(outPath, 'utf8');
+    assert.ok(html.includes('dir="rtl"'));
+    assert.ok(html.includes('سجل الأدلة'));
+  } finally {
+    try { unlinkSync(outPath); } catch { /* already gone */ }
+  }
 });
 
 test('Arabic output leads in Arabic and keeps the official text reachable', () => {

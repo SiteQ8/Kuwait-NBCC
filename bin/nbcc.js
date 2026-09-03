@@ -680,7 +680,10 @@ function cmdCrosswalk(flags) {
 
 function cmdReport(positional, flags) {
   const data = loadAssessment(positional[0]);
-  const html = renderReport(data, { today: flags.date ? new Date(flags.date) : new Date() });
+  const html = renderReport(data, {
+    today: flags.date ? new Date(`${flags.date}T00:00:00Z`) : new Date(),
+    lang: flags.ar ? 'ar' : 'en'
+  });
   const path = typeof flags.out === 'string' ? flags.out : 'nbcc-report.html';
   writeFileSync(resolve(process.cwd(), path), html, 'utf8');
   const r = assess(data);

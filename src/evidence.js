@@ -170,14 +170,18 @@ export function evidenceRegister(assessment, asOf = new Date()) {
         severity: 'medium',
         control: control.id,
         issue: `No evidence recorded for any of the ${rows.length} artifacts this control needs.`,
-        fix: 'Record where each artifact is held so it can be produced for NCSC under GOV-5.'
+        issueAr: `لم يسجل أي دليل من الأدلة ${rows.length} التي يحتاجها هذا الضابط.`,
+        fix: 'Record where each artifact is held so it can be produced for NCSC under GOV-5.',
+        fixAr: 'سجل موضع حفظ كل دليل حتى يمكن تقديمه للمركز وفق الضابط GOV-5.'
       });
     } else if (missing > 0) {
       findings.push({
         severity: 'low',
         control: control.id,
         issue: `${missing} of ${rows.length} evidence artifacts have no record.`,
-        fix: 'Complete the register so the evidence pack is whole before the deadline.'
+        issueAr: `${missing} من ${rows.length} من الأدلة دون تسجيل.`,
+        fix: 'Complete the register so the evidence pack is whole before the deadline.',
+        fixAr: 'أكمل السجل حتى تكتمل حزمة الأدلة قبل الموعد النهائي.'
       });
     }
     for (const r of stale) {
@@ -185,7 +189,9 @@ export function evidenceRegister(assessment, asOf = new Date()) {
         severity: 'medium',
         control: control.id,
         issue: `Evidence "${r.artifact}" is ${r.ageDays} days old. This control has a cadence of ${r.cadence}, so anything past ${r.refreshDays} days is stale.`,
-        fix: 'Collect a current copy. Stale evidence shows a control that once worked, not one that is operating.'
+        issueAr: `مضى على الدليل "${r.artifactAr}" ${r.ageDays} يوما، ودورية هذا الضابط ${r.cadence}، فما تجاوز ${r.refreshDays} يوما يعد متقادما.`,
+        fix: 'Collect a current copy. Stale evidence shows a control that once worked, not one that is operating.',
+        fixAr: 'اجمع نسخة حديثة، فالدليل المتقادم يثبت ضابطا عمل يوما ما لا ضابطا يعمل الآن.'
       });
     }
     for (const r of misdated) {
@@ -193,7 +199,9 @@ export function evidenceRegister(assessment, asOf = new Date()) {
         severity: 'medium',
         control: control.id,
         issue: `Evidence "${r.artifact}" carries a collection date in the future.`,
-        fix: 'Correct the collected date so the register can be relied on.'
+        issueAr: `الدليل "${r.artifactAr}" يحمل تاريخ جمع في المستقبل.`,
+        fix: 'Correct the collected date so the register can be relied on.',
+        fixAr: 'صحح تاريخ الجمع حتى يمكن الاعتماد على السجل.'
       });
     }
     if (undated > 0) {
@@ -201,7 +209,9 @@ export function evidenceRegister(assessment, asOf = new Date()) {
         severity: 'low',
         control: control.id,
         issue: `${undated} evidence artifact(s) are held but carry no collection date.`,
-        fix: 'Record when each artifact was collected so its freshness can be judged.'
+        issueAr: `${undated} من الأدلة محفوظة دون تاريخ جمع.`,
+        fix: 'Record when each artifact was collected so its freshness can be judged.',
+        fixAr: 'سجل تاريخ جمع كل دليل حتى يمكن الحكم على حداثته.'
       });
     }
     if (unreferenced > 0) {
@@ -209,7 +219,9 @@ export function evidenceRegister(assessment, asOf = new Date()) {
         severity: 'low',
         control: control.id,
         issue: `${unreferenced} evidence artifact(s) are held but record no location.`,
-        fix: 'Record a reference so the artifact can actually be produced on request.'
+        issueAr: `${unreferenced} من الأدلة محفوظة دون تسجيل موضعها.`,
+        fix: 'Record a reference so the artifact can actually be produced on request.',
+        fixAr: 'سجل مرجعا لموضع الدليل حتى يمكن تقديمه فعلا عند الطلب.'
       });
     }
   }

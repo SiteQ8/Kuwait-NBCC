@@ -118,7 +118,7 @@ export function windowScaleSVG(status, opts = {}) {
     .map(
       (t) => `
     <line x1="${t.x.toFixed(1)}" y1="${y - 11}" x2="${t.x.toFixed(1)}" y2="${y + 11}" stroke="${TOKENS.line}" stroke-width="1.5"/>
-    <text x="${t.x.toFixed(1)}" y="${y + 30}" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="${TOKENS.slate}">${t.name}</text>
+    <text x="${t.x.toFixed(1)}" y="${y + 30}" text-anchor="middle" font-family="var(--sans)" font-size="11.5" fill="${TOKENS.slate}">${opts.lang === 'ar' ? (t.nameAr || t.name) : t.name}</text>
     <text x="${t.x.toFixed(1)}" y="${y - 18}" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="${TOKENS.slateSoft}">${t.due}</text>`
     )
     .join('');
@@ -135,21 +135,22 @@ export function windowScaleSVG(status, opts = {}) {
 </svg>`;
 }
 
-export function statusPill(state) {
-  const map = {
-    met: ['pill-met', 'Met'],
-    partial: ['pill-partial', 'Partial'],
-    gap: ['pill-gap', 'Gap'],
-    'covered-by-exception': ['pill-exception', 'Exception'],
-    unassessed: ['pill-unassessed', 'Not assessed'],
-    'not-applicable': ['pill-na', 'Not applicable'],
-    'out-of-scope': ['pill-na', 'Out of scope'],
-    unknown: ['pill-unknown', 'Not assessed'],
-    exception: ['pill-exception', 'Exception'],
-    na: ['pill-na', 'Not applicable']
-  };
-  const [cls, label] = map[state] || ['pill-unknown', state];
-  return `<span class="pill ${cls}">${label}</span>`;
+const PILLS = {
+  met: ['pill-met', 'Met', 'مستوفى'],
+  partial: ['pill-partial', 'Partial', 'جزئي'],
+  gap: ['pill-gap', 'Gap', 'فجوة'],
+  'covered-by-exception': ['pill-exception', 'Exception', 'مغطى باستثناء'],
+  unassessed: ['pill-unassessed', 'Not assessed', 'غير مقيم'],
+  'not-applicable': ['pill-na', 'Not applicable', 'لا ينطبق'],
+  'out-of-scope': ['pill-na', 'Out of scope', 'خارج النطاق'],
+  unknown: ['pill-unknown', 'Not assessed', 'غير مقيم'],
+  exception: ['pill-exception', 'Exception', 'استثناء'],
+  na: ['pill-na', 'Not applicable', 'لا ينطبق']
+};
+
+export function statusPill(state, lang = 'en') {
+  const [cls, en, ar] = PILLS[state] || ['pill-unknown', state, state];
+  return `<span class="pill ${cls}">${lang === 'ar' ? ar : en}</span>`;
 }
 
 export function scoreColor(percent) {

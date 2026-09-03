@@ -40,6 +40,8 @@ So every control here keeps its **official minimum requirement word for word**, 
 
 Article 6 makes the English Annex authoritative, so the Arabic requirement is labelled a working translation and never replaces the official text, which sits one click away under **عرض النص الرسمي بالإنجليزية** and is printed after the Arabic in `nbcc show --ar`. Framework identifiers, protocol names and certification names such as SOC 2 Type II stay in Latin script, because that is what they are called.
 
+**The report is the artifact that circulates, so it exists whole in either language.** `nbcc report entity.json --out report.html --ar` produces a right to left Arabic document: headings, tables, status labels, milestone names, findings and their remedies, with the authoritative English printed under each requirement. Both reports carry identical numbers.
+
 | Function | Controls | Checks |
 |---|---|---|
 | Govern | 6 | 59 |
@@ -119,7 +121,7 @@ Measure an entity
   portfolio <file...>           Roll several entities up, split systemic from isolated
 
 Produce artifacts
-  report <file> --out x.html    Self contained HTML report
+  report <file> --out x.html [--ar]  Self contained HTML report
   export <file> --as md|csv|json|register
   doctor                        Verify catalog integrity
 ```
@@ -238,7 +240,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 117 tests
+node --test test/*.test.js     # 121 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 
