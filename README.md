@@ -38,6 +38,8 @@ So every control here keeps its **official minimum requirement word for word**, 
 
 **All of it exists in Arabic as well as English**, including a working Arabic translation of all 44 minimum requirements. Pick a language and the whole instrument is in that language. No English labels inside the Arabic interface, no Arabic subtitles inside the English one.
 
+Written as Arabic rather than translated into it. Checks lead with the verb, because Arabic is verb first and "الحصر يشمل الخوادم" carries the English word order across; the same statement as "يشمل الحصر الخوادم" reads as Arabic. Both properties are asserted in the test suite.
+
 Terminology follows the wording the regional cybersecurity regulators actually print rather than a literal gloss: data residency is توطين البيانات, screening is المسح الأمني, removable media is وسائط التخزين الخارجية, a console is لوحة تحكم. The banned literal renderings are asserted in the test suite.
 
 Article 6 makes the English Annex authoritative, so the Arabic requirement is labelled a working translation and never replaces the official text, which sits one click away under **عرض النص الرسمي بالإنجليزية** and is printed after the Arabic in `nbcc show --ar`. Framework identifiers, protocol names and certification names such as SOC 2 Type II stay in Latin script, because that is what they are called.
@@ -250,7 +252,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 127 tests
+node --test test/*.test.js     # 129 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

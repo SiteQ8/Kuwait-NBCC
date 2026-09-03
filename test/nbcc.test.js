@@ -150,6 +150,36 @@ test('the report renders bullets as a list rather than running prose', () => {
   assert.ok(!html.includes('\u2022'), 'raw bullet characters should not reach the report');
 });
 
+test('Arabic checks lead with the verb rather than the English word order', () => {
+  // Arabic is verb first. Writing "الحصر يشمل الخوادم" carries the English
+  // order across and reads as translated text to an assessor.
+  const VERBS = new Set(`يغطي تراجع يحمل تستخدم تحفظ تبين تحجب تحمل تزامن يشمل تسجل
+    تطبق تتطلب تقفل تحدث تعطل يعمل تمنع تتبع تختبر تجمع تقدم تشارك يستخدم تغذي تدار
+    تترك تتخذ توثق يتابع تعالج تعطى تحظى تتصاعد تجدد تخضع يبين`.split(/\s+/));
+  const offenders = [];
+  for (const c of CONTROLS) {
+    for (const k of c.checksAr) {
+      const w = k.replace(/\.$/, '').split(' ');
+      const opensWithNoun = w[0].startsWith('ال') || w[0] === 'كل';
+      if (!opensWithNoun) continue;
+      for (let i = 1; i < Math.min(w.length, 7); i += 1) {
+        if (VERBS.has(w[i])) { offenders.push(`${c.id}: ${k}`); break; }
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], `these read as translated English:\n${offenders.join('\n')}`);
+});
+
+test('a negation particle stays with its verb', () => {
+  // Moving the verb forward and leaving لا behind reverses the meaning.
+  for (const c of CONTROLS) {
+    for (const k of c.checksAr) {
+      assert.ok(!/ لا (تستخدم|تترك|تدار|توثق|تحفظ) /.test(k),
+        `${c.id} strands a negation: ${k}`);
+    }
+  }
+});
+
 test('Arabic terminology follows the regional regulators, not a literal gloss', () => {
   // Each of these was wrong on first writing and was corrected against the
   // wording the Gulf cybersecurity controls actually print.
