@@ -948,6 +948,44 @@ test('cli portfolio refuses one file and reports systemic gaps', () => {
 
 const ARABIC = /[\u0600-\u06FF]/;
 
+// Latin text that legitimately survives in Arabic output: framework and
+// protocol names, control ids, flags, and the entity's own data.
+const LATIN_OK = new Set(`NIST CSF ISO CIS GOV NCSC SOC CSA STAR Type Bayan Holding Group
+Internal audit and GRC Kuwait NBCC Toolkit CLD Lead Cloud Platform Owner Infrastructure
+Head Risk Compliance Security Operations Manager HR Officer Data Network Team IT Director
+Asset SPF DKIM DMARC TLS MFA OIDC SLA Business Continuity Incident Response nbcc show csv
+stale missing systemic json trend report evidence assess met partial gap exception na
+unknown DMS SEC POL SUB DATA SAMPLES ITAM EXPORT DISCOVERY SW APPROVED PROC VEND REGISTER
+SCOPE IR APPOINT CONTACTS BCP PLAN RUNBOOKS CSP CERTS DD CLOUD ORGPOL PAB SCAN SIEM CONFIG
+VM SCANS TRACKER ORG PUBLISHED RET PROOF SA GAPS CHANGELOG EXC`.split(/\s+/));
+
+test('no command leaks one language into the other', () => {
+  // The audit that found English labels sitting inside Arabic output, kept as
+  // a test so a new command cannot reintroduce them.
+  const snaps = readdirSync(resolve(root, 'templates/snapshots'))
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => resolve(root, 'templates/snapshots', f));
+  const commands = [
+    ['catalog'], ['catalog', '--fn', 'GOV'], ['show', 'GOV-6'], ['show', 'CLD-11'],
+    ['search', 'MFA'], ['deadline'], ['crosswalk'], ['doctor'],
+    ['assess', EXAMPLE, '--date', '2026-09-03'],
+    ['plan', EXAMPLE, '--date', '2026-09-03'],
+    ['evidence', EXAMPLE, '--date', '2026-09-03'],
+    ['trend', ...snaps, '--date', '2026-09-03']
+  ];
+  for (const args of commands) {
+    const en = cli(args);
+    assert.ok(!ARABIC.test(en), `${args[0]} leaked Arabic into English output`);
+
+    const ar = cli([...args, '--ar']);
+    // The official English text is printed deliberately, under its own heading.
+    const body = ar.split('النص الرسمي بالإنجليزية')[0].replace(/\S*\/\S*/g, ' ');
+    const stray = [...new Set(body.match(/[A-Za-z]{3,}/g) || [])].filter((w) => !LATIN_OK.has(w));
+    assert.deepEqual(stray, [], `${args[0]} leaked English into Arabic output: ${stray.join(', ')}`);
+    assert.ok(ARABIC.test(ar), `${args[0]} produced no Arabic at all`);
+  }
+});
+
 test('English output carries no Arabic anywhere', () => {
   // Mixing the scripts is what made the tool feel like a demo rather than an
   // instrument, so both directions are asserted rather than eyeballed.

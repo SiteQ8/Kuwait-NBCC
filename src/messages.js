@@ -1,0 +1,258 @@
+/*
+ * Command line messages.
+ *
+ * Every string the tool prints lives here in both languages. Scattering
+ * ternaries through the command bodies is how English labels ended up inside
+ * Arabic output, so the rule is that no user facing literal is written inline.
+ */
+
+export const MESSAGES = {
+  en: {
+    dir: 'ltr',
+
+    // shared
+    controls: 'controls', checksWord: 'checks', of: 'of', and: 'and',
+    owner: 'Owner', unassigned: 'unassigned', none: 'none', more: 'more',
+    days: 'days', dayShort: 'd', phase: 'Phase', effort: 'Effort', cadence: 'Cadence',
+    band: 'Band', target: 'Target', notRecorded: 'not recorded',
+    efforts: { low: 'low', medium: 'medium', high: 'high' },
+    cadences: {},
+    severities: { high: 'high', medium: 'medium', low: 'low' },
+
+    // catalog
+    catalogCount: (c, k) => `${c} controls, ${k} checks`,
+    catalogHint: 'Run "nbcc show <id>" for the official minimum requirement.',
+
+    // show
+    purpose: 'Purpose', editorialNote: '(summary, not Annex text)',
+    reqHead: 'Minimum requirement', reqOfficial: '(official text)',
+    reqWorking: '(working translation)', officialHead: 'Official English text',
+    checksHead: 'Checks', evidenceHead: 'Evidence to retain', mapsTo: 'Maps to',
+
+    // search
+    searchNone: (q) => `Nothing matched "${q}".`,
+    searchFound: (n, q) => `${n} control(s) match "${q}"`,
+
+    // deadline
+    deadlineRemain: (n, d) => `${n} days remain before full compliance is due on ${d}.`,
+    deadlineOver: (n, d) => `The deadline of ${d} passed ${n} days ago.`,
+    deadlineElapsed: (p) => `${p}% of the window elapsed`,
+    publishedIn: (p, g) => `Published ${p} in ${g}`,
+    milestonesHead: 'Phase milestones',
+    dueOn: 'due',
+
+    // init
+    initWrote: (p) => `Wrote ${p}`,
+    initScope: (c, k) => `${c} applicable controls, ${k} checks to answer.`,
+    initStatuses: 'Statuses: met, partial, gap, exception, na, unknown.',
+    initNext: (p) => `Fill in the checks, then run "nbcc assess ${p}".`,
+
+    // assess
+    assessedOn: (n, d) => `${n} assessed ${d}`,
+    implementation: 'Implementation', posture: 'Defensible posture', coverage: 'Coverage',
+    scoreLine: (m, p, g, u, e) =>
+      `${m} met \u00b7 ${p} partial \u00b7 ${g} gap \u00b7 ${u} unassessed \u00b7 ${e} excepted`,
+    scopeLine: (i, o, k) => `${i} controls in scope, ${o} out of scope, ${k} checks scored`,
+    byFunction: 'By function', metShort: 'met',
+    controlsHead: 'Controls', findingsHead: 'Findings',
+    findingsMore: (n) => `and ${n} more, see "nbcc report"`,
+    evidenceHeadShort: 'Evidence',
+    evidenceLocatable: (p, n) => `${p} of the ${n} artifacts are recorded and locatable`,
+    evidenceClaims: 'control(s) scored met or partial with nothing recorded to show for them',
+    evidenceHint: (p) => `Run "nbcc evidence ${p}" for the register.`,
+
+    // plan
+    planHead: 'Readiness plan', planEffort: (d, w) => `${d} person days of open work, ${w} working days remain`,
+    planPhase: (n, d) => `due ${d}`, planOpen: 'open', planWaits: 'waits on', planUnblocks: 'unblocks',
+    planNoWork: 'No open work. Every applicable control is fully met.',
+
+    // evidence
+    registerHead: 'Evidence register',
+    registerSub: (n, y) => `${n} artifacts \u00b7 retain ${y} years \u00b7 produce for NCSC on request`,
+    regRecorded: 'Recorded', regProducible: 'Producible',
+    regCounts: (h, u, s, d, m) =>
+      `${h} held \u00b7 ${u} with no location \u00b7 ${s} stale \u00b7 ${d} undated \u00b7 ${m} missing`,
+    regRange: (a, b) => `Collected between ${a} and ${b}`,
+    regNoLocation: 'no location recorded', regNoDate: 'no collection date',
+    regNoRef: 'no reference', regOld: (n) => `${n} days old`,
+    regAttention: 'Needs attention',
+    regClaimsHead: 'Claimed but unevidenced',
+    regClaimsSub: 'Controls scored as met or partial with nothing recorded to show for them.',
+    regHint: 'Add --csv to export the register, --missing or --stale to narrow it.',
+
+    // trend
+    trendHead: 'Trend',
+    trendSub: (n, a, b, d) => `${n} snapshots from ${a} to ${b}, ${d} days`,
+    trendSeries: 'The series', trendRate: 'Rate', trendForecast: 'Forecast',
+    trendForecastSub: (d, n) => `straight line to ${d}, ${n} days away`,
+    trendMoved: (label, c, m) => `${label} moved ${c > 0 ? '+' : ''}${c} points, ${m} per month`,
+    trendDrift: (p, dir, m) =>
+      `The most recent interval ran ${p}% ${dir} at ${m} per month, so the straight line flatters or understates it`,
+    faster: 'faster', slower: 'slower',
+    trendReaches: (d, n) => `Implementation reaches 100% around ${d}, ${n} days before the deadline.`,
+    trendStalled: (c, m) => `No forward rate to project from. At ${c}% today, closing the gap needs ${m} points per month.`,
+    trendShort: (p, s) => `Projected ${p}% at the deadline, short by ${s} points.`,
+    trendNeeded: (cur, need, mult) =>
+      `Current pace is ${cur} per month. Landing on time needs ${need} per month, about ${mult} times the present rate.`,
+    trendEvidence: (p) => `Evidence projects to ${p}%. A control you cannot show is a control you cannot defend.`,
+    trendByFunction: 'By function', worstFirst: 'worst projection first',
+    trendNow: 'now', trendProjected: 'projected', perMonth: '/mo',
+    trendCaveat: 'A straight line through the snapshots. Compliance work rarely moves in one, so treat this as a direction, not a date.',
+    verdicts: {
+      'on track': 'on track', close: 'close, but short', behind: 'behind',
+      stalled: 'stalled', regressing: 'going backwards', complete: 'complete'
+    },
+    trendDupes: (d) => `repeated snapshot date(s): ${d}`,
+    trendSkipped: 'skipped',
+
+    // portfolio
+    portfolioHead: 'Portfolio',
+    portfolioSub: (n, d, dl) => `${n} entities, ${d} days to ${dl}`,
+    portfolioSeriesWarn: 'every file carries the same entity name.',
+    portfolioSeriesHint: 'If these are one entity over time, "nbcc trend" is the command you want.',
+    meanImpl: 'Mean implementation', meanEvidence: 'Mean evidence',
+    portfolioRange: (lo, hi, sp, base, tot, hf, uc) =>
+      `Range ${lo}% to ${hi}%, a spread of ${sp} points \u00b7 ${base} of ${tot} at the baseline` +
+      ` \u00b7 ${hf} high findings \u00b7 ${uc} unevidenced claims`,
+    entitiesHead: 'Entities', mostExposed: 'most exposed first',
+    systemicHead: 'Systemic',
+    systemicSub: (p) => `failing at ${p}% or more of the entities it applies to`,
+    systemicNote: 'These are group problems with group fixes. Remediating them entity by entity wastes the year.',
+    systemicNone: 'no control fails across most of the portfolio',
+    isolatedHead: 'Isolated', isolatedSub: 'weak at some entities but not the group',
+    portfolioDupes: (d) => `repeated entity name(s): ${d}`,
+    portfolioHint: 'Add --csv for one row per entity, --systemic to hide the isolated list.',
+    mean: 'mean', highShort: 'high',
+
+    // crosswalk
+    crosswalkHead: 'NBCC crosswalk', crosswalkTo: 'to NBCC',
+    crosswalkOfficial: 'named in the Annex', crosswalkConvenience: 'convenience mapping',
+    crosswalkReferenced: 'referenced', colControl: 'CONTROL',
+
+    // doctor
+    doctorHead: 'Self check', doctorOk: 'Catalog is internally consistent.',
+    docControls: 'Controls', docChecks: 'Checks', docEvidence: 'Evidence items',
+    docFunctions: 'Functions', docMilestones: 'Milestones',
+    docProblems: (n) => `${n} catalog problem(s)`
+  },
+
+  ar: {
+    dir: 'rtl',
+
+    controls: 'ضابطا', checksWord: 'بندا', of: 'من', and: 'و',
+    owner: 'المسؤول', unassigned: 'غير محدد', none: 'لا شيء', more: 'أخرى',
+    days: 'يوما', dayShort: 'ي', phase: 'المرحلة', effort: 'الجهد', cadence: 'الدورية',
+    band: 'المستوى', target: 'التاريخ المستهدف', notRecorded: 'غير مسجل',
+    efforts: { low: 'منخفض', medium: 'متوسط', high: 'مرتفع' },
+    cadences: {
+      annual: 'سنويا', biennial: 'كل سنتين', 'per hire': 'عند كل تعيين', weekly: 'أسبوعيا',
+      monthly: 'شهريا', quarterly: 'ربع سنوي', continuous: 'مستمر',
+      'per incident': 'عند كل حادث', 'per engagement': 'عند كل تعاقد'
+    },
+    severities: { high: 'مرتفعة', medium: 'متوسطة', low: 'منخفضة' },
+
+    catalogCount: (c, k) => `${c} ضابطا و${k} بندا للتحقق`,
+    catalogHint: 'استخدم "nbcc show <id> --ar" لعرض الحد الأدنى المطلوب.',
+
+    purpose: 'الغرض', editorialNote: '(تلخيص، وليس من نص الملحق)',
+    reqHead: 'الحد الأدنى المطلوب', reqOfficial: '(النص الرسمي)',
+    reqWorking: '(ترجمة عاملة)', officialHead: 'النص الرسمي بالإنجليزية',
+    checksHead: 'بنود التحقق', evidenceHead: 'الأدلة الواجب حفظها', mapsTo: 'المواءمة مع الأطر',
+
+    searchNone: (q) => `لا نتائج مطابقة لـ "${q}".`,
+    searchFound: (n, q) => `${n} من الضوابط تطابق "${q}"`,
+
+    deadlineRemain: (n, d) => `بقي ${n} يوما على استحقاق الامتثال الكامل في ${d}.`,
+    deadlineOver: (n, d) => `مضى ${n} يوما على الموعد النهائي ${d}.`,
+    deadlineElapsed: (p) => `انقضى ${p}٪ من المدة`,
+    publishedIn: (p, g) => `نشر في ${p} في ${g}`,
+    milestonesHead: 'مراحل المهلة',
+    dueOn: 'يستحق',
+
+    initWrote: (p) => `أنشئ ${p}`,
+    initScope: (c, k) => `${c} ضابطا منطبقا، و${k} بندا للإجابة عنها.`,
+    initStatuses: 'الحالات: met و partial و gap و exception و na و unknown.',
+    initNext: (p) => `أجب عن البنود ثم شغل "nbcc assess ${p}".`,
+
+    assessedOn: (n, d) => `${n} قيمت بتاريخ ${d}`,
+    implementation: 'نسبة التطبيق', posture: 'الوضع القابل للإثبات', coverage: 'نسبة التغطية',
+    scoreLine: (m, p, g, u, e) =>
+      `${m} مستوف \u00b7 ${p} جزئي \u00b7 ${g} فجوة \u00b7 ${u} غير مقيم \u00b7 ${e} مستثنى`,
+    scopeLine: (i, o, k) => `${i} ضابطا ضمن النطاق، و${o} خارجه، و${k} بندا مقيسا`,
+    byFunction: 'بحسب الوظيفة', metShort: 'مستوف',
+    controlsHead: 'الضوابط', findingsHead: 'الملاحظات',
+    findingsMore: (n) => `و${n} أخرى، انظر "nbcc report"`,
+    evidenceHeadShort: 'الأدلة',
+    evidenceLocatable: (p, n) => `${p} من الأدلة ${n} مسجلة ويمكن بلوغها`,
+    evidenceClaims: 'من الضوابط قيمت مستوفاة أو جزئية دون ما يثبتها',
+    evidenceHint: (p) => `شغل "nbcc evidence ${p}" لعرض السجل.`,
+
+    planHead: 'خطة الجاهزية', planEffort: (d, w) => `${d} يوم عمل مفتوح، وبقي ${w} يوم عمل`,
+    planPhase: (n, d) => `يستحق ${d}`, planOpen: 'مفتوح', planWaits: 'ينتظر', planUnblocks: 'يفتح الطريق أمام',
+    planNoWork: 'لا عمل مفتوح، فكل ضابط منطبق مستوفى بالكامل.',
+
+    registerHead: 'سجل الأدلة',
+    registerSub: (n, y) => `${n} دليلا \u00b7 تحفظ ${y} سنوات \u00b7 تقدم للمركز عند الطلب`,
+    regRecorded: 'مسجل', regProducible: 'يمكن بلوغه',
+    regCounts: (h, u, s, d, m) =>
+      `${h} محفوظ \u00b7 ${u} دون موضع \u00b7 ${s} متقادم \u00b7 ${d} دون تاريخ \u00b7 ${m} مفقود`,
+    regRange: (a, b) => `جمعت بين ${a} و${b}`,
+    regNoLocation: 'لم يسجل موضعه', regNoDate: 'دون تاريخ جمع',
+    regNoRef: 'دون مرجع', regOld: (n) => `مضى عليه ${n} يوما`,
+    regAttention: 'يحتاج انتباها',
+    regClaimsHead: 'مدعاة دون دليل',
+    regClaimsSub: 'ضوابط قيمت مستوفاة أو جزئية دون ما يثبتها.',
+    regHint: 'أضف ‎--csv‎ لتصدير السجل، أو ‎--missing‎ أو ‎--stale‎ لتضييقه.',
+
+    trendHead: 'الاتجاه',
+    trendSub: (n, a, b, d) => `${n} لقطات من ${a} إلى ${b}، ${d} يوما`,
+    trendSeries: 'السلسلة', trendRate: 'المعدل', trendForecast: 'التوقع',
+    trendForecastSub: (d, n) => `خط مستقيم حتى ${d}، على بعد ${n} يوما`,
+    trendMoved: (label, c, m) => `تحرك ${label} بمقدار ${c > 0 ? '+' : ''}${c} نقطة، أي ${m} شهريا`,
+    trendDrift: (p, dir, m) =>
+      `جرت الفترة الأخيرة ${p}٪ ${dir} بمعدل ${m} شهريا، فالخط المستقيم يجمل الصورة أو يبخسها`,
+    faster: 'أسرع', slower: 'أبطأ',
+    trendReaches: (d, n) => `تبلغ نسبة التطبيق 100٪ نحو ${d}، أي قبل الموعد النهائي بـ ${n} يوما.`,
+    trendStalled: (c, m) => `لا معدل تقدم يبنى عليه توقع، وعند ${c}٪ اليوم يحتاج سد الفجوة ${m} نقطة شهريا.`,
+    trendShort: (p, s) => `التوقع ${p}٪ عند الموعد النهائي، بعجز قدره ${s} نقطة.`,
+    trendNeeded: (cur, need, mult) =>
+      `المعدل الحالي ${cur} شهريا، والوصول في الموعد يحتاج ${need} شهريا، أي نحو ${mult} أضعاف المعدل الحالي.`,
+    trendEvidence: (p) => `تتوقع الأدلة عند ${p}٪، والضابط الذي لا يمكن إثباته لا يمكن الدفاع عنه.`,
+    trendByFunction: 'بحسب الوظيفة', worstFirst: 'الأسوأ توقعا أولا',
+    trendNow: 'الآن', trendProjected: 'متوقع', perMonth: '/شهر',
+    trendCaveat: 'هذا خط مستقيم يمر باللقطات، وعمل الامتثال نادرا ما يسير في خط واحد، فاقرأه اتجاها لا تاريخا.',
+    verdicts: {
+      'on track': 'في المسار', close: 'قريب لكنه قاصر', behind: 'متأخر',
+      stalled: 'متوقف', regressing: 'يتراجع', complete: 'مكتمل'
+    },
+    trendDupes: (d) => `تواريخ لقطات مكررة: ${d}`,
+    trendSkipped: 'تخطي',
+
+    portfolioHead: 'المحفظة',
+    portfolioSub: (n, d, dl) => `${n} جهات، و${d} يوما حتى ${dl}`,
+    portfolioSeriesWarn: 'كل الملفات تحمل اسم الجهة نفسه.',
+    portfolioSeriesHint: 'إن كانت هذه جهة واحدة عبر الزمن، فالأمر المطلوب هو "nbcc trend".',
+    meanImpl: 'متوسط التطبيق', meanEvidence: 'متوسط الأدلة',
+    portfolioRange: (lo, hi, sp, base, tot, hf, uc) =>
+      `المدى من ${lo}٪ إلى ${hi}٪ بفارق ${sp} نقطة \u00b7 ${base} من ${tot} بلغت الحد الأدنى` +
+      ` \u00b7 ${hf} ملاحظة مرتفعة \u00b7 ${uc} دعوى دون دليل`,
+    entitiesHead: 'الجهات', mostExposed: 'الأكثر انكشافا أولا',
+    systemicHead: 'ثغرات عامة',
+    systemicSub: (p) => `تخفق لدى ${p}٪ أو أكثر من الجهات التي تنطبق عليها`,
+    systemicNote: 'هذه مشكلات على مستوى المجموعة وحلها يكون على مستوى المجموعة، ومعالجتها جهة جهة تهدر السنة.',
+    systemicNone: 'لا ضابط يخفق لدى معظم المحفظة',
+    isolatedHead: 'ثغرات منفردة', isolatedSub: 'ضعيفة لدى بعض الجهات دون المجموعة',
+    portfolioDupes: (d) => `أسماء جهات مكررة: ${d}`,
+    portfolioHint: 'أضف ‎--csv‎ لصف لكل جهة، أو ‎--systemic‎ لإخفاء قائمة المنفردة.',
+    mean: 'متوسط', highShort: 'مرتفعة',
+
+    crosswalkHead: 'مواءمة الضوابط الوطنية', crosswalkTo: 'مقابل الضوابط الوطنية',
+    crosswalkOfficial: 'منصوص عليه في الملحق', crosswalkConvenience: 'مواءمة تيسيرية',
+    crosswalkReferenced: 'مرجعا', colControl: 'الضابط',
+
+    doctorHead: 'الفحص الذاتي', doctorOk: 'الكتالوج متسق داخليا.',
+    docControls: 'الضوابط', docChecks: 'بنود التحقق', docEvidence: 'عناصر الأدلة',
+    docFunctions: 'الوظائف', docMilestones: 'المراحل',
+    docProblems: (n) => `${n} من مشكلات الكتالوج`
+  }
+};

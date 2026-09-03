@@ -25,6 +25,19 @@ import { diffAssessments } from '../src/diff.js';
 import { evidenceRegister, unevidencedClaims, renderRegisterCSV } from '../src/evidence.js';
 import { forecast } from '../src/trend.js';
 import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
+import { MESSAGES } from '../src/messages.js';
+
+// Language is chosen once from the flags and every printed string comes from
+// the message table, so a command cannot half switch.
+let M = MESSAGES.en;
+function m(key, ...args) {
+  const v = M[key] !== undefined ? M[key] : MESSAGES.en[key];
+  if (v === undefined) return key;
+  return typeof v === 'function' ? v(...args) : v;
+}
+const arabic = () => M.dir === 'rtl';
+// Control text that exists in both languages.
+const cl = (c, field) => (arabic() && c[`${field}Ar`] ? c[`${field}Ar`] : c[field]);
 
 // Read from the manifest so the reported version can never drift from the
 // package that was actually published.
@@ -133,6 +146,14 @@ function padStart(s, n) {
   return str.length >= n ? str : ' '.repeat(n - str.length) + str;
 }
 
+const STATE_WORDS = {
+  en: { met: 'met', partial: 'partial', gap: 'gap', 'covered-by-exception': 'covered by exception',
+        unassessed: 'unassessed', 'not-applicable': 'not applicable', 'out-of-scope': 'out of scope' },
+  ar: { met: 'مستوف', partial: 'جزئي', gap: 'فجوة', 'covered-by-exception': 'مغطى باستثناء',
+        unassessed: 'غير مقيم', 'not-applicable': 'لا ينطبق', 'out-of-scope': 'خارج النطاق' }
+};
+const STATE_WORD = (state) => (arabic() ? STATE_WORDS.ar : STATE_WORDS.en)[state] || state;
+
 const STATE_COLOR = {
   met: C.green,
   partial: C.yellow,
@@ -174,7 +195,7 @@ ${C.bold}Produce a record${C.reset}
                               register exports the evidence register as CSV
 
 ${C.bold}Options${C.reset}
-  --ar                        Print the checks and evidence in Arabic
+  --ar                        Print everything in Arabic
   --csv                       Export the evidence register as CSV
   --missing, --stale          Narrow the evidence register to one state
   --fn GOV|ID|PR|DE|RS|RC|CLD   Filter by function
@@ -297,12 +318,16 @@ function cmdSearch(positional, flags) {
   if (!term) fail('a search term is required.');
   const hits = searchControls(term);
   if (flags.json) return out(JSON.stringify(hits.map((h) => h.id), null, 2));
-  if (!hits.length) return out(`No control mentions "${term}".`);
-  out(`${hits.length} control(s) mention ${C.bold}${term}${C.reset}\n`);
+  if (!hits.length) return out(m('searchNone', term));
+  out(`${m('searchFound', hits.length, term)}\n`);
   for (const c of hits) {
-    const hit = c.checks.find((k) => k.toLowerCase().includes(term.toLowerCase()));
-    out(`  ${C.bold}${pad(c.id, 9)}${C.reset} ${c.title}`);
-    if (hit) out(`  ${' '.repeat(9)} ${C.dim}${wrap(hit, 66)[0]}${C.reset}`);
+    const lower = term.toLowerCase();
+    // A term matched in one language should still be shown in the chosen one,
+    // so the matching check is located by index rather than by string.
+    let idx = cl(c, 'checks').findIndex((k) => k.toLowerCase().includes(lower));
+    if (idx < 0) idx = c.checks.findIndex((k) => k.toLowerCase().includes(lower));
+    out(`  ${C.bold}${pad(c.id, 9)}${C.reset} ${cl(c, 'title')}`);
+    if (idx >= 0) out(`  ${' '.repeat(9)} ${C.dim}${wrap(cl(c, 'checks')[idx], 66)[0]}${C.reset}`);
   }
 }
 
@@ -311,18 +336,18 @@ function cmdDeadline(flags) {
   const s = deadlineStatus(today);
   if (flags.json) return out(JSON.stringify(s, null, 2));
 
-  out(`${C.bold}${REGULATION.decision}${C.reset} ${C.dim}${REGULATION.title}${C.reset}`);
-  out(`${C.dim}Published ${s.publishedOn} in ${REGULATION.gazette}${C.reset}\n`);
-  const headline = s.overdue
-    ? `${C.red}${C.bold}The deadline passed ${Math.abs(s.remainingDays)} days ago.${C.reset}`
-    : `${C.bold}${s.remainingDays} days${C.reset} remain before full compliance is due on ${C.bold}${s.deadline}${C.reset}.`;
-  out(`  ${headline}`);
-  out(`  ${bar(s.elapsedPercent, 40)} ${padStart(s.elapsedPercent, 5)}% of the window elapsed\n`);
-  out(`${C.cyan}Phase milestones${C.reset}`);
-  for (const m of s.milestones) {
-    const mark = m.passed ? `${C.red}passed${C.reset}` : `${C.green}${m.daysRemaining} days${C.reset}`;
-    out(`  ${m.passed ? '\u25cf' : '\u25cb'} ${pad(m.name, 12)} ${C.dim}due${C.reset} ${m.due}  ${mark}`);
-    for (const l of wrap(m.blurb, 66)) out(`    ${C.dim}${l}${C.reset}`);
+  out(`${C.bold}${arabic() ? REGULATION.decisionAr : REGULATION.decision}${C.reset} ${C.dim}${arabic() ? REGULATION.titleAr : REGULATION.title}${C.reset}`);
+  out(`${C.dim}${m('publishedIn', s.publishedOn, arabic() ? REGULATION.gazetteAr : REGULATION.gazette)}${C.reset}\n`);
+  out(`  ${C.bold}${s.overdue ? C.red + m('deadlineOver', Math.abs(s.remainingDays), s.deadline)
+    : m('deadlineRemain', s.remainingDays, s.deadline)}${C.reset}`);
+  out(`  ${bar(s.elapsedPercent, 40)} ${m('deadlineElapsed', s.elapsedPercent)}\n`);
+  out(`${C.cyan}${m('milestonesHead')}${C.reset}`);
+  for (const stone of s.milestones) {
+    const mark = stone.passed
+      ? `${C.red}${arabic() ? 'انقضت' : 'passed'}${C.reset}`
+      : `${C.green}${stone.daysRemaining} ${m('days')}${C.reset}`;
+    out(`  ${stone.passed ? '\u25cf' : '\u25cb'} ${pad(arabic() ? stone.nameAr : stone.name, arabic() ? 16 : 12)} ${C.dim}${m('dueOn')}${C.reset} ${stone.due}  ${mark}`);
+    for (const l of wrap(arabic() ? stone.blurbAr : stone.blurb, 66)) out(`    ${C.dim}${l}${C.reset}`);
   }
 }
 
@@ -357,16 +382,18 @@ function cmdAssess(positional, flags) {
   if (flags.json) return out(JSON.stringify(r, null, 2));
 
   const s = r.scores;
-  out(`${C.bold}${r.entity.name || 'Unnamed entity'}${C.reset} ${C.dim}assessed ${r.assessmentDate}${C.reset}\n`);
-  out(`  Implementation      ${bar(s.implementation)} ${padStart(s.implementation + '%', 6)}`);
-  out(`  Defensible posture  ${bar(s.posture)} ${padStart(s.posture + '%', 6)}`);
-  out(`  Coverage            ${bar(s.coverage)} ${padStart(s.coverage + '%', 6)}`);
-  out(`\n  Band ${C.bold}${s.band.label}${C.reset}   ${s.controlsMet} met \u00b7 ${s.controlsPartial} partial \u00b7 ${C.red}${s.controlsGap} gap${C.reset} \u00b7 ${s.controlsUnassessed} unassessed \u00b7 ${s.controlsExcepted} excepted`);
-  out(`  ${s.controlsInScope} controls in scope, ${s.controlsOutOfScope} out of scope, ${s.scoredChecks} checks scored\n`);
+  const W = arabic() ? 22 : 20;
+  out(`${C.bold}${r.entity.name || m('notRecorded')}${C.reset} ${C.dim}${m('assessedOn', '', r.assessmentDate).trim()}${C.reset}\n`);
+  out(`  ${pad(m('implementation'), W)}${bar(s.implementation)} ${padStart(s.implementation + '%', 6)}`);
+  out(`  ${pad(m('posture'), W)}${bar(s.posture)} ${padStart(s.posture + '%', 6)}`);
+  out(`  ${pad(m('coverage'), W)}${bar(s.coverage)} ${padStart(s.coverage + '%', 6)}`);
+  out(`\n  ${m('band')} ${C.bold}${arabic() ? s.band.labelAr : s.band.label}${C.reset}   ` +
+      m('scoreLine', s.controlsMet, s.controlsPartial, `${C.red}${s.controlsGap}${C.reset}`, s.controlsUnassessed, s.controlsExcepted));
+  out(`  ${m('scopeLine', s.controlsInScope, s.controlsOutOfScope, s.scoredChecks)}\n`);
 
-  out(`${C.cyan}By function${C.reset}`);
+  out(`${C.cyan}${m('byFunction')}${C.reset}`);
   for (const f of r.byFunction) {
-    out(`  ${pad(f.name, 10)} ${bar(f.implementation, 22)} ${padStart(f.implementation + '%', 6)}  ${C.dim}${f.met}/${f.controls} met${C.reset}`);
+    out(`  ${pad(arabic() ? f.nameAr : f.name, arabic() ? 18 : 10)} ${bar(f.implementation, 22)} ${padStart(f.implementation + '%', 6)}  ${C.dim}${f.met}/${f.controls} ${m('metShort')}${C.reset}`);
   }
 
   const rows = r.controls.filter((c) => c.inScope && (!flags.gaps || c.state !== 'met'));
@@ -375,33 +402,33 @@ function cmdAssess(positional, flags) {
     if (flags.phase && c.phase !== Number(flags.phase)) return false;
     return true;
   });
-  out(`\n${C.cyan}Controls${C.reset}${flags.gaps ? C.dim + ' (not met only)' + C.reset : ''}`);
+  out(`\n${C.cyan}${m('controlsHead')}${C.reset}`);
   for (const c of filtered) {
     const col = STATE_COLOR[c.state] || '';
     out(
-      `  ${C.bold}${pad(c.id, 9)}${C.reset} ${pad(c.title, 44)} ${col}${pad(c.state, 20)}${C.reset} ${padStart(c.implementation === null ? '' : c.implementation + '%', 6)}`
+      `  ${C.bold}${pad(c.id, 9)}${C.reset} ${pad(arabic() ? c.titleAr : c.title, 44)} ${col}${pad(STATE_WORD(c.state), 20)}${C.reset} ${padStart(c.implementation === null ? '' : c.implementation + '%', 6)}`
     );
   }
 
   if (r.findings.length) {
-    out(`\n${C.cyan}Findings${C.reset} ${C.dim}(${r.findings.length})${C.reset}`);
+    out(`\n${C.cyan}${m('findingsHead')}${C.reset} ${C.dim}(${r.findings.length})${C.reset}`);
     for (const f of r.findings.slice(0, 12)) {
       const col = f.severity === 'high' ? C.red : f.severity === 'medium' ? C.yellow : C.dim;
-      out(`  ${col}${pad(f.severity, 7)}${C.reset} ${pad(f.control, 9)} ${f.issue}`);
+      out(`  ${col}${pad(m('severities')[f.severity] || f.severity, 9)}${C.reset} ${pad(f.control, 9)} ${arabic() && f.issueAr ? f.issueAr : f.issue}`);
     }
-    if (r.findings.length > 12) out(`  ${C.dim}and ${r.findings.length - 12} more, see "nbcc report"${C.reset}`);
+    if (r.findings.length > 12) out(`  ${C.dim}${m('findingsMore', r.findings.length - 12)}${C.reset}`);
   }
 
   // A score with nothing behind it is the gap an audit finds first, so the
   // headline output says how much of this position can actually be shown.
   const reg = evidenceRegister(data, asOf);
   const claims = unevidencedClaims(data, r, asOf);
-  out(`\n${C.cyan}Evidence${C.reset}`);
-  out(`  ${padStart(`${reg.producible}%`, 6)} of the ${reg.totalArtifacts} artifacts are recorded and locatable`);
+  out(`\n${C.cyan}${m('evidenceHeadShort')}${C.reset}`);
+  out(`  ${m('evidenceLocatable', padStart(`${reg.producible}%`, 6), reg.totalArtifacts)}`);
   if (claims.length > 0) {
-    out(`  ${C.yellow}${padStart(String(claims.length), 6)}${C.reset} control(s) scored met or partial with nothing recorded to show for them`);
+    out(`  ${C.yellow}${padStart(String(claims.length), 6)}${C.reset} ${m('evidenceClaims')}`);
   }
-  out(`  ${C.dim}Run "nbcc evidence ${positional[0]}" for the register.${C.reset}`);
+  out(`  ${C.dim}${m('evidenceHint', positional[0])}${C.reset}`);
 }
 
 function cmdPlan(positional, flags) {
@@ -409,34 +436,30 @@ function cmdPlan(positional, flags) {
   const p = buildPlan(data, flags.date ? new Date(flags.date) : new Date());
   if (flags.json) return out(JSON.stringify(p, null, 2));
 
-  out(`${C.bold}Readiness plan${C.reset} ${C.dim}${p.entity.name || 'Unnamed entity'}${C.reset}\n`);
+  out(`${C.bold}${m('planHead')}${C.reset} ${C.dim}${p.entity.name || m('notRecorded')}${C.reset}\n`);
   const d = p.deadline;
-  out(`  ${bar(d.elapsedPercent, 40)} ${d.remainingDays} days to ${d.deadline}`);
-  out(
-    `  ${p.effort.totalPersonDays} person days of open work \u00b7 ${p.effort.workingDaysRemaining} working days left \u00b7 ` +
-      (p.effort.feasible
-        ? `${C.green}achievable with ${p.effort.parallelStreamsNeeded} stream(s)${C.reset}`
-        : `${C.red}needs ${p.effort.parallelStreamsNeeded} parallel streams${C.reset}`)
-  );
+  out(`  ${bar(d.elapsedPercent, 40)} ${d.remainingDays} ${m('days')} ${m('dueOn')} ${d.deadline}`);
+  out(`  ${m('planEffort', p.effort.totalPersonDays, p.effort.workingDaysRemaining)}`);
 
   for (const phase of p.phases) {
-    out(`\n${C.cyan}Phase ${phase.id}: ${phase.name}${C.reset} ${C.dim}due ${phase.due}, ${phase.passed ? 'passed' : phase.daysRemaining + ' days'}${C.reset}`);
-    for (const l of wrap(phase.blurb, 74)) out(`  ${C.dim}${l}${C.reset}`);
+    out(`\n${C.cyan}${m('phase')} ${phase.id}: ${arabic() ? phase.nameAr : phase.name}${C.reset} ` +
+        `${C.dim}${m('dueOn')} ${phase.due}, ${phase.passed ? (arabic() ? 'انقضت' : 'passed') : phase.daysRemaining + ' ' + m('days')}${C.reset}`);
+    for (const l of wrap(arabic() ? phase.blurbAr : phase.blurb, 74)) out(`  ${C.dim}${l}${C.reset}`);
     if (!phase.items.length) {
-      out(`  ${C.green}nothing open${C.reset}`);
+      out(`  ${C.green}${m('planNoWork')}${C.reset}`);
       continue;
     }
-    out(`  ${C.dim}${phase.openControls} open, about ${phase.estimatedPersonDays} person days${C.reset}`);
+    out(`  ${C.dim}${phase.openControls} ${m('planOpen')}, ${phase.estimatedPersonDays} ${m('days')}${C.reset}`);
     for (const item of phase.items) {
-      const wait = item.waitingOn.length ? ` ${C.dim}after ${item.waitingOn.join(',')}${C.reset}` : '';
-      const unb = item.unblocks.length ? ` ${C.yellow}unblocks ${item.unblocks.length}${C.reset}` : '';
-      out(`    ${pad(item.id, 9)} ${pad(item.title, 42)} ${C.dim}${pad(item.effort, 7)}${C.reset}${unb}${wait}`);
+      const wait = item.waitingOn.length ? ` ${C.dim}${m('planWaits')} ${item.waitingOn.join(',')}${C.reset}` : '';
+      const unb = item.unblocks.length ? ` ${C.yellow}${m('planUnblocks')} ${item.unblocks.length}${C.reset}` : '';
+      out(`    ${pad(item.id, 9)} ${pad(arabic() ? item.titleAr || item.title : item.title, 42)} ${C.dim}${pad(m('efforts')[item.effort] || item.effort, 9)}${C.reset}${unb}${wait}`);
     }
   }
 
   if (p.quickWins.length) {
-    out(`\n${C.cyan}Start here${C.reset} ${C.dim}low effort, open now${C.reset}`);
-    for (const q of p.quickWins) out(`  ${pad(q.id, 9)} ${q.title}`);
+    out(`\n${C.cyan}${arabic() ? 'ابدأ من هنا' : 'Start here'}${C.reset} ${C.dim}${arabic() ? 'جهد منخفض ومفتوح الآن' : 'low effort, open now'}${C.reset}`);
+    for (const q of p.quickWins) out(`  ${pad(q.id, 9)} ${arabic() ? q.titleAr || q.title : q.title}`);
   }
 }
 
@@ -457,16 +480,17 @@ function cmdEvidence(positional, flags) {
     missing: `${C.dim}\u25a1${C.reset}`
   };
 
-  out(`${C.bold}Evidence register${C.reset} ${C.dim}${reg.entity}${C.reset}`);
-  out(`${C.dim}${reg.totalArtifacts} artifacts \u00b7 retain ${reg.retentionYears} years \u00b7 produce for NCSC on request${C.reset}\n`);
+  const RW = arabic() ? 14 : 12;
+  out(`${C.bold}${m('registerHead')}${C.reset} ${C.dim}${reg.entity}${C.reset}`);
+  out(`${C.dim}${m('registerSub', reg.totalArtifacts, reg.retentionYears)}${C.reset}\n`);
 
-  out(`  Recorded    ${bar(reg.coverage)}  ${padStart(`${reg.coverage}%`, 6)}`);
-  out(`  Producible  ${bar(reg.producible)}  ${padStart(`${reg.producible}%`, 6)}`);
+  out(`  ${pad(m('regRecorded'), RW)}${bar(reg.coverage)}  ${padStart(`${reg.coverage}%`, 6)}`);
+  out(`  ${pad(m('regProducible'), RW)}${bar(reg.producible)}  ${padStart(`${reg.producible}%`, 6)}`);
   const c = reg.counts;
-  out(`\n  ${C.green}${c.held} held${C.reset} \u00b7 ${C.yellow}${c.unreferenced} with no location${C.reset} \u00b7 ${C.yellow}${c.stale} stale${C.reset}` +
-      ` \u00b7 ${C.yellow}${c.undated} undated${C.reset} \u00b7 ${C.dim}${c.missing} missing${C.reset}`);
+  out(`\n  ${m('regCounts', `${C.green}${c.held}${C.reset}`, `${C.yellow}${c.unreferenced}${C.reset}`,
+      `${C.yellow}${c.stale}${C.reset}`, `${C.yellow}${c.undated}${C.reset}`, `${C.dim}${c.missing}${C.reset}`)}`);
   if (reg.oldestCollected) {
-    out(`  ${C.dim}Collected between ${reg.oldestCollected} and ${reg.newestCollected}${C.reset}`);
+    out(`  ${C.dim}${m('regRange', reg.oldestCollected, reg.newestCollected)}${C.reset}`);
   }
 
   const only = flags.missing ? 'missing' : flags.stale ? 'stale' : null;
@@ -476,37 +500,40 @@ function cmdEvidence(positional, flags) {
     const shown = only ? items.filter((i) => i.state === only) : items;
     if (shown.length === 0) continue;
     const usable = items.filter((i) => i.state === 'held' || i.state === 'unreferenced').length;
-    out(`${C.bold}${id}${C.reset} ${items[0].controlTitle} ${C.dim}${usable}/${items.length}${C.reset}`);
+    out(`${C.bold}${id}${C.reset} ${arabic() ? items[0].controlTitleAr : items[0].controlTitle} ${C.dim}${usable}/${items.length} \u00b7 ${m('cadences')[items[0].cadence] || items[0].cadence}${C.reset}`);
     for (const i of shown) {
       const detail = i.state === 'missing' ? ''
-        : i.state === 'unreferenced' ? `${C.dim} no location recorded${C.reset}`
-        : i.state === 'undated' ? `${C.dim} no collection date${C.reset}`
-        : `${C.dim} ${i.reference || 'no reference'}${i.collected ? `, ${i.collected}` : ''}` +
-          `${i.state === 'stale' ? `, ${i.ageDays} days old` : ''}${C.reset}`;
-      out(`  ${MARK[i.state]} ${i.artifact}${detail}`);
+        : i.state === 'unreferenced' ? `${C.dim} ${m('regNoLocation')}${C.reset}`
+        : i.state === 'undated' ? `${C.dim} ${m('regNoDate')}${C.reset}`
+        : `${C.dim} ${i.reference || m('regNoRef')}${i.collected ? `, ${i.collected}` : ''}` +
+          `${i.state === 'stale' ? `, ${m('regOld', i.ageDays)}` : ''}${C.reset}`;
+      out(`  ${MARK[i.state]} ${arabic() ? i.artifactAr : i.artifact}${detail}`);
     }
   }
 
   if (reg.findings.length > 0 && !only) {
     const high = reg.findings.filter((f) => f.severity === 'medium');
     if (high.length > 0) {
-      out(`\n${C.bold}Needs attention${C.reset}`);
-      for (const f of high.slice(0, 10)) out(`  ${C.yellow}${pad(f.control, 9)}${C.reset} ${f.issue}`);
-      if (high.length > 10) out(`  ${C.dim}and ${high.length - 10} more, see "nbcc evidence ${positional[0]} --json"${C.reset}`);
+      out(`\n${C.bold}${m('regAttention')}${C.reset}`);
+      for (const f of high.slice(0, 10)) {
+        out(`  ${C.yellow}${pad(f.control, 9)}${C.reset} ${arabic() && f.issueAr ? f.issueAr : f.issue}`);
+      }
+      if (high.length > 10) out(`  ${C.dim}${m('findingsMore', high.length - 10)}${C.reset}`);
     }
   }
 
   const claims = only ? [] : unevidencedClaims(data, assess(data, { asOf }), asOf);
   if (claims.length > 0) {
-    out(`\n${C.bold}Claimed but unevidenced${C.reset} ${C.dim}(${claims.length})${C.reset}`);
-    out(`${C.dim}Controls scored as met or partial with nothing recorded to show for them.${C.reset}`);
+    out(`\n${C.bold}${m('regClaimsHead')}${C.reset} ${C.dim}(${claims.length})${C.reset}`);
+    out(`${C.dim}${m('regClaimsSub')}${C.reset}`);
     for (const c2 of claims.slice(0, 10)) {
-      out(`  ${C.yellow}${pad(c2.control, 9)}${C.reset} ${pad(c2.title, 44)} ${C.dim}${c2.implementation}%${C.reset}`);
+      const title = arabic() ? getControl(c2.control).titleAr : c2.title;
+      out(`  ${C.yellow}${pad(c2.control, 9)}${C.reset} ${pad(title, 44)} ${C.dim}${c2.implementation}%${C.reset}`);
     }
-    if (claims.length > 10) out(`  ${C.dim}and ${claims.length - 10} more${C.reset}`);
+    if (claims.length > 10) out(`  ${C.dim}${m('findingsMore', claims.length - 10)}${C.reset}`);
   }
 
-  out(`\n${C.dim}Add --csv to export the register, --missing or --stale to narrow it.${C.reset}`);
+  out(`\n${C.dim}${m('regHint')}${C.reset}`);
 }
 
 function cmdTrend(positional, flags) {
@@ -523,63 +550,60 @@ function cmdTrend(positional, flags) {
     return fail(f.reason);
   }
 
-  const VERDICT = {
-    'on track': [C.green, 'on track'],
-    close: [C.yellow, 'close, but short'],
-    behind: [C.red, 'behind'],
-    stalled: [C.red, 'stalled'],
-    regressing: [C.red, 'going backwards'],
-    complete: [C.green, 'complete']
+  const VERDICT_COLOR = {
+    'on track': C.green, close: C.yellow, behind: C.red,
+    stalled: C.red, regressing: C.red, complete: C.green
   };
 
-  out(`${C.bold}Trend${C.reset} ${C.dim}${f.entity}${C.reset}`);
-  out(`${C.dim}${f.snapshots} snapshots from ${f.from} to ${f.to}, ${f.spanDays} days${C.reset}\n`);
+  out(`${C.bold}${m('trendHead')}${C.reset} ${C.dim}${f.entity}${C.reset}`);
+  out(`${C.dim}${m('trendSub', f.snapshots, f.from, f.to, f.spanDays)}${C.reset}\n`);
 
-  out(`${C.cyan}The series${C.reset}`);
+  out(`${C.cyan}${m('trendSeries')}${C.reset}`);
   for (const p of f.points) {
     out(`  ${C.dim}${p.date}${C.reset}  ${bar(p.implementation, 20)} ${padStart(`${p.implementation}%`, 6)}` +
-        `  ${C.dim}${pad(p.bandName, 14)} evidence ${padStart(`${p.evidenceProducible}%`, 6)}${C.reset}`);
+        `  ${C.dim}${pad(arabic() ? p.bandNameAr : p.bandName, arabic() ? 16 : 14)} ${m('evidenceHeadShort')} ${padStart(`${p.evidenceProducible}%`, 6)}${C.reset}`);
   }
 
   const i = f.implementation;
-  const [col, word] = VERDICT[i.verdict] || [C.dim, i.verdict];
-  out(`\n${C.cyan}Rate${C.reset}`);
-  out(`  Implementation moved ${i.changeTotal > 0 ? '+' : ''}${i.changeTotal} points, ${i.perMonth} per month`);
+  const col = VERDICT_COLOR[i.verdict] || C.dim;
+  const word = m('verdicts')[i.verdict] || i.verdict;
+  out(`\n${C.cyan}${m('trendRate')}${C.reset}`);
+  out(`  ${m('trendMoved', m('implementation'), i.changeTotal, i.perMonth)}`);
   if (Math.abs(f.recentRateDriftPercent) >= 25) {
-    const dir = f.recentRateDriftPercent > 0 ? 'faster' : 'slower';
-    out(`  ${C.yellow}The most recent interval ran ${Math.abs(f.recentRateDriftPercent)}% ${dir} at ${i.recentPerMonth} per month, so the straight line flatters or understates it${C.reset}`);
+    const dir = f.recentRateDriftPercent > 0 ? m('faster') : m('slower');
+    out(`  ${C.yellow}${m('trendDrift', Math.abs(f.recentRateDriftPercent), dir, i.recentPerMonth)}${C.reset}`);
   }
-  out(`  Evidence moved ${f.evidence.changeTotal > 0 ? '+' : ''}${f.evidence.changeTotal} points, ${f.evidence.perMonth} per month`);
+  out(`  ${m('trendMoved', m('evidenceHeadShort'), f.evidence.changeTotal, f.evidence.perMonth)}`);
 
-  out(`\n${C.cyan}Forecast${C.reset} ${C.dim}straight line to ${f.deadline}, ${f.daysToDeadline} days away${C.reset}`);
+  out(`\n${C.cyan}${m('trendForecast')}${C.reset} ${C.dim}${m('trendForecastSub', f.deadline, f.daysToDeadline)}${C.reset}`);
   out(`  ${col}${C.bold}${word.toUpperCase()}${C.reset}`);
   if (i.verdict === 'on track' || i.verdict === 'complete') {
-    out(`  Implementation reaches 100% around ${C.green}${i.completionDate}${C.reset}, ` +
-        `${Math.round((new Date(f.deadline) - new Date(i.completionDate)) / 86400000)} days before the deadline.`);
+    out(`  ${m('trendReaches', `${C.green}${i.completionDate}${C.reset}`,
+      Math.round((new Date(f.deadline) - new Date(i.completionDate)) / 86400000))}`);
   } else if (i.verdict === 'stalled' || i.verdict === 'regressing') {
-    out(`  No forward rate to project from. At ${i.current}% today, closing the gap needs ${C.yellow}${i.neededPerMonth} points per month${C.reset}.`);
+    out(`  ${m('trendStalled', i.current, `${C.yellow}${i.neededPerMonth}${C.reset}`)}`);
   } else {
-    out(`  Projected ${col}${i.projectedAtDeadline}%${C.reset} at the deadline, short by ${col}${i.shortfall} points${C.reset}.`);
-    out(`  Current pace is ${i.perMonth} per month. Landing on time needs ${C.yellow}${i.neededPerMonth} per month${C.reset}` +
-        `, about ${Math.round((i.neededPerMonth / (i.perMonth || 0.01)) * 10) / 10} times the present rate.`);
+    out(`  ${m('trendShort', `${col}${i.projectedAtDeadline}${C.reset}`, `${col}${i.shortfall}${C.reset}`)}`);
+    out(`  ${m('trendNeeded', i.perMonth, `${C.yellow}${i.neededPerMonth}${C.reset}`,
+      Math.round((i.neededPerMonth / (i.perMonth || 0.01)) * 10) / 10)}`);
   }
   if (f.evidence.projectedAtDeadline < 100) {
-    out(`  ${C.dim}Evidence projects to ${f.evidence.projectedAtDeadline}%. A control you cannot show is a control you cannot defend.${C.reset}`);
+    out(`  ${C.dim}${m('trendEvidence', f.evidence.projectedAtDeadline)}${C.reset}`);
   }
 
-  out(`\n${C.cyan}By function${C.reset} ${C.dim}worst projection first${C.reset}`);
+  out(`\n${C.cyan}${m('trendByFunction')}${C.reset} ${C.dim}${m('worstFirst')}${C.reset}`);
   for (const fn of f.byFunction) {
     const c2 = fn.projectedAtDeadline >= 100 ? C.green : fn.projectedAtDeadline >= 90 ? C.yellow : C.red;
-    out(`  ${pad(fn.name, 10)} ${bar(fn.current, 18)} ${padStart(`${fn.current}%`, 6)} now` +
-        `  ${C.dim}${padStart(`${fn.perMonth > 0 ? '+' : ''}${fn.perMonth}`, 6)}/mo${C.reset}` +
-        `  ${c2}${padStart(`${fn.projectedAtDeadline}%`, 6)}${C.reset} ${C.dim}projected${C.reset}`);
+    out(`  ${pad(arabic() ? fn.nameAr : fn.name, arabic() ? 18 : 10)} ${bar(fn.current, 18)} ${padStart(`${fn.current}%`, 6)} ${m('trendNow')}` +
+        `  ${C.dim}${padStart(`${fn.perMonth > 0 ? '+' : ''}${fn.perMonth}`, 6)}${m('perMonth')}${C.reset}` +
+        `  ${c2}${padStart(`${fn.projectedAtDeadline}%`, 6)}${C.reset} ${C.dim}${m('trendProjected')}${C.reset}`);
   }
 
   if (f.duplicates.length > 0) {
-    out(`\n${C.yellow}warning${C.reset} repeated snapshot date(s): ${f.duplicates.join(', ')}`);
+    out(`\n${C.yellow}warning${C.reset} ${m('trendDupes', f.duplicates.join(', '))}`);
   }
-  for (const r of f.rejected) out(`${C.yellow}skipped${C.reset} ${r.label}: ${r.reason}`);
-  out(`\n${C.dim}A straight line through the snapshots. Compliance work rarely moves in one, so treat this as a direction, not a date.${C.reset}`);
+  for (const r of f.rejected) out(`${C.yellow}${m('trendSkipped')}${C.reset} ${r.label}: ${r.reason}`);
+  out(`\n${C.dim}${m('trendCaveat')}${C.reset}`);
 }
 
 function cmdPortfolio(positional, flags) {
@@ -593,60 +617,59 @@ function cmdPortfolio(positional, flags) {
   const r = rollUp(docs, { asOf });
   if (flags.json) return out(JSON.stringify(r, null, 2));
 
-  out(`${C.bold}Portfolio${C.reset} ${C.dim}${r.entities} entities, ${r.daysToDeadline} days to ${r.deadline}${C.reset}\n`);
+  const PW = arabic() ? 20 : 22;
+  out(`${C.bold}${m('portfolioHead')}${C.reset} ${C.dim}${m('portfolioSub', r.entities, r.daysToDeadline, r.deadline)}${C.reset}\n`);
 
   if (r.looksLikeSeries) {
-    out(`${C.yellow}warning${C.reset} every file carries the same entity name.`);
-    out(`${C.dim}        If these are one entity over time, "nbcc trend" is the command you want.${C.reset}\n`);
+    out(`${C.yellow}warning${C.reset} ${m('portfolioSeriesWarn')}`);
+    out(`${C.dim}        ${m('portfolioSeriesHint')}${C.reset}\n`);
   }
 
-  out(`  Mean implementation   ${bar(r.scores.meanImplementation)} ${padStart(`${r.scores.meanImplementation}%`, 6)}`);
-  out(`  Mean evidence         ${bar(r.scores.meanEvidence)} ${padStart(`${r.scores.meanEvidence}%`, 6)}`);
-  out(`\n  ${C.dim}Range ${r.scores.lowest}% to ${r.scores.highest}%, a spread of ${r.scores.spread} points` +
-      ` \u00b7 ${r.scores.atBaseline} of ${r.entities} at the baseline` +
-      ` \u00b7 ${r.scores.totalHighFindings} high findings` +
-      ` \u00b7 ${r.scores.totalUnevidencedClaims} unevidenced claims${C.reset}`);
+  out(`  ${pad(m('meanImpl'), PW)}${bar(r.scores.meanImplementation)} ${padStart(`${r.scores.meanImplementation}%`, 6)}`);
+  out(`  ${pad(m('meanEvidence'), PW)}${bar(r.scores.meanEvidence)} ${padStart(`${r.scores.meanEvidence}%`, 6)}`);
+  out(`\n  ${C.dim}${m('portfolioRange', r.scores.lowest, r.scores.highest, r.scores.spread,
+      r.scores.atBaseline, r.entities, r.scores.totalHighFindings, r.scores.totalUnevidencedClaims)}${C.reset}`);
 
-  out(`\n${C.cyan}Entities${C.reset} ${C.dim}most exposed first${C.reset}`);
+  out(`\n${C.cyan}${m('entitiesHead')}${C.reset} ${C.dim}${m('mostExposed')}${C.reset}`);
   for (const e of r.ranked) {
     const col = e.implementation >= 95 ? C.green : e.implementation >= 75 ? C.blue
       : e.implementation >= 50 ? C.yellow : C.red;
     out(`  ${pad(e.name, 24)} ${bar(e.implementation, 18)} ${col}${padStart(`${e.implementation}%`, 6)}${C.reset}` +
-        `  ${C.dim}${pad(e.bandName, 13)} evidence ${padStart(`${e.evidenceProducible}%`, 6)}` +
-        `  ${e.highFindings ? C.red : C.dim}${padStart(String(e.highFindings), 2)} high${C.reset}`);
+        `  ${C.dim}${pad(arabic() ? e.bandNameAr : e.bandName, arabic() ? 15 : 13)} ${m('evidenceHeadShort')} ${padStart(`${e.evidenceProducible}%`, 6)}` +
+        `  ${e.highFindings ? C.red : C.dim}${padStart(String(e.highFindings), 2)} ${m('highShort')}${C.reset}`);
   }
 
   if (r.systemic.length > 0) {
-    out(`\n${C.cyan}Systemic${C.reset} ${C.dim}failing at ${Math.round(SYSTEMIC_SHARE * 100)}% or more of the entities it applies to${C.reset}`);
-    out(`${C.dim}These are group problems with group fixes. Remediating them entity by entity wastes the year.${C.reset}`);
+    out(`\n${C.cyan}${m('systemicHead')}${C.reset} ${C.dim}${m('systemicSub', Math.round(SYSTEMIC_SHARE * 100))}${C.reset}`);
+    out(`${C.dim}${m('systemicNote')}${C.reset}`);
     for (const c of r.systemic.slice(0, 12)) {
-      out(`  ${C.red}${pad(c.id, 9)}${C.reset} ${pad(c.title, 42)} ${C.red}${padStart(`${c.entitiesFailing}/${c.entitiesApplicable}`, 6)}${C.reset}` +
-          `  ${C.dim}mean ${padStart(`${c.mean}%`, 6)} \u00b7 phase ${c.phase} \u00b7 ${c.effort} effort${C.reset}`);
+      out(`  ${C.red}${pad(c.id, 9)}${C.reset} ${pad(arabic() ? c.titleAr : c.title, 42)} ${C.red}${padStart(`${c.entitiesFailing}/${c.entitiesApplicable}`, 6)}${C.reset}` +
+          `  ${C.dim}${m('mean')} ${padStart(`${c.mean}%`, 6)} \u00b7 ${m('phase')} ${c.phase} \u00b7 ${m('efforts')[c.effort] || c.effort}${C.reset}`);
     }
-    if (r.systemic.length > 12) out(`  ${C.dim}and ${r.systemic.length - 12} more${C.reset}`);
+    if (r.systemic.length > 12) out(`  ${C.dim}${m('findingsMore', r.systemic.length - 12)}${C.reset}`);
   } else {
-    out(`\n${C.cyan}Systemic${C.reset}  ${C.green}none${C.reset} ${C.dim}no control fails across most of the portfolio${C.reset}`);
+    out(`\n${C.cyan}${m('systemicHead')}${C.reset}  ${C.green}${m('none')}${C.reset} ${C.dim}${m('systemicNone')}${C.reset}`);
   }
 
   if (r.isolated.length > 0 && !flags.systemic) {
-    out(`\n${C.cyan}Isolated${C.reset} ${C.dim}weak at some entities but not the group${C.reset}`);
+    out(`\n${C.cyan}${m('isolatedHead')}${C.reset} ${C.dim}${m('isolatedSub')}${C.reset}`);
     for (const c of r.isolated.slice(0, 8)) {
-      out(`  ${C.yellow}${pad(c.id, 9)}${C.reset} ${pad(c.title, 42)} ${padStart(`${c.entitiesFailing}/${c.entitiesApplicable}`, 6)}` +
+      out(`  ${C.yellow}${pad(c.id, 9)}${C.reset} ${pad(arabic() ? c.titleAr : c.title, 42)} ${padStart(`${c.entitiesFailing}/${c.entitiesApplicable}`, 6)}` +
           `  ${C.dim}${c.failingNames.slice(0, 3).join(', ')}${c.failingNames.length > 3 ? ', ...' : ''}${C.reset}`);
     }
-    if (r.isolated.length > 8) out(`  ${C.dim}and ${r.isolated.length - 8} more${C.reset}`);
+    if (r.isolated.length > 8) out(`  ${C.dim}${m('findingsMore', r.isolated.length - 8)}${C.reset}`);
   }
 
-  out(`\n${C.cyan}By function${C.reset} ${C.dim}weakest first${C.reset}`);
+  out(`\n${C.cyan}${m('trendByFunction')}${C.reset} ${C.dim}${m('worstFirst')}${C.reset}`);
   for (const f of r.byFunction) {
-    out(`  ${pad(f.name, 10)} ${bar(f.mean, 20)} ${padStart(`${f.mean}%`, 6)} mean` +
-        `  ${C.dim}${padStart(`${f.lowest}%`, 6)} to ${padStart(`${f.highest}%`, 6)}${C.reset}`);
+    out(`  ${pad(arabic() ? f.nameAr : f.name, arabic() ? 18 : 10)} ${bar(f.mean, 20)} ${padStart(`${f.mean}%`, 6)} ${m('mean')}` +
+        `  ${C.dim}${padStart(`${f.lowest}%`, 6)} ${m('of')} ${padStart(`${f.highest}%`, 6)}${C.reset}`);
   }
 
   if (r.duplicateNames.length > 0) {
-    out(`\n${C.yellow}warning${C.reset} repeated entity name(s): ${r.duplicateNames.join(', ')}`);
+    out(`\n${C.yellow}warning${C.reset} ${m('portfolioDupes', r.duplicateNames.join(', '))}`);
   }
-  out(`\n${C.dim}Add --csv for one row per entity, --systemic to hide the isolated list.${C.reset}`);
+  out(`\n${C.dim}${m('portfolioHint')}${C.reset}`);
 }
 
 function cmdCrosswalk(flags) {
@@ -657,7 +680,7 @@ function cmdCrosswalk(flags) {
     const index = reverseIndex(to);
     if (flags.json) return out(JSON.stringify(index, null, 2));
     const fw = FRAMEWORKS[to];
-    out(`${C.bold}${fw.name}${C.reset} ${C.dim}to NBCC${C.reset}`);
+    out(`${C.bold}${fw.name}${C.reset} ${C.dim}${m('crosswalkTo')}${C.reset}`);
     out(`${C.dim}${fw.note}${C.reset}\n`);
     for (const row of index) out(`  ${pad(row.ref, 12)} ${row.controls.join(', ')}`);
     return;
@@ -666,13 +689,13 @@ function cmdCrosswalk(flags) {
   const table = crosswalkTable();
   if (flags.json) return out(JSON.stringify(table, null, 2));
   const cov = coverageSummary();
-  out(`${C.bold}NBCC crosswalk${C.reset}\n`);
+  out(`${C.bold}${m('crosswalkHead')}${C.reset}\n`);
   for (const key of Object.keys(cov)) {
     const c = cov[key];
-    out(`  ${pad(c.shortName, 22)} ${padStart(c.distinctReferences, 3)} ${c.unitPlural} referenced ${C.dim}${c.official ? 'named in the Annex' : 'convenience mapping'}${C.reset}`);
+    out(`  ${pad(c.shortName, 22)} ${padStart(c.distinctReferences, 3)} ${m('crosswalkReferenced')} ${C.dim}${c.official ? m('crosswalkOfficial') : m('crosswalkConvenience')}${C.reset}`);
   }
   out('');
-  out(`  ${C.dim}${pad('CONTROL', 9)} ${pad('NIST CSF 2.0', 34)} ${pad('CIS v8.1', 30)} ISO 27001${C.reset}`);
+  out(`  ${C.dim}${pad(m('colControl'), 9)} ${pad('NIST CSF 2.0', 34)} ${pad('CIS v8.1', 30)} ISO 27001${C.reset}`);
   for (const r of table) {
     out(`  ${C.bold}${pad(r.control, 9)}${C.reset} ${pad(r.csf.join(' '), 34)} ${pad(r.cis.join(' '), 30)} ${r.iso.join(' ')}`);
   }
@@ -755,24 +778,28 @@ function cmdDiff(positional, flags) {
 function cmdDoctor(flags) {
   const catalogProblems = validateCatalog();
   if (flags.json) return out(JSON.stringify({ catalog: catalogProblems, stats: CATALOG_STATS }, null, 2));
-  out(`${C.bold}Self check${C.reset}\n`);
-  out(`  Controls        ${CATALOG_STATS.controls}`);
-  out(`  Checks          ${CATALOG_STATS.checks}`);
-  out(`  Evidence items  ${CATALOG_STATS.evidenceItems}`);
-  out(`  Functions       ${FUNCTIONS.length}`);
-  out(`  Milestones      ${milestones().map((m) => m.due).join(', ')}`);
+  out(`${C.bold}${m('doctorHead')}${C.reset}\n`);
+  const DW = arabic() ? 18 : 16;
+  out(`  ${pad(m('docControls'), DW)}${CATALOG_STATS.controls}`);
+  out(`  ${pad(m('docChecks'), DW)}${CATALOG_STATS.checks}`);
+  out(`  ${pad(m('docEvidence'), DW)}${CATALOG_STATS.evidenceItems}`);
+  out(`  ${pad(m('docFunctions'), DW)}${FUNCTIONS.length}`);
+  out(`  ${pad(m('docMilestones'), DW)}${milestones().map((stone) => stone.due).join(', ')}`);
   if (catalogProblems.length) {
-    out(`\n  ${C.red}${catalogProblems.length} catalog problem(s)${C.reset}`);
+    out(`\n  ${C.red}${m('docProblems', catalogProblems.length)}${C.reset}`);
     for (const p of catalogProblems) out(`    ${p}`);
     process.exit(1);
   }
-  out(`\n  ${C.green}Catalog is internally consistent.${C.reset}`);
+  out(`\n  ${C.green}${m('doctorOk')}${C.reset}`);
 }
 
 function main() {
   const argv = process.argv.slice(2);
   const { flags, positional } = parseArgs(argv);
   const command = positional.shift();
+
+  // One decision, applied to every string the run prints.
+  M = flags.ar ? MESSAGES.ar : MESSAGES.en;
 
   if (!command || command === 'help' || flags.help) return help();
   if (command === 'version' || flags.version) return out(VERSION);

@@ -128,6 +128,8 @@ Produce artifacts
 
 Flags: `--fn <GOV|ID|PR|DE|RS|RC|CLD>`, `--phase <1|2|3>`, `--gaps`, `--json`, `--no-cloud`, `--out <file>`, `--date <YYYY-MM-DD>`, `--ar`.
 
+**`--ar` works on every command**, not just some of them. Headings, table columns, status words, band names, cadence and effort values, findings and their remedies all switch. A test runs every command in both languages and fails if either leaks into the other, so a new command cannot quietly reintroduce a mixed screen.
+
 A worked example ships in `templates/example-assessment.json`:
 
 ```
@@ -240,7 +242,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 121 tests
+node --test test/*.test.js     # 122 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

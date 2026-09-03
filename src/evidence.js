@@ -32,6 +32,14 @@ export const REFRESH_DAYS = Object.freeze({
   'per engagement': null
 });
 
+// Cadence keys are data, so the Arabic finding text has to render them rather
+// than interpolate the English word into an Arabic sentence.
+export const CADENCE_AR = Object.freeze({
+  weekly: 'أسبوعية', monthly: 'شهرية', quarterly: 'ربع سنوية', annual: 'سنوية',
+  biennial: 'كل سنتين', continuous: 'مستمرة', 'per hire': 'عند كل تعيين',
+  'per incident': 'عند كل حادث', 'per engagement': 'عند كل تعاقد'
+});
+
 export const ITEM_STATES = Object.freeze([
   'missing', 'held', 'stale', 'undated', 'unreferenced', 'misdated'
 ]);
@@ -189,7 +197,7 @@ export function evidenceRegister(assessment, asOf = new Date()) {
         severity: 'medium',
         control: control.id,
         issue: `Evidence "${r.artifact}" is ${r.ageDays} days old. This control has a cadence of ${r.cadence}, so anything past ${r.refreshDays} days is stale.`,
-        issueAr: `مضى على الدليل "${r.artifactAr}" ${r.ageDays} يوما، ودورية هذا الضابط ${r.cadence}، فما تجاوز ${r.refreshDays} يوما يعد متقادما.`,
+        issueAr: `مضى على الدليل "${r.artifactAr}" ${r.ageDays} يوما، ودورية هذا الضابط ${CADENCE_AR[r.cadence] || r.cadence}، فما تجاوز ${r.refreshDays} يوما يعد متقادما.`,
         fix: 'Collect a current copy. Stale evidence shows a control that once worked, not one that is operating.',
         fixAr: 'اجمع نسخة حديثة، فالدليل المتقادم يثبت ضابطا عمل يوما ما لا ضابطا يعمل الآن.'
       });

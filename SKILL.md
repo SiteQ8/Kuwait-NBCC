@@ -34,7 +34,7 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 |---|---|
 | List every control | `nbcc catalog` |
 | Read one control in full | `nbcc show PR-2` |
-| Read it in Arabic | `nbcc show PR-2 --ar` |
+| Anything in Arabic | add `--ar` to any command |
 | Find controls by text | `nbcc search MFA` |
 | Map onto another framework | `nbcc crosswalk --to cis` |
 | Time remaining | `nbcc deadline` |
