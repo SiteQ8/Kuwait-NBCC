@@ -1,0 +1,750 @@
+{
+  "nbcc": "1",
+  "entity": {
+    "name": "Bayan Holding Group",
+    "sector": "Financial services",
+    "contact": "grc@example.kw"
+  },
+  "assessor": "Internal audit and GRC",
+  "assessmentDate": "2026-09-01",
+  "profile": {
+    "usesCloud": true,
+    "hasPublicAccounts": true
+  },
+  "controls": {
+    "GOV-1": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference GOV-1"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "GOV-2": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "unknown",
+        "met",
+        "unknown",
+        "met",
+        "partial",
+        "unknown",
+        "unknown",
+        "unknown",
+        "met",
+        "met",
+        "unknown",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "GOV-3": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference GOV-3"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "GOV-4": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "exception",
+        "exception",
+        "exception",
+        "exception",
+        "exception",
+        "exception",
+        "exception"
+      ],
+      "evidence": [],
+      "targetDate": "2026-12-31",
+      "notes": "",
+      "exception": {
+        "reason": "Vetting provider contract under renewal.",
+        "riskAccepted": true,
+        "expiry": "2026-06-30"
+      }
+    },
+    "GOV-5": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "met",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "GOV-6": {
+      "owner": "Head of Risk and Compliance",
+      "checks": [
+        "met",
+        "partial",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "ID-1": {
+      "owner": "IT Asset Manager",
+      "checks": [
+        "gap",
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "met",
+        "met",
+        "met",
+        "met",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "ID-2": {
+      "owner": "IT Asset Manager",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "gap",
+        "partial",
+        "gap"
+      ],
+      "evidence": [
+        "See GRC library reference ID-2"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "ID-3": {
+      "owner": "IT Asset Manager",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "partial",
+        "met",
+        "met",
+        "partial",
+        "unknown",
+        "unknown",
+        "met",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "gap",
+        "met",
+        "met",
+        "met",
+        "gap",
+        "met",
+        "met",
+        "gap",
+        "partial",
+        "unknown",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference PR-1"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "PR-1.1": {
+      "owner": "",
+      "checks": [
+        "gap",
+        "met",
+        "met",
+        "met",
+        "partial",
+        "met",
+        "partial",
+        "gap",
+        "unknown",
+        "met",
+        "gap"
+      ],
+      "evidence": [
+        "See GRC library reference PR-1.1"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-1.2": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "met",
+        "gap",
+        "gap",
+        "unknown",
+        "met",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference PR-1.2"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "PR-2": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "gap",
+        "met",
+        "met",
+        "met",
+        "gap",
+        "partial",
+        "partial",
+        "partial",
+        "met",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-2.1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "partial",
+        "unknown",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference PR-2.1"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-2.2": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "gap",
+        "met",
+        "met",
+        "unknown",
+        "gap",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-3": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "unknown",
+        "partial",
+        "partial",
+        "unknown",
+        "unknown",
+        "met",
+        "met",
+        "met",
+        "met",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "PR-3.1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "na",
+        "na",
+        "na",
+        "na",
+        "na",
+        "na",
+        "na",
+        "na"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-4": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "gap",
+        "met",
+        "unknown",
+        "partial",
+        "gap",
+        "met",
+        "met",
+        "unknown",
+        "met",
+        "met",
+        "gap",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference PR-4"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "PR-4.1": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "partial",
+        "gap",
+        "gap",
+        "unknown",
+        "met",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "PR-4.2": {
+      "owner": "",
+      "checks": [
+        "exception",
+        "exception",
+        "exception",
+        "exception",
+        "exception"
+      ],
+      "evidence": [
+        "See GRC library reference PR-4.2"
+      ],
+      "targetDate": "",
+      "notes": "",
+      "exception": {
+        "reason": "Engineering laboratory requires removable media for air gapped instrument transfer.",
+        "riskAccepted": true,
+        "expiry": "2027-06-30",
+        "compensating": "Dedicated scanning kiosk and quarterly media audit."
+      }
+    },
+    "PR-5": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "unknown",
+        "met",
+        "met",
+        "met",
+        "met",
+        "met",
+        "met",
+        "met",
+        "gap",
+        "met",
+        "partial"
+      ],
+      "evidence": [],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "PR-6": {
+      "owner": "Infrastructure Lead",
+      "checks": [
+        "met",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "gap",
+        "partial",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "DE-1": {
+      "owner": "Security Operations Lead",
+      "checks": [
+        "met",
+        "met",
+        "partial",
+        "partial",
+        "partial",
+        "met",
+        "met",
+        "gap",
+        "met",
+        "partial",
+        "gap",
+        "gap",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference DE-1"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "DE-2": {
+      "owner": "Security Operations Lead",
+      "checks": [
+        "partial",
+        "gap",
+        "met",
+        "met",
+        "partial"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "RS-1": {
+      "owner": "Incident Response Lead",
+      "checks": [
+        "met",
+        "partial",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "partial",
+        "unknown",
+        "met",
+        "met",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference RS-1"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "RS-2": {
+      "owner": "Incident Response Lead",
+      "checks": [
+        "met",
+        "met",
+        "unknown",
+        "gap",
+        "met",
+        "met",
+        "met",
+        "unknown",
+        "met",
+        "unknown",
+        "gap",
+        "gap",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "RC-1": {
+      "owner": "Business Continuity Manager",
+      "checks": [
+        "partial",
+        "met",
+        "gap",
+        "met",
+        "met",
+        "met",
+        "gap"
+      ],
+      "evidence": [
+        "See GRC library reference RC-1"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "RC-2": {
+      "owner": "Business Continuity Manager",
+      "checks": [
+        "gap",
+        "met",
+        "gap",
+        "partial",
+        "met",
+        "partial"
+      ],
+      "evidence": [
+        "See GRC library reference RC-2"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "CLD-1": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "gap",
+        "gap",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-2": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "gap",
+        "met",
+        "gap"
+      ],
+      "evidence": [
+        "See GRC library reference CLD-2"
+      ],
+      "targetDate": "2026-12-31",
+      "notes": ""
+    },
+    "CLD-3": {
+      "owner": "",
+      "checks": [
+        "unknown",
+        "gap",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-4": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "gap",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference CLD-4"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-5": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "partial",
+        "unknown",
+        "unknown"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-6": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "exception",
+        "exception",
+        "exception"
+      ],
+      "evidence": [
+        "See GRC library reference CLD-6"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": "",
+      "exception": {
+        "reason": "SLA schedule pending legal review.",
+        "expiry": "2027-01-31"
+      }
+    },
+    "CLD-7": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "partial",
+        "gap",
+        "gap",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-8": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "gap",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-9": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "gap",
+        "met",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-10": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "partial",
+        "partial",
+        "gap"
+      ],
+      "evidence": [
+        "See GRC library reference CLD-10"
+      ],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-11": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "gap",
+        "gap",
+        "gap",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-12": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "unknown",
+        "partial",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    },
+    "CLD-13": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "gap",
+        "gap",
+        "gap",
+        "gap",
+        "met"
+      ],
+      "evidence": [],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-14": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "partial",
+        "met",
+        "met",
+        "met"
+      ],
+      "evidence": [
+        "See GRC library reference CLD-14"
+      ],
+      "targetDate": "",
+      "notes": ""
+    },
+    "CLD-15": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "gap",
+        "met",
+        "met",
+        "gap"
+      ],
+      "evidence": [],
+      "targetDate": "2027-03-31",
+      "notes": ""
+    },
+    "CLD-16": {
+      "owner": "Cloud Platform Owner",
+      "checks": [
+        "met",
+        "met",
+        "gap",
+        "gap"
+      ],
+      "evidence": [
+        "See GRC library reference CLD-16"
+      ],
+      "targetDate": "2027-06-30",
+      "notes": ""
+    }
+  }
+}

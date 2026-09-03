@@ -1,0 +1,221 @@
+// GOVERN (GOV) controls of the Kuwait NBCC baseline.
+
+/*
+ * Control shape
+ *   id            official control identifier
+ *   fn            NIST CSF function grouping used by the Annex
+ *   title         official English control title
+ *   titleAr       Arabic rendering of the title
+ *   purpose       official "Purpose / Description" cell
+ *   purposeAr     Arabic rendering of the purpose
+ *   requirement   official "Minimum Requirement" cell, quoted
+ *   checks        atomic verifiable statements derived from the requirement
+ *   evidence      artifacts an assessor would reasonably expect to see
+ *   cadence       review or repeat frequency implied by the requirement
+ *   effort        rough implementation weight, one of low medium high
+ *   phase         suggested readiness phase, 1 to 3
+ *   appliesWhen   profile predicate keys, all must hold for the control to apply
+ *   crosswalk     mappings to CSF 2.0 subcategories and CIS v8.1 safeguards
+ */
+
+export const GOVERN = [
+  {
+    id: 'GOV-1',
+    fn: 'GOV',
+    title: 'Governance and Roles',
+    titleAr: 'الحوكمة والأدوار',
+    purpose: 'Establish clear accountability for cybersecurity.',
+    purposeAr: 'ترسيخ مساءلة واضحة عن الأمن السيبراني.',
+    requirement:
+      'The entity MUST designate an employee at manager level or above with overall responsibility for cybersecurity. Define and document roles and responsibilities for information security, IT operations, risk management, data classification, and incident response. Review and update this structure at least annually or when major organizational changes occur.',
+    checks: [
+      'An employee at manager level or above is formally designated with overall responsibility for cybersecurity.',
+      'The designation is documented and traceable to a signed appointment or equivalent record.',
+      'Roles and responsibilities are documented for information security.',
+      'Roles and responsibilities are documented for IT operations.',
+      'Roles and responsibilities are documented for risk management.',
+      'Roles and responsibilities are documented for data classification.',
+      'Roles and responsibilities are documented for incident response.',
+      'The role structure is reviewed and updated at least annually.',
+      'The role structure is reviewed after any major organizational change.'
+    ],
+    evidence: [
+      'Signed appointment letter or decision naming the cybersecurity lead',
+      'RACI matrix or roles and responsibilities document',
+      'Organizational chart showing the reporting line of the cybersecurity function',
+      'Dated record of the most recent annual review'
+    ],
+    cadence: 'annual',
+    effort: 'low',
+    phase: 1,
+    appliesWhen: [],
+    crosswalk: { csf: ['GV.RR-01', 'GV.RR-02'], cis: ['17.1'] }
+  },
+  {
+    id: 'GOV-2',
+    fn: 'GOV',
+    title: 'Policies and Exception Management',
+    titleAr: 'السياسات وإدارة الاستثناءات',
+    purpose: 'Ensure behavior and decisions are guided by documented, approved rules.',
+    purposeAr: 'ضمان استناد السلوكيات والقرارات إلى قواعد موثقة ومعتمدة.',
+    requirement:
+      'Maintain core written policies that, at minimum, cover: acceptable use, Secure Configuration, data classification, access control, backup & recovery, incident response, and third-party / service provider security. Policies SHOULD be approved by management and reviewed at least every two years. Any deviations MUST follow a simple exception process with documented risk acceptance and an expiry date.',
+    checks: [
+      'A written acceptable use policy exists.',
+      'A written secure configuration policy exists.',
+      'A written data classification policy exists.',
+      'A written access control policy exists.',
+      'A written backup and recovery policy exists.',
+      'A written incident response policy exists.',
+      'A written third party and service provider security policy exists.',
+      'Policies are approved by management.',
+      'Policies are reviewed at least every two years.',
+      'A documented exception process exists for deviations from policy.',
+      'Every recorded exception carries a documented risk acceptance.',
+      'Every recorded exception carries an expiry date.'
+    ],
+    evidence: [
+      'Policy set with version history and approval signatures',
+      'Policy review calendar showing the two year cycle',
+      'Exception register listing scope, owner, risk acceptance and expiry',
+      'Compensating control notes attached to open exceptions'
+    ],
+    cadence: 'biennial',
+    effort: 'medium',
+    phase: 1,
+    appliesWhen: [],
+    crosswalk: { csf: ['GV.PO-01', 'GV.PO-02'], cis: ['4.1', '14.1'] }
+  },
+  {
+    id: 'GOV-3',
+    fn: 'GOV',
+    title: 'Data Classification and Sovereignty',
+    titleAr: 'تصنيف البيانات والسيادة عليها',
+    purpose: 'Ensure data is handled according to its sensitivity and legal requirements.',
+    purposeAr: 'ضمان التعامل مع البيانات وفق درجة حساسيتها ومتطلباتها القانونية.',
+    requirement:
+      'Implement a data classification program aligned with the National Data Classification Framework, using at least Sensitive, Restricted, and Public categories, with clear criteria and examples. Issue a Data Classification Policy/Document approved by senior management and submitted to NCSC for approval, in accordance with Decision No. 1 of 2025. Tag or label data (and related systems/records) with its classification and ensure protection measures increase with sensitivity (for example: stronger access controls and encryption for Sensitive data). Storing or processing Sensitive data outside Kuwait MUST follow the national approval process and receive explicit NCSC approval before use (per applicable regulations).',
+    checks: [
+      'A data classification program is implemented and aligned with the National Data Classification Framework.',
+      'The scheme uses at least the Sensitive, Restricted and Public categories.',
+      'Classification criteria and worked examples are documented.',
+      'A Data Classification Policy or Document is approved by senior management.',
+      'The Data Classification Document has been submitted to NCSC for approval under Decision No. 1 of 2025.',
+      'Data is tagged or labelled with its classification.',
+      'Related systems and records carry the classification of the data they hold.',
+      'Protection measures demonstrably increase with sensitivity.',
+      'Sensitive data receives stronger access controls and encryption than lower tiers.',
+      'Any storage or processing of Sensitive data outside Kuwait has explicit prior NCSC approval.'
+    ],
+    evidence: [
+      'Approved Data Classification Policy with senior management signature',
+      'Proof of submission to NCSC and any approval response',
+      'Sample labelled records, file shares or database catalogues',
+      'Control matrix showing measures applied per classification tier',
+      'Approval file for every offshore location holding Sensitive data'
+    ],
+    cadence: 'annual',
+    effort: 'high',
+    phase: 1,
+    appliesWhen: [],
+    crosswalk: { csf: ['ID.AM-07', 'GV.PO-01'], cis: ['3.1', '3.2', '3.7'] }
+  },
+  {
+    id: 'GOV-4',
+    fn: 'GOV',
+    title: 'Kuwaitization and Vetting for Cyber Roles',
+    titleAr: 'التكويت والتحري في الأدوار السيبرانية',
+    purpose: 'Support national capacity building and reduce insider risk in critical cyber roles.',
+    purposeAr: 'دعم بناء القدرات الوطنية والحد من مخاطر التهديد الداخلي في الأدوار السيبرانية الحرجة.',
+    requirement:
+      'For key cybersecurity roles (e.g., SOC analysts, administrators, incident responders), prioritize qualified Kuwaiti nationals where feasible and consistent with national HR frameworks and local laws and regulations. For staff in such sensitive roles, perform basic pre-employment screening (e.g., identity verification, employment history, conflict-of-interest checks) in line with applicable laws and HR policies. Maintain a simple list of designated "sensitive cyber roles" and ensure screening is documented.',
+    checks: [
+      'Qualified Kuwaiti nationals are prioritized for key cybersecurity roles where feasible.',
+      'The prioritization approach is consistent with national HR frameworks and local law.',
+      'A list of designated sensitive cyber roles is maintained.',
+      'Identity verification is performed before hire into sensitive cyber roles.',
+      'Employment history is verified before hire into sensitive cyber roles.',
+      'Conflict of interest checks are performed before hire into sensitive cyber roles.',
+      'Screening outcomes are documented and retained.'
+    ],
+    evidence: [
+      'Register of designated sensitive cyber roles',
+      'Screening records held per role holder in line with HR policy',
+      'Recruitment policy clause covering national prioritization',
+      'Hiring file samples showing completed checks'
+    ],
+    cadence: 'per hire',
+    effort: 'low',
+    phase: 2,
+    appliesWhen: [],
+    crosswalk: { csf: ['GV.RR-04', 'PR.AA-01'], cis: ['14.1'] }
+  },
+  {
+    id: 'GOV-5',
+    fn: 'GOV',
+    title: 'Periodic Self Assessment and Continuous Improvement',
+    titleAr: 'التقييم الذاتي الدوري والتحسين المستمر',
+    purpose: 'Provide a minimal mechanism to measure implementation of this baseline.',
+    purposeAr: 'توفير آلية بسيطة لقياس مدى تطبيق هذه الضوابط.',
+    requirement:
+      'At least once per year, complete a self-assessment against this baseline using an NCSC-issued or NCSC-approved checklist. Document the results, key gaps, actions, and target dates. Retain the record for at least three years and make it available to NCSC upon request. Use major incidents or audits to update priorities.',
+    checks: [
+      'A self assessment against the baseline is completed at least once per year.',
+      'The self assessment uses an NCSC issued or NCSC approved checklist.',
+      'Results are documented.',
+      'Key gaps are documented.',
+      'Remediation actions are documented.',
+      'Target dates are recorded against each action.',
+      'Assessment records are retained for at least three years.',
+      'Records can be produced for NCSC on request.',
+      'Major incidents and audit findings feed back into assessment priorities.'
+    ],
+    evidence: [
+      'Completed self assessment for the current year',
+      'Gap and action register with owners and target dates',
+      'Retention proof covering the last three annual cycles',
+      'Change log showing priorities updated after an incident or audit'
+    ],
+    cadence: 'annual',
+    effort: 'medium',
+    phase: 1,
+    appliesWhen: [],
+    crosswalk: { csf: ['GV.OV-01', 'GV.OV-03', 'ID.IM-02'], cis: ['17.4'] }
+  },
+  {
+    id: 'GOV-6',
+    fn: 'GOV',
+    title: 'Service Provider and Outsourcing Governance',
+    titleAr: 'حوكمة مزودي الخدمة والإسناد الخارجي',
+    purpose: 'Manage cybersecurity risk arising from external providers, including cloud.',
+    purposeAr: 'إدارة مخاطر الأمن السيبراني الناشئة عن مزودي الخدمات الخارجيين ومنهم مزودو الخدمات السحابية.',
+    requirement:
+      'Establish and maintain an inventory of service providers (including cloud/managed services), including classification and an entity contact for each provider; review at least annually or upon significant change. For service providers handling Sensitive data or supporting critical services, document the service scope and shared responsibilities for protecting the service and data. Ensure incident response contact information includes relevant service providers, and define incident reporting timeframes and mechanisms for provider-related incidents. For offboarding/termination, ensure required actions are performed to remove access and handle data appropriately, retaining evidence where applicable.',
+    checks: [
+      'An inventory of service providers exists and covers cloud and managed services.',
+      'Each provider record carries a classification.',
+      'Each provider record names an entity contact.',
+      'The inventory is reviewed at least annually or upon significant change.',
+      'Service scope is documented for providers handling Sensitive data or critical services.',
+      'Shared responsibilities for protecting the service and data are documented for those providers.',
+      'Incident response contact information includes relevant service providers.',
+      'Incident reporting timeframes are defined for provider related incidents.',
+      'Incident reporting mechanisms are defined for provider related incidents.',
+      'Offboarding actions remove provider access.',
+      'Offboarding actions handle provider held data appropriately.',
+      'Evidence of offboarding actions is retained.'
+    ],
+    evidence: [
+      'Service provider register with classification, contact and review date',
+      'Scope and shared responsibility documents for critical providers',
+      'Incident contact list including provider escalation paths',
+      'Completed offboarding checklists with access removal proof'
+    ],
+    cadence: 'annual',
+    effort: 'medium',
+    phase: 2,
+    appliesWhen: [],
+    crosswalk: { csf: ['GV.SC-04', 'GV.SC-07', 'GV.SC-10'], cis: ['15.1', '15.2', '15.4'] }
+  }
+];
+
