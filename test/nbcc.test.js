@@ -209,6 +209,49 @@ test('the site payload carries the Arabic decomposition', () => {
   assert.ok(site.includes('المناطق التقنية الحرجة محددة'), 'a known Arabic check should be present');
 });
 
+test('every control carries a working Arabic requirement', () => {
+  for (const c of CONTROLS) {
+    assert.ok(c.requirementAr && c.requirementAr.trim(), `${c.id} has no requirementAr`);
+    assert.ok(/[\u0600-\u06FF]/.test(c.requirementAr), `${c.id} requirementAr has no Arabic script`);
+    // The English is authoritative and must never be replaced by the Arabic.
+    assert.ok(c.requirement && c.requirement.trim(), `${c.id} lost its official requirement`);
+    assert.notEqual(c.requirementAr, c.requirement);
+  }
+});
+
+test('the Arabic requirement keeps the bullet structure of the official text', () => {
+  for (const c of CONTROLS) {
+    const en = (c.requirement.match(/\u2022/g) || []).length;
+    const ar = (c.requirementAr.match(/\u2022/g) || []).length;
+    assert.equal(ar, en, `${c.id} has ${ar} Arabic bullets against ${en} official ones`);
+  }
+});
+
+test('neither language table has a key the other is missing', () => {
+  // A missing key falls back to the other language, which is how English
+  // labels ended up inside the Arabic interface without anyone noticing.
+  const html = buildSite();
+  const body = html.match(/const STR = \{([\s\S]*?)\n\};/)[1];
+  const en = body.slice(body.indexOf('en:'), body.indexOf('ar:'));
+  const ar = body.slice(body.indexOf('ar:'));
+  const keys = (t) => new Set(
+    [...t.matchAll(/(?:^|[\s{,])([a-zA-Z][a-zA-Z0-9]*)\s*:/g)].map((x) => x[1])
+  );
+  const ek = keys(en);
+  const ak = keys(ar);
+  const missingAr = [...ek].filter((k) => !ak.has(k) && k !== 'en');
+  const missingEn = [...ak].filter((k) => !ek.has(k) && k !== 'ar');
+  assert.deepEqual(missingAr, [], `Arabic is missing: ${missingAr.join(', ')}`);
+  assert.deepEqual(missingEn, [], `English is missing: ${missingEn.join(', ')}`);
+});
+
+test('the shipped page carries both requirement languages', () => {
+  const site = buildSite();
+  assert.ok(site.includes('requirementAr'));
+  assert.ok(site.includes('تنشئ الجهة حصرا لمزودي الخدمة'), 'a known Arabic requirement should ship');
+  assert.ok(site.includes('showOfficial'), 'the official text must remain reachable');
+});
+
 /* -------------------------------------------------------------- scoping */
 
 test('cloud controls drop out when the entity uses no cloud', () => {
@@ -899,6 +942,47 @@ test('cli portfolio refuses one file and reports systemic gaps', () => {
   // The snapshots are one entity over time, which the command should notice.
   assert.ok(text.includes('nbcc trend'), 'a time series passed here should be redirected');
   assert.doesNotThrow(() => JSON.parse(cli(['portfolio', ...files, '--json', '--date', '2026-09-03'])));
+});
+
+/* ------------------------------------------------ language separation */
+
+const ARABIC = /[\u0600-\u06FF]/;
+
+test('English output carries no Arabic anywhere', () => {
+  // Mixing the scripts is what made the tool feel like a demo rather than an
+  // instrument, so both directions are asserted rather than eyeballed.
+  const commands = [
+    ['catalog'], ['show', 'GOV-6'], ['deadline'], ['crosswalk'], ['doctor'], ['help'],
+    ['assess', EXAMPLE, '--date', '2026-09-03'],
+    ['plan', EXAMPLE, '--date', '2026-09-03'],
+    ['evidence', EXAMPLE, '--date', '2026-09-03']
+  ];
+  for (const args of commands) {
+    const text = cli(args);
+    assert.ok(!ARABIC.test(text), `${args[0]} leaked Arabic into English output`);
+  }
+});
+
+test('the English report carries no Arabic', () => {
+  const html = renderReport(JSON.parse(readFileSync(EXAMPLE, 'utf8')), { today: SEP });
+  assert.ok(!ARABIC.test(html), 'the English report leaked Arabic');
+});
+
+test('Arabic output leads in Arabic and keeps the official text reachable', () => {
+  const text = cli(['show', 'GOV-6', '--ar']);
+  assert.ok(ARABIC.test(text));
+  assert.ok(text.includes('الحد الأدنى المطلوب'));
+  assert.ok(text.includes('ترجمة عاملة'), 'the translation must be labelled as working, not official');
+  assert.ok(text.includes('النص الرسمي بالإنجليزية'), 'the authoritative text must still be printed');
+  assert.ok(text.includes('Establish and maintain an inventory'), 'the official English must follow');
+  assert.ok(!text.includes('Purpose'), 'English section headings should not appear in Arabic output');
+});
+
+test('the Arabic catalog listing uses Arabic titles and headings', () => {
+  const text = cli(['catalog', '--fn', 'GOV', '--ar']);
+  assert.ok(text.includes('الحوكمة والأدوار'));
+  assert.ok(!text.includes('Governance & Roles'));
+  assert.ok(!text.includes('checks'), 'the English unit label should not appear');
 });
 
 /* ---------------------------------------------------------- crosswalk */

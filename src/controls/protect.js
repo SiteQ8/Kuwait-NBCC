@@ -11,7 +11,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Establish hardened configuration baselines for servers, workstations, network devices, and key applications. From this baseline, disable or remove services, features and ports that are not needed for the system\u2019s role. Change or disable default accounts and default passwords. Enable a host-based firewall on endpoints and servers and allow only the network traffic required for normal operation. Review configurations at least annually and after major changes.',
-    checks: [
+        requirementAr:
+      'تضع الجهة إعدادات مرجعية محصنة للخوادم ومحطات العمل وأجهزة الشبكة والتطبيقات الرئيسية، وتعطل أو تزيل انطلاقا من هذه الإعدادات الخدمات والخصائص والمنافذ غير اللازمة لدور النظام، وتغير أو تعطل الحسابات وكلمات المرور الافتراضية، وتفعل جدار حماية على مستوى المضيف في الأجهزة الطرفية والخوادم لا يسمح إلا بحركة البيانات اللازمة للتشغيل الطبيعي، وتراجع الإعدادات سنويا على الأقل وبعد التغييرات الجوهرية.',
+checks: [
       'Hardened configuration baselines exist for servers.',
       'Hardened configuration baselines exist for workstations.',
       'Hardened configuration baselines exist for network devices.',
@@ -71,7 +73,11 @@ export const PROTECT = [
       'Where feasible, separate user networks from server/data networks, and keep management/admin interfaces on a more restricted network segment. Place internet-facing systems in a more controlled network zone. Avoid direct access from user networks to sensitive servers unless explicitly required and approved.\n' +
       '• Do not treat network location alone as sufficient basis for trust. Access to management/admin interfaces and Critical Systems MUST be explicitly authorized based on least privilege and protected with strong authentication in accordance with PR-2 (including MFA for administrative access where supported).\n' +
       '• Document such access and review it at least annually.',
-    checks: [
+        requirementAr:
+      'تفصل الجهة متى أمكن شبكات المستخدمين عن شبكات الخوادم والبيانات، وتبقي واجهات الإدارة في مقطع شبكي أكثر تقييدا، وتضع الأنظمة المتصلة بالإنترنت في منطقة شبكية أكثر ضبطا، وتتجنب الوصول المباشر من شبكات المستخدمين إلى الخوادم الحساسة ما لم يكن مطلوبا ومعتمدا صراحة.\n' +
+      '• ولا يعد الموقع الشبكي وحده أساسا كافيا للثقة، إذ يجب اعتماد الوصول إلى واجهات الإدارة والأنظمة الحرجة اعتمادا صريحا قائما على أقل الصلاحيات وحمايته بمصادقة قوية وفق الضابط PR-2 بما في ذلك المصادقة متعددة العوامل للوصول الإداري حيثما كانت مدعومة.\n' +
+      '• ويوثق هذا الوصول ويراجع سنويا على الأقل.',
+checks: [
       'User networks are separated from server and data networks where feasible.',
       'Management and admin interfaces sit on a more restricted network segment.',
       'Internet facing systems are placed in a more controlled network zone.',
@@ -125,7 +131,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Have a simple written process for vulnerability management and review it at least annually. Run automated vulnerability scans on key systems: at least monthly for internet-facing systems, at least quarterly for other important internal systems, and after major changes. After each scan, review the report, produce a short action list, and fix the most serious issues first (for example, high and critical findings). Aim to apply operating system and application patches at least monthly on supported systems. Keep records of scans and key remediation actions.',
-    checks: [
+        requirementAr:
+      'تعتمد الجهة آلية مكتوبة مبسطة لإدارة الثغرات وتراجعها سنويا على الأقل، وتجري فحوصا آلية للثغرات على الأنظمة الرئيسية بواقع شهري على الأقل للأنظمة المتصلة بالإنترنت وربع سنوي على الأقل لسائر الأنظمة الداخلية المهمة وكذلك بعد التغييرات الجوهرية، وتراجع بعد كل فحص تقريره وتعد قائمة إجراءات موجزة وتعالج أخطر المسائل أولا كالنتائج العالية والحرجة، وتسعى إلى تطبيق تحديثات أنظمة التشغيل والتطبيقات شهريا على الأقل على الأنظمة المدعومة، وتحفظ سجلات الفحوص وإجراءات المعالجة الرئيسية.',
+checks: [
       'A written vulnerability management process exists.',
       'The process is reviewed at least annually.',
       'Automated vulnerability scans run at least monthly on internet facing systems.',
@@ -181,7 +189,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Require unique passwords for all accounts; do not reuse the same password across different systems. As a simple rule, require at least 8 characters for accounts protected by multi-factor authentication (MFA) and at least 14 characters for accounts without MFA. Avoid forcing regular password changes unless compromise is suspected. Enforce session lock or screen saver after 15 minutes of inactivity for workstations and around 2 minutes for mobile devices where practical. Limit administrator privileges to dedicated admin accounts, and require staff to perform day-to-day activities (email, web browsing, office work) from a normal user account. Implement MFA for all remote network access, externally exposed applications, and privileged/admin accounts where supported, using at least two different types of factor (something you know, something you have, something you are).',
-    checks: [
+        requirementAr:
+      'تشترط الجهة كلمات مرور فريدة لجميع الحسابات دون إعادة استخدام كلمة المرور نفسها عبر أنظمة مختلفة، وكقاعدة مبسطة تشترط ثمانية محارف على الأقل للحسابات المحمية بالمصادقة متعددة العوامل وأربعة عشر محرفا على الأقل للحسابات غير المحمية بها، وتتجنب فرض تغيير دوري لكلمات المرور ما لم يشتبه في اختراق، وتفرض قفل الجلسة أو شاشة التوقف بعد خمس عشرة دقيقة من الخمول في محطات العمل ونحو دقيقتين في الأجهزة المحمولة متى كان ذلك عمليا، وتقصر صلاحيات المدير على حسابات إدارية مخصصة وتلزم الموظفين بأداء أعمالهم اليومية من بريد وتصفح وأعمال مكتبية من حساب مستخدم عادي، وتطبق المصادقة متعددة العوامل على كل وصول شبكي عن بعد وعلى التطبيقات المكشوفة خارجيا وعلى الحسابات ذات الصلاحيات والحسابات الإدارية حيثما كانت مدعومة، على أن تستخدم نوعين مختلفين على الأقل من العوامل أي شيء تعرفه وشيء تملكه وشيء تكونه.',
+checks: [
       'Unique passwords are required for all accounts.',
       'Password reuse across different systems is prohibited.',
       'Accounts protected by MFA require at least 8 characters.',
@@ -241,7 +251,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Require that all official business communications use only Entity-approved corporate email accounts on approved domains. Personal/consumer email accounts MUST NOT be configured on corporate devices and MUST NOT be used for work-related communication. Enforce this via (1) an acceptable use policy, and (2) device and email configuration (e.g., MDM or mail client settings) that prevent adding personal accounts where feasible.',
-    checks: [
+        requirementAr:
+      'تشترط الجهة أن تجري كل مراسلات العمل الرسمية عبر حسابات بريد مؤسسي معتمدة منها وعلى نطاقات معتمدة، ولا يجوز تهيئة حسابات البريد الشخصي أو الاستهلاكي على أجهزة الجهة ولا استخدامها في المراسلات المتعلقة بالعمل، ويفرض ذلك أولا بسياسة للاستخدام المقبول وثانيا بإعدادات الأجهزة والبريد كنظام إدارة الأجهزة أو إعدادات عميل البريد بما يمنع إضافة الحسابات الشخصية متى أمكن.',
+checks: [
       'All official business communication uses entity approved corporate email accounts.',
       'Corporate email runs on approved domains.',
       'Personal or consumer email accounts are not configured on corporate devices.',
@@ -285,7 +297,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Provide or approve a password-manager-style solution for staff who manage multiple credentials. Encourage use of long, unique passwords generated by the manager for each system. For shared/team accounts (where unavoidable), use shared password vaults or similar capabilities; do not share passwords through email, chat, or on paper.',
-    checks: [
+        requirementAr:
+      'توفر الجهة أو تعتمد حلا من نوع مدير كلمات المرور للموظفين الذين يديرون بيانات اعتماد متعددة، وتشجع استخدام كلمات مرور طويلة وفريدة يولدها المدير لكل نظام، وتستخدم للحسابات المشتركة أو حسابات الفرق عند تعذر تجنبها خزائن كلمات مرور مشتركة أو قدرات مماثلة، ولا تتبادل كلمات المرور عبر البريد الإلكتروني أو المحادثات أو على الورق.',
+checks: [
       'A password manager style solution is provided or approved for staff managing multiple credentials.',
       'Long unique generated passwords are encouraged for each system.',
       'Shared or team accounts use a shared password vault or similar capability.',
@@ -329,7 +343,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Establish a security awareness program and provide training at least annually and for new joiners. At minimum, cover: social engineering and phishing, safe use of email and the web, handling of Sensitive and Restricted data, password and MFA hygiene, use of approved communication tools, use of portable media, and how to report suspicious activity or incidents. Use simple language and relevant examples.',
-    checks: [
+        requirementAr:
+      'تنشئ الجهة برنامجا للتوعية الأمنية وتقدم التدريب سنويا على الأقل وللموظفين الجدد، ويغطي كحد أدنى الهندسة الاجتماعية والتصيد والاستخدام الآمن للبريد الإلكتروني والإنترنت والتعامل مع البيانات الحساسة والمقيدة وسلامة كلمات المرور والمصادقة متعددة العوامل واستخدام أدوات التواصل المعتمدة واستخدام الوسائط المحمولة وكيفية الإبلاغ عن النشاط المشبوه أو الحوادث، وتستخدم في ذلك لغة بسيطة وأمثلة ذات صلة.',
+checks: [
       'A security awareness program is established.',
       'Training is delivered at least annually.',
       'Training is delivered to new joiners.',
@@ -385,7 +401,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Maintain a central register of official Entity accounts on external platforms (e.g., major social networks, video platforms). Create official accounts using corporate email addresses and appropriate naming conventions. Where the platform provides it and criteria are met, enable verification or "official" status. Protect these accounts with MFA and role-based administration; review access at least annually and remove access when staff leave or change roles.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة سجلا مركزيا لحساباتها الرسمية على المنصات الخارجية كشبكات التواصل ومنصات الفيديو الكبرى، وتنشئ الحسابات الرسمية باستخدام عناوين بريد مؤسسي وأعراف تسمية مناسبة، وتفعل التوثيق أو صفة الحساب الرسمي حيثما توفرها المنصة واستوفيت شروطها، وتحمي هذه الحسابات بالمصادقة متعددة العوامل وتديرها وفق الأدوار، وتراجع الوصول إليها سنويا على الأقل وتزيله عند مغادرة الموظفين أو تغير أدوارهم.',
+checks: [
       'A central register of official entity accounts on external platforms is maintained.',
       'Official accounts are created using corporate email addresses.',
       'Official accounts follow appropriate naming conventions.',
@@ -433,7 +451,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Deploy endpoint protection (e.g., anti-malware/EDR software) on supported servers and workstations with automatic updates and centralized alerting where possible. Use email and web security controls (e.g., spam filtering, attachment and URL filtering) to block common malicious content and clearly suspicious file types. Configure email systems to block or warn on dangerous file extensions that are not needed for business and to limit very large attachments according to business need. Configure email domains with appropriate anti-spoofing controls (SPF, DKIM, DMARC) to prevent impersonation. Train staff to be cautious with unexpected links and attachments, and to report suspicious messages.',
-    checks: [
+        requirementAr:
+      'تنشر الجهة حلول حماية الأجهزة الطرفية كبرمجيات مكافحة البرمجيات الخبيثة أو الكشف والاستجابة على الخوادم ومحطات العمل المدعومة مع تحديث تلقائي وتنبيه مركزي متى أمكن، وتستخدم ضوابط أمن البريد والويب كترشيح الرسائل المزعجة والمرفقات والروابط لحجب المحتوى الخبيث الشائع وأنواع الملفات المشبوهة بوضوح، وتهيئ أنظمة البريد لحجب امتدادات الملفات الخطرة غير اللازمة للعمل أو التنبيه عليها ولتحديد المرفقات الكبيرة جدا وفق حاجة العمل، وتهيئ نطاقات البريد بضوابط مناسبة لمنع الانتحال هي SPF وDKIM وDMARC، وتدرب الموظفين على الحذر من الروابط والمرفقات غير المتوقعة وعلى الإبلاغ عن الرسائل المشبوهة.',
+checks: [
       'Endpoint protection is deployed on supported servers.',
       'Endpoint protection is deployed on supported workstations.',
       'Endpoint protection signatures and engines update automatically.',
@@ -491,7 +511,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'For official work (meetings, calls, messaging, screen sharing), use only Entity-approved communication and collaboration platforms. Do not use personal or unapproved apps (for example, private messaging, personal email, unauthorized remote-control tools) for work data or meetings. Maintain a simple list of approved platforms and ensure staff are aware of it. Where feasible, restrict installation or use of unapproved tools on corporate devices via configuration.',
-    checks: [
+        requirementAr:
+      'تستخدم الجهة في الأعمال الرسمية من اجتماعات ومكالمات ومراسلة ومشاركة للشاشة منصات التواصل والتعاون المعتمدة منها وحدها، ولا تستخدم التطبيقات الشخصية أو غير المعتمدة كالمراسلة الخاصة والبريد الشخصي وأدوات التحكم عن بعد غير المصرح بها في بيانات العمل أو اجتماعاته، وتحفظ قائمة مبسطة بالمنصات المعتمدة وتضمن علم الموظفين بها، وتقيد متى أمكن تثبيت الأدوات غير المعتمدة أو استخدامها على أجهزة الجهة عن طريق الإعدادات.',
+checks: [
       'Only entity approved platforms are used for official meetings, calls, messaging and screen sharing.',
       'Personal or unapproved apps are not used for work data or meetings.',
       'Unauthorized remote control tools are not used for work.',
@@ -535,7 +557,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Where feasible, restrict or technically disable the use of unapproved portable storage media (e.g., USB drives) on Entity systems, especially those handling Sensitive data. Establish procedures to allow only authorized portable media if necessary for business, and train staff on proper usage of portable media devices.',
-    checks: [
+        requirementAr:
+      'تقيد الجهة متى أمكن استخدام وسائط التخزين المحمولة غير المعتمدة كأقراص الناقل التسلسلي العام على أنظمتها أو تعطله تقنيا، ولا سيما الأنظمة التي تعالج بيانات حساسة، وتضع إجراءات لا تسمح إلا بالوسائط المحمولة المصرح بها إذا اقتضت حاجة العمل ذلك، وتدرب الموظفين على الاستخدام السليم لأجهزة الوسائط المحمولة.',
+checks: [
       'Use of unapproved portable storage media is restricted or technically disabled where feasible.',
       'Systems handling Sensitive data receive the strictest portable media restriction.',
       'A procedure exists to authorize portable media where a business need exists.',
@@ -579,7 +603,9 @@ export const PROTECT = [
     purposeSource: 'annex',
     requirement:
       'Implement regular, automated backups for critical systems and data, with priority to Sensitive and Restricted data. Store backups in at least one separate location (for example, a separate network segment, storage system, or cloud account). Protect backup data from unauthorized access and tampering (e.g., access controls, encryption). Test restoration of backups for key systems at least annually. Define and apply retention periods and secure disposal procedures aligned with legal requirements and the National Data Classification Framework, ensuring Sensitive data is securely erased or destroyed when no longer needed. For Sensitive data, if backups involve storage outside Kuwait (such as cloud backups), obtain any required approvals in line with data sovereignty requirements.',
-    checks: [
+        requirementAr:
+      'تنفذ الجهة نسخا احتياطية آلية منتظمة للأنظمة والبيانات الحرجة مع إعطاء الأولوية للبيانات الحساسة والمقيدة، وتحفظ النسخ في موقع منفصل واحد على الأقل كمقطع شبكي مستقل أو نظام تخزين آخر أو حساب سحابي، وتحمي بيانات النسخ الاحتياطي من الوصول غير المصرح به ومن العبث بضوابط الوصول والتشفير، وتختبر استعادة النسخ للأنظمة الرئيسية سنويا على الأقل، وتحدد وتطبق مدد الحفظ وإجراءات الإتلاف الآمن بما يتوافق مع المتطلبات القانونية ومع الإطار الوطني لتصنيف البيانات وبما يضمن محو البيانات الحساسة أو إتلافها بصورة آمنة عند انتفاء الحاجة إليها، أما البيانات الحساسة فإذا انطوت نسخها الاحتياطية على حفظ خارج الكويت كالنسخ السحابية وجب الحصول على أي موافقات مطلوبة وفق متطلبات السيادة على البيانات.',
+checks: [
       'Regular automated backups run for critical systems and data.',
       'Sensitive and Restricted data receive backup priority.',
       'Backups are stored in at least one separate location.',
@@ -639,7 +665,13 @@ export const PROTECT = [
       '• Restricted access so that only authorized personnel can enter or unlock equipment (for example, keys, access cards, or codes managed by IT or facilities).\n' +
       '• A simple record of non-routine visitors (such as contractors or vendors) to critical IT areas, which MAY be kept using existing building or guard logs.\n' +
       'Store backup media and portable equipment (such as laptops) in a locked room or cabinet when not in use; avoid leaving them unattended in public or shared areas. This control focuses on the physical protection of IT assets and SHOULD make use of the entity’s existing building or facility security arrangements wherever possible.',
-    checks: [
+        requirementAr:
+      'تحدد الجهة المناطق التقنية الحرجة كمراكز البيانات وغرف الخوادم وغرف الشبكة الرئيسية ومواقع حفظ وسائط النسخ الاحتياطي وتحفظ قائمة مبسطة بها، وتطبق على هذه المناطق حمايات مادية أساسية تناسب الموقع تشمل كحد أدنى ما يلي:\n' +
+      '• أبوابا أو خزائن يمكن قفلها عند خلو المنطقة.\n' +
+      '• وصولا مقيدا بحيث لا يدخل أو يفتح المعدات إلا المخولون، وذلك مثلا بمفاتيح أو بطاقات دخول أو رموز تديرها تقنية المعلومات أو إدارة المرافق.\n' +
+      '• سجلا مبسطا للزوار غير المعتادين كالمقاولين والموردين إلى المناطق التقنية الحرجة، ويجوز حفظه ضمن سجلات المبنى أو الحراسة القائمة.\n' +
+      'وتحفظ وسائط النسخ الاحتياطي والمعدات المحمولة كالحواسيب المحمولة في غرفة أو خزانة مقفلة عند عدم الاستخدام، مع تجنب تركها دون رقابة في الأماكن العامة أو المشتركة، ويركز هذا الضابط على الحماية المادية للأصول التقنية وينبغي أن يستفيد من ترتيبات أمن المبنى أو المرافق القائمة لدى الجهة حيثما أمكن.',
+checks: [
       'Critical IT areas are identified and listed.',
       'Doors or cabinets in critical IT areas can be locked when unattended.',
       'Access is restricted so only authorized personnel can enter or unlock equipment.',

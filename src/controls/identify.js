@@ -11,7 +11,9 @@ export const IDENTIFY = [
     purposeSource: 'annex',
     requirement:
       'Maintain a central electronic inventory of hardware assets (servers, workstations, laptops, network equipment, IoT/OT devices, etc.) and key on-premises services. Record at least: owner, location, purpose, criticality, and lifecycle state (in use, spare, retired). For physical assets, use unique, machine-readable labels (e.g., barcode/QR-style) to support scanning and tracking. At least weekly, review network discovery or similar tools to identify unauthorized devices and either remove, block, or formally approve them.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة حصرا إلكترونيا مركزيا لأصول العتاد، ومنها الخوادم ومحطات العمل والحواسيب المحمولة ومعدات الشبكة وأجهزة إنترنت الأشياء والتقنيات التشغيلية وغيرها، وكذلك الخدمات الرئيسية داخل المقر، ويسجل فيه كحد أدنى المالك والموقع والغرض ودرجة الحرجية وحالة دورة الحياة من حيث كونه قيد الاستخدام أو احتياطيا أو مسحوبا، أما الأصول المادية فتوسم بملصقات فريدة قابلة للقراءة آليا مثل الباركود أو رمز الاستجابة السريعة بما يدعم المسح والتتبع، وتراجع الجهة أسبوعيا على الأقل مخرجات أدوات اكتشاف الشبكة أو ما شابهها لتحديد الأجهزة غير المصرح بها ثم تزيلها أو تحجبها أو تعتمدها رسميا.',
+checks: [
       'A central electronic inventory of hardware assets is maintained.',
       'The inventory covers servers, workstations, laptops, network equipment and IoT or OT devices.',
       'Key on premises services are recorded in the inventory.',
@@ -65,7 +67,9 @@ export const IDENTIFY = [
     purposeSource: 'annex',
     requirement:
       'Maintain a list of authorized software (including version families) and service providers (including cloud and SaaS). At least monthly, review systems for unauthorized software and either remove it or record a documented exception. The list register SHOULD include owner, contact details, service description, criticality, and data sensitivity (which classifications are processed). Review provider information at least annually.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة قائمة بالبرمجيات المصرح بها بما في ذلك عائلات الإصدارات، وقائمة بمزودي الخدمة بما في ذلك الخدمات السحابية والبرمجيات كخدمة، وتراجع الأنظمة شهريا على الأقل بحثا عن برمجيات غير مصرح بها فتزيلها أو تسجل لها استثناء موثقا، وينبغي أن يتضمن السجل المالك وبيانات الاتصال ووصف الخدمة ودرجة الحرجية وحساسية البيانات أي التصنيفات التي تعالج، وتراجع معلومات المزودين سنويا على الأقل.',
+checks: [
       'A list of authorized software is maintained.',
       'The software list records version families.',
       'A list of service providers is maintained and includes cloud and SaaS.',
@@ -119,7 +123,9 @@ export const IDENTIFY = [
     purposeSource: 'annex',
     requirement:
       'Maintain an inventory of critical and sensitive data sets, including classification, location, and business owner. Maintain an inventory of user and service accounts including privileges and last activity. Review accounts at least quarterly. Disable or remove dormant interactive user accounts that have not been used for 90 days, where the technology supports it. Review service accounts at least quarterly to validate continued business need. Ensure high-risk or privileged accounts are clearly identified.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة حصرا لمجموعات البيانات الحرجة والحساسة يتضمن التصنيف والموقع والمالك من جهة الأعمال، وحصرا لحسابات المستخدمين وحسابات الخدمة يتضمن الصلاحيات وآخر نشاط، وتراجع الحسابات ربع سنويا على الأقل، وتعطل أو تزيل حسابات المستخدمين التفاعلية الخاملة التي لم تستخدم تسعين يوما متى كانت التقنية تدعم ذلك، وتراجع حسابات الخدمة ربع سنويا على الأقل للتحقق من استمرار الحاجة إليها، وتضمن تحديد الحسابات عالية الخطورة أو ذات الصلاحيات تحديدا واضحا.',
+checks: [
       'An inventory of critical and sensitive data sets is maintained.',
       'Each data set record carries a classification.',
       'Each data set record carries a location.',

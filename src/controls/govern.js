@@ -33,7 +33,9 @@ export const GOVERN = [
     purposeSource: 'annex',
     requirement:
       'The entity MUST designate an employee at manager level or above with overall responsibility for cybersecurity. Define and document roles and responsibilities for information security, IT operations, risk management, data classification, and incident response. Review and update this structure at least annually or when major organizational changes occur.',
-    checks: [
+        requirementAr:
+      'على الجهة أن تعين موظفا بدرجة مدير فما فوق يتولى المسؤولية الشاملة عن الأمن السيبراني، وأن تحدد وتوثق الأدوار والمسؤوليات الخاصة بأمن المعلومات وعمليات تقنية المعلومات وإدارة المخاطر وتصنيف البيانات والاستجابة للحوادث، ثم تراجع هذا الهيكل وتحدثه سنويا على الأقل أو عند وقوع تغييرات تنظيمية جوهرية.',
+checks: [
       'An employee at manager level or above is formally designated with overall responsibility for cybersecurity.',
       'The designation is documented and traceable to a signed appointment or equivalent record.',
       'Roles and responsibilities are documented for information security.',
@@ -83,7 +85,9 @@ export const GOVERN = [
     purposeSource: 'annex',
     requirement:
       'Maintain core written policies that, at minimum, cover: acceptable use, Secure Configuration, data classification, access control, backup & recovery, incident response, and third-party / service provider security. Policies SHOULD be approved by management and reviewed at least every two years. Any deviations MUST follow a simple exception process with documented risk acceptance and an expiry date.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة سياسات مكتوبة أساسية تغطي كحد أدنى الاستخدام المقبول والتهيئة الآمنة وتصنيف البيانات والتحكم في الوصول والنسخ الاحتياطي والاستعادة والاستجابة للحوادث وأمن الأطراف الثالثة ومزودي الخدمة، وينبغي أن تعتمد هذه السياسات من الإدارة وأن تراجع كل سنتين على الأقل، أما أي خروج عنها فيجب أن يمر بآلية استثناء مبسطة تتضمن قبولا موثقا للمخاطر وتاريخ انتهاء.',
+checks: [
       'A written acceptable use policy exists.',
       'A written secure configuration policy exists.',
       'A written data classification policy exists.',
@@ -139,7 +143,9 @@ export const GOVERN = [
     purposeSource: 'annex',
     requirement:
       'Implement a data classification program aligned with the National Data Classification Framework, using at least Sensitive, Restricted, and Public categories, with clear criteria and examples. Issue a Data Classification Policy/Document approved by senior management and submitted to NCSC for approval, in accordance with Decision No. 1 of 2025. Tag or label data (and related systems/records) with its classification and ensure protection measures increase with sensitivity (for example: stronger access controls and encryption for Sensitive data). Storing or processing Sensitive data outside Kuwait MUST follow the national approval process and receive explicit NCSC approval before use (per applicable regulations).',
-    checks: [
+        requirementAr:
+      'تطبق الجهة برنامجا لتصنيف البيانات موائما للإطار الوطني لتصنيف البيانات يستخدم فئات حساس ومقيد وعام على الأقل بمعايير وأمثلة واضحة، وتصدر سياسة أو وثيقة لتصنيف البيانات معتمدة من الإدارة العليا ومرفوعة إلى المركز لاعتمادها وفقا للقرار رقم 1 لسنة 2025، ثم توسم البيانات والأنظمة والسجلات المرتبطة بها بتصنيفها وتضمن تصاعد تدابير الحماية مع درجة الحساسية، ومن ذلك مثلا ضوابط وصول وتشفير أقوى للبيانات الحساسة، أما حفظ البيانات الحساسة أو معالجتها خارج الكويت فيجب أن يتبع آلية الاعتماد الوطنية وأن يحصل على موافقة صريحة من المركز قبل الاستخدام وفق اللوائح المعمول بها.',
+checks: [
       'A data classification program is implemented and aligned with the National Data Classification Framework.',
       'The scheme uses at least the Sensitive, Restricted and Public categories.',
       'Classification criteria and worked examples are documented.',
@@ -193,7 +199,9 @@ export const GOVERN = [
     purposeSource: 'annex',
     requirement:
       'For key cybersecurity roles (e.g., SOC analysts, administrators, incident responders), prioritize qualified Kuwaiti nationals where feasible and consistent with national HR frameworks and local laws and regulations. For staff in such sensitive roles, perform basic pre-employment screening (e.g., identity verification, employment history, conflict-of-interest checks) in line with applicable laws and HR policies. Maintain a simple list of designated "sensitive cyber roles" and ensure screening is documented.',
-    checks: [
+        requirementAr:
+      'في الأدوار السيبرانية الرئيسية، ومنها مثلا محللو مركز العمليات الأمنية ومسؤولو الأنظمة والمستجيبون للحوادث، تعطى الأولوية للكوادر الكويتية المؤهلة متى كان ذلك ممكنا وبما يتسق مع أطر الموارد البشرية الوطنية والقوانين واللوائح المحلية، ويجرى للعاملين في هذه الأدوار الحساسة تحر أساسي قبل التعيين يشمل مثلا التحقق من الهوية والتاريخ الوظيفي وتعارض المصالح بما يتفق مع القوانين وسياسات الموارد البشرية السارية، كما تحفظ قائمة مبسطة بالأدوار السيبرانية الحساسة المحددة مع توثيق عمليات التحري.',
+checks: [
       'Qualified Kuwaiti nationals are prioritized for key cybersecurity roles where feasible.',
       'The prioritization approach is consistent with national HR frameworks and local law.',
       'A list of designated sensitive cyber roles is maintained.',
@@ -239,7 +247,9 @@ export const GOVERN = [
     purposeSource: 'annex',
     requirement:
       'At least once per year, complete a self-assessment against this baseline using an NCSC-issued or NCSC-approved checklist. Document the results, key gaps, actions, and target dates. Retain the record for at least three years and make it available to NCSC upon request. Use major incidents or audits to update priorities.',
-    checks: [
+        requirementAr:
+      'تستكمل الجهة مرة واحدة سنويا على الأقل تقييما ذاتيا مقابل هذه الضوابط باستخدام قائمة تحقق صادرة عن المركز أو معتمدة منه، وتوثق النتائج والفجوات الرئيسية والإجراءات والتواريخ المستهدفة، ثم تحفظ السجل ثلاث سنوات على الأقل وتتيحه للمركز عند الطلب، وتستفيد من الحوادث الكبرى وعمليات التدقيق في تحديث الأولويات.',
+checks: [
       'A self assessment against the baseline is completed at least once per year.',
       'The self assessment uses an NCSC issued or NCSC approved checklist.',
       'Results are documented.',
@@ -292,7 +302,12 @@ export const GOVERN = [
       '• For service providers handling Sensitive data or supporting critical services, document the service scope and shared responsibilities for protecting the service and data.\n' +
       '• Ensure incident response contact information includes relevant service providers, and define incident reporting timeframes and mechanisms for provider-related incidents.\n' +
       '• For offboarding/termination, ensure required actions are performed to remove access and handle data appropriately, retaining evidence where applicable.',
-    checks: [
+        requirementAr:
+      'تنشئ الجهة حصرا لمزودي الخدمة يشمل الخدمات السحابية والمدارة وتحفظه، ويتضمن تصنيفا وجهة اتصال داخل الجهة لكل مزود، ويراجع سنويا على الأقل أو عند أي تغيير جوهري.\n' +
+      '• وبالنسبة لمزودي الخدمة الذين يتعاملون مع بيانات حساسة أو يدعمون خدمات حرجة، يوثق نطاق الخدمة والمسؤوليات المشتركة عن حماية الخدمة والبيانات.\n' +
+      '• وتضمن الجهة أن تشمل بيانات الاتصال الخاصة بالاستجابة للحوادث مزودي الخدمة المعنيين، وأن تحدد مهل الإبلاغ عن الحوادث المتعلقة بالمزودين وآلياته.\n' +
+      '• وعند إنهاء التعاقد، تتخذ الإجراءات اللازمة لإزالة الوصول والتعامل مع البيانات على النحو المناسب مع حفظ ما يثبت ذلك حيثما أمكن.',
+checks: [
       'An inventory of service providers exists and covers cloud and managed services.',
       'Each provider record carries a classification.',
       'Each provider record names an entity contact.',

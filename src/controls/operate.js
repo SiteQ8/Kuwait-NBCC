@@ -13,7 +13,11 @@ export const DETECT = [
       'Enable audit logging on critical systems, network devices, security tools, and key applications. At minimum, log authentication events, administrative actions, and important security events. Where feasible, centralize logs into a basic logging solution for easier review.\n' +
       '• Restrict access to logs to authorized personnel only and protect logs from unauthorized modification or deletion (including logging configuration changes), prioritizing Critical Systems and the central logging solution where used.\n' +
       '• Retain logs for at least 90 days live and 12 months in total (live or archived). Review logs for suspicious activity at a frequency appropriate to the Entity’s risk (for example, weekly for smaller Entities, daily for higher-risk environments).',
-    checks: [
+        requirementAr:
+      'تفعل الجهة تسجيل التدقيق على الأنظمة الحرجة وأجهزة الشبكة وأدوات الأمن والتطبيقات الرئيسية، وتسجل كحد أدنى أحداث المصادقة والإجراءات الإدارية والأحداث الأمنية المهمة، وتجمع السجلات مركزيا في حل أساسي للتسجيل متى كان ذلك ممكنا تيسيرا للمراجعة.\n' +
+      '• ويقصر الوصول إلى السجلات على المخولين وحدهم، وتحمى السجلات من التعديل أو الحذف غير المصرح به بما في ذلك تغييرات إعدادات التسجيل، مع إعطاء الأولوية للأنظمة الحرجة ولحل التسجيل المركزي حيثما استخدم.\n' +
+      '• وتحفظ السجلات تسعين يوما على الأقل بصورة حية واثني عشر شهرا إجمالا حية كانت أو مؤرشفة، وتراجع بحثا عن نشاط مشبوه بوتيرة تناسب مخاطر الجهة، فأسبوعيا مثلا للجهات الأصغر ويوميا للبيئات الأعلى خطورة.',
+checks: [
       'Audit logging is enabled on critical systems.',
       'Audit logging is enabled on network devices.',
       'Audit logging is enabled on security tools.',
@@ -73,7 +77,9 @@ export const DETECT = [
     purposeSource: 'annex',
     requirement:
       'Ensure all information systems (servers, workstations, network devices) synchronize their system clocks to a reliable, authoritative time source (e.g., NTP). Timestamps in logs MUST be consistent across the infrastructure. Periodically verify that system clocks remain in sync (for example, by comparing log timestamps from different systems).',
-    checks: [
+        requirementAr:
+      'تضمن الجهة أن تزامن جميع أنظمة المعلومات، من خوادم ومحطات عمل وأجهزة شبكة، ساعاتها مع مصدر زمني موثوق ومعتمد مثل بروتوكول توقيت الشبكة، ويجب أن تكون الطوابع الزمنية في السجلات متسقة عبر البنية التحتية، مع التحقق دوريا من بقاء ساعات الأنظمة متزامنة وذلك مثلا بمقارنة الطوابع الزمنية الواردة من أنظمة مختلفة.',
+checks: [
       'Servers synchronize their clocks to a reliable authoritative time source.',
       'Workstations synchronize their clocks to a reliable authoritative time source.',
       'Network devices synchronize their clocks to a reliable authoritative time source.',
@@ -116,7 +122,9 @@ export const RESPOND = [
     purposeSource: 'annex',
     requirement:
       'Establish and communicate a simple incident reporting process so that staff know how to report suspected incidents (for example, phishing, data loss, or system compromise). Appoint one person as the incident response lead and at least one backup to coordinate incident handling, even if external service providers are used. Maintain up-to-date contact details for the incident lead, backup, relevant service providers, and NCSC. Where an actual or suspected cybersecurity incident or threat may be reportable under NCSC-issued incident management or reporting guidance, the Entity MUST notify NCSC promptly through the official channels and within the applicable timelines set by NCSC. Where appropriate, the Entity MUST use out-of-band communication channels during active incidents or where normal channels may be affected. The Entity MUST provide follow-up updates and information as required by applicable NCSC reporting guidance.',
-    checks: [
+        requirementAr:
+      'تنشئ الجهة آلية مبسطة للإبلاغ عن الحوادث وتعممها بحيث يعرف الموظفون كيف يبلغون عن الحوادث المشتبه بها، ومنها مثلا التصيد أو فقد البيانات أو اختراق الأنظمة، وتعين شخصا واحدا مسؤولا عن الاستجابة للحوادث وبديلا واحدا على الأقل لتنسيق التعامل معها حتى مع الاستعانة بمزودي خدمة خارجيين، وتحفظ بيانات اتصال محدثة للمسؤول وبديله ولمزودي الخدمة المعنيين وللمركز، وحيثما كان الحادث أو التهديد السيبراني القائم أو المشتبه به مما يجب الإبلاغ عنه بموجب إرشادات المركز في إدارة الحوادث أو الإبلاغ عنها، وجب على الجهة إخطار المركز فورا عبر القنوات الرسمية وضمن المهل التي يحددها، وعند الاقتضاء يجب على الجهة استخدام قنوات اتصال بديلة أثناء الحوادث النشطة أو حين تتأثر القنوات المعتادة، كما يجب عليها تقديم التحديثات والمعلومات اللاحقة وفق إرشادات الإبلاغ المعمول بها لدى المركز.',
+checks: [
       'A simple incident reporting process is established.',
       'The reporting process is communicated so staff know how to report suspected incidents.',
       'One person is appointed as incident response lead.',
@@ -174,7 +182,9 @@ export const RESPOND = [
     purposeSource: 'annex',
     requirement:
       'Maintain a short written incident response procedure that covers: initial triage, containment, communication, evidence preservation, recovery, and reporting/escalation (including when and how to notify NCSC and other regulators or law enforcement). When NCSC or another competent authority notifies the entity of a potential incident, promptly triage and investigate, take reasonable remedial actions, and provide feedback where requested. After significant incidents, perform a brief lessons-learned review and record key improvements to be implemented, and share relevant lessons learned with NCSC or sector authorities where appropriate.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة إجراء مكتوبا موجزا للاستجابة للحوادث يغطي الفرز الأولي والاحتواء والتواصل وحفظ الأدلة والتعافي والإبلاغ والتصعيد بما في ذلك متى وكيف يخطر المركز وسائر الجهات الرقابية أو جهات إنفاذ القانون، وحين يخطر المركز أو جهة مختصة أخرى الجهة بحادث محتمل، تفرزه وتحقق فيه فورا وتتخذ إجراءات معالجة معقولة وتقدم تغذية راجعة عند طلبها، وبعد الحوادث الجوهرية تجري مراجعة موجزة للدروس المستفادة وتسجل التحسينات الرئيسية الواجب تنفيذها وتشارك الدروس ذات الصلة مع المركز أو جهات القطاع عند الاقتضاء.',
+checks: [
       'A written incident response procedure exists.',
       'The procedure covers initial triage.',
       'The procedure covers containment.',
@@ -235,7 +245,9 @@ export const RECOVER = [
     purposeSource: 'annex',
     requirement:
       'Maintain a simple recovery plan or documented procedures for restoring critical systems and services after incidents or other disruptions. The plan SHOULD reference backup locations, key contacts, and any sequencing needed for restoration, especially for Sensitive and Restricted data. Review and update the plan at least annually and after major changes.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة خطة تعاف مبسطة أو إجراءات موثقة لاستعادة الأنظمة والخدمات الحرجة بعد الحوادث أو غيرها من حالات التعطل، وينبغي أن تشير الخطة إلى مواقع النسخ الاحتياطية وجهات الاتصال الرئيسية وأي ترتيب لازم لعمليات الاستعادة ولا سيما بالنسبة للبيانات الحساسة والمقيدة، وتراجع الخطة وتحدث سنويا على الأقل وبعد التغييرات الجوهرية.',
+checks: [
       'A recovery plan or documented restoration procedures exist for critical systems and services.',
       'The plan references backup locations.',
       'The plan references key contacts.',
@@ -281,7 +293,9 @@ export const RECOVER = [
     purposeSource: 'annex',
     requirement:
       'Conduct basic recovery or continuity tests (for example, tabletop exercises or partial restoration tests) for critical systems at least annually. After tests or real incidents, capture lessons learned, update procedures and controls where practical, and track completion of agreed improvements.',
-    checks: [
+        requirementAr:
+      'تجري الجهة اختبارات أساسية للتعافي أو الاستمرارية للأنظمة الحرجة سنويا على الأقل، ومنها مثلا التمارين المكتبية أو اختبارات الاستعادة الجزئية، وبعد الاختبارات أو الحوادث الفعلية توثق الدروس المستفادة وتحدث الإجراءات والضوابط حيثما كان ذلك عمليا وتتابع إنجاز التحسينات المتفق عليها.',
+checks: [
       'Recovery or continuity tests are conducted for critical systems at least annually.',
       'Tests take a recognizable form such as a tabletop exercise or partial restoration test.',
       'Lessons learned are captured after tests.',

@@ -7,7 +7,7 @@ description: Assess, plan and evidence compliance with the Kuwait National Basic
 
 Structured access to Kuwait's mandatory cybersecurity baseline: 44 controls, 329 checks, 164 evidence artifacts, in Arabic and English, with crosswalks to NIST CSF 2.0, CIS Controls v8.1 IG1 and ISO 27001:2022.
 
-The checks and evidence exist in both languages. The minimum requirement is quoted in English only, because Article 6 makes the English Annex authoritative and translating it would invent a text the regulator never issued.
+Everything exists in both languages, including a working Arabic translation of all 44 minimum requirements. Article 6 makes the English Annex authoritative, so the Arabic requirement is labelled a working translation and the official English is always printed alongside it. Never quote the Arabic requirement as the regulation.
 
 ## When to use this
 

@@ -36,7 +36,9 @@ The Annex is prose. Prose cannot be measured, tracked, or handed to an auditor a
 
 So every control here keeps its **official minimum requirement word for word**, and alongside it sits a decomposition into the individual statements an assessor ticks off one at a time. 44 controls become **329 checks** and **164 evidence artifacts**. That decomposition is this project's contribution and carries no official standing, but it is what turns a paragraph of regulation into something you can score, sequence and prove.
 
-**All of it exists in Arabic as well as English.** Every check, every evidence artifact, every control title and purpose. Article 6 makes the English Annex authoritative, so the minimum requirement is quoted rather than translated and stays in English wherever it appears. Everything this project wrote itself follows whichever language you are working in.
+**All of it exists in Arabic as well as English**, including a working Arabic translation of all 44 minimum requirements. Pick a language and the whole instrument is in that language. No English labels inside the Arabic interface, no Arabic subtitles inside the English one.
+
+Article 6 makes the English Annex authoritative, so the Arabic requirement is labelled a working translation and never replaces the official text, which sits one click away under **عرض النص الرسمي بالإنجليزية** and is printed after the Arabic in `nbcc show --ar`. Framework identifiers, protocol names and certification names such as SOC 2 Type II stay in Latin script, because that is what they are called.
 
 | Function | Controls | Checks |
 |---|---|---|
@@ -93,7 +95,7 @@ In the browser workbench each control carries the same register: tick what you h
 
 The [workbench](https://siteq8.github.io/Kuwait-NBCC/) is a single HTML file. Browse the baseline, click through the assessment, read the plan, export your work as JSON. Everything stays in local storage on your machine, which for an entity recording its own control gaps is the point rather than a limitation.
 
-Switch to Arabic and the whole instrument switches with it: right to left layout, translated checks and evidence, translated cadence and effort labels. The quoted requirement stays in English and is direction isolated so its punctuation typesets correctly inside the Arabic page.
+Switch to Arabic and the whole instrument switches with it: right to left layout, translated requirements, checks, evidence, cadence and effort. The authoritative English text remains available on demand under each requirement.
 
 ### On the command line
 
@@ -236,7 +238,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 109 tests
+node --test test/*.test.js     # 117 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

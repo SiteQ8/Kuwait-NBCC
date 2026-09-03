@@ -28,7 +28,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Entities MUST ensure the Cloud Service Provider (CSP) is authorized to operate in the State of Kuwait in accordance with regulations issued by the relevant national authorities',
-    checks: [
+        requirementAr:
+      'يجب على الجهات التأكد من أن مزود الخدمة السحابية مرخص له بالعمل في دولة الكويت وفقا للوائح الصادرة عن الجهات الوطنية المختصة',
+checks: [
       'Every cloud service provider in use is authorized to operate in the State of Kuwait.',
       'Authorization is verified against regulations issued by the relevant national authorities.',
       'Verification is recorded before the provider is engaged.'
@@ -64,7 +66,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Prior to selection, Entities MUST evaluate the CSP\u2019s security posture. This requirement is satisfied by reviewing the CSP\u2019s valid, independent international security certifications (e.g., ISO 27001, SOC 2 Type II, CSA STAR Level 2).',
-    checks: [
+        requirementAr:
+      'يجب على الجهات قبل الاختيار تقييم الوضع الأمني لمزود الخدمة السحابية، ويستوفى هذا المتطلب بمراجعة الشهادات الأمنية الدولية المستقلة السارية لدى المزود مثل الأيزو 27001 وSOC 2 Type II وCSA STAR المستوى الثاني.',
+checks: [
       'The security posture of the provider is evaluated before selection.',
       'The evaluation reviews valid independent international security certifications.',
       'Certification validity dates are checked and recorded.'
@@ -100,7 +104,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Contracts MUST include a "Right to Audit." To protect the security of multi-tenant environments, this right is exercised by the Entity reviewing the CSP\u2019s independent Third-Party Audit Reports (e.g., SOC 2, C5) rather than conducting physical data center visits.',
-    checks: [
+        requirementAr:
+      'يجب أن تتضمن العقود حق التدقيق، وحماية لأمن البيئات متعددة المستأجرين يمارس هذا الحق بمراجعة الجهة لتقارير التدقيق المستقلة الصادرة عن طرف ثالث لدى المزود مثل SOC 2 وC5 بدلا من إجراء زيارات مادية لمراكز البيانات.',
+checks: [
       'Every cloud contract includes a right to audit clause.',
       'The right is exercised by reviewing independent third party audit reports.',
       'Reports are obtained and reviewed rather than physical data center visits being sought.'
@@ -136,7 +142,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Contracts MUST include a commitment from the CSP to notify the Entity of a confirmed data incident without undue delay to allow for accurate investigation and reporting.',
-    checks: [
+        requirementAr:
+      'يجب أن تتضمن العقود التزاما من مزود الخدمة السحابية بإخطار الجهة بأي حادث مؤكد يمس البيانات دون تأخير غير مبرر بما يتيح التحقيق والإبلاغ على نحو دقيق.',
+checks: [
       'Every cloud contract commits the provider to notify the entity of a confirmed data incident.',
       'The commitment requires notification without undue delay.',
       'The notification path feeds the entity incident process under RS-1.'
@@ -172,7 +180,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'The contract MUST explicitly state that the Entity retains exclusive ownership of their data. The CSP MUST provide tools or standard APIs to allow the Entity to retrieve their data upon contract termination.',
-    checks: [
+        requirementAr:
+      'يجب أن ينص العقد صراحة على احتفاظ الجهة بالملكية الحصرية لبياناتها، ويجب على مزود الخدمة السحابية توفير أدوات أو واجهات برمجية قياسية تمكن الجهة من استرجاع بياناتها عند إنهاء العقد.',
+checks: [
       'The contract explicitly states that the entity retains exclusive ownership of its data.',
       'The provider offers tools or standard APIs for data retrieval on termination.',
       'The retrieval route is identified and understood before it is needed.'
@@ -208,7 +218,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Contracts MUST define Service Level Agreements (SLAs) for availability. The agreement SHOULD include financial remedies (service credits) for failure to meet these standards.',
-    checks: [
+        requirementAr:
+      'يجب أن تحدد العقود اتفاقيات مستوى الخدمة الخاصة بالإتاحة، وينبغي أن تتضمن الاتفاقية تعويضات مالية في صورة أرصدة خدمة عند الإخفاق في بلوغ هذه المستويات.',
+checks: [
       'Every cloud contract defines a service level agreement for availability.',
       'The agreement includes financial remedies such as service credits.',
       'Achieved availability is compared against the agreed level.'
@@ -244,7 +256,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Entities MUST document the cloud service model (IaaS, PaaS, or SaaS) and the resulting division of security responsibilities. The Entity retains accountability for Data Classification, Identity & Access Management (IAM), and Resource Configuration, regardless of the model.',
-    checks: [
+        requirementAr:
+      'يجب على الجهات توثيق نموذج الخدمة السحابية سواء كان بنية تحتية كخدمة أو منصة كخدمة أو برمجية كخدمة، وتوثيق ما يترتب عليه من توزيع للمسؤوليات الأمنية، وتظل الجهة مسؤولة عن تصنيف البيانات وإدارة الهوية والوصول وتهيئة الموارد أيا كان النموذج.',
+checks: [
       'The cloud service model is documented for each service as IaaS, PaaS or SaaS.',
       'The resulting division of security responsibilities is documented.',
       'The entity accepts accountability for data classification regardless of model.',
@@ -284,7 +298,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Maintain a real-time inventory of cloud resources. Use programmatic resource tagging to identify the Data Classification (Public, Restricted, Sensitive) and Business Owner of each resource.',
-    checks: [
+        requirementAr:
+      'تحفظ الجهة حصرا آنيا لموارد السحابة، وتستخدم الوسم البرمجي للموارد لتحديد تصنيف البيانات لكل مورد بوصفه عاما أو مقيدا أو حساسا وتحديد مالكه من جهة الأعمال.',
+checks: [
       'A real time inventory of cloud resources is maintained.',
       'Programmatic resource tagging is in use.',
       'Tags identify the data classification of each resource as Public, Restricted or Sensitive.',
@@ -322,7 +338,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Multi-Factor Authentication (MFA) MUST be enforced for all users with administrative access to the Cloud Management Console and root accounts.',
-    checks: [
+        requirementAr:
+      'يجب فرض المصادقة متعددة العوامل على جميع المستخدمين ذوي الوصول الإداري إلى وحدة الإدارة السحابية وعلى الحسابات الجذرية.',
+checks: [
       'MFA is enforced for every user with administrative access to the cloud management console.',
       'MFA is enforced on root accounts.',
       'Enforcement is technical rather than advisory.'
@@ -358,7 +376,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Service Accounts (non-human identities) MUST NOT be used for interactive human login. Keys for service accounts SHOULD be rotated periodically based on risk, or managed via automated identity federation (e.g., OIDC) to prevent credential theft.',
-    checks: [
+        requirementAr:
+      'لا يجوز استخدام حسابات الخدمة، أي الهويات غير البشرية، في الدخول التفاعلي البشري، وينبغي تدوير مفاتيح حسابات الخدمة دوريا بناء على المخاطر أو إدارتها عبر اتحاد هوية آلي مثل OIDC منعا لسرقة بيانات الاعتماد.',
+checks: [
       'Service accounts are not used for interactive human login.',
       'Service account keys are rotated periodically based on risk, or federation removes the need for static keys.',
       'Automated identity federation such as OIDC is used where available.'
@@ -394,7 +414,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'All data at rest in the cloud MUST be encrypted. Entities SHOULD utilize the CSP\u2019s default encryption (platform-managed keys) as a minimum standard. For Sensitive data, Entities MAY opt for Customer-Managed Encryption Keys (CMEK) on cloud, based on a risk assessment. In accordance with Decision (1) of 2025.',
-    checks: [
+        requirementAr:
+      'يجب تشفير جميع البيانات المحفوظة في السحابة، وينبغي أن تستخدم الجهات التشفير الافتراضي لدى مزود الخدمة السحابية أي المفاتيح المدارة من المنصة بوصفه حدا أدنى، أما البيانات الحساسة فيجوز أن تختار الجهات لها مفاتيح تشفير يديرها العميل في السحابة بناء على تقييم للمخاطر، وذلك وفقا للقرار رقم 1 لسنة 2025.',
+checks: [
       'All data at rest in the cloud is encrypted.',
       'Platform managed keys are used at minimum.',
       'Use of customer managed encryption keys for Sensitive data is decided on a risk assessment.',
@@ -432,7 +454,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'The Entity MUST configure cloud services and related contracts to store and process Customer Content (files, databases, application data) according to the National Data Classification Framework (Decision No. 1 of 2025).',
-    checks: [
+        requirementAr:
+      'يجب على الجهة تهيئة الخدمات السحابية والعقود المرتبطة بها لحفظ محتوى العميل، أي الملفات وقواعد البيانات وبيانات التطبيقات، ومعالجته وفقا للإطار الوطني لتصنيف البيانات الصادر بالقرار رقم 1 لسنة 2025.',
+checks: [
       'Cloud services are configured to store Customer Content in line with the National Data Classification Framework.',
       'Cloud services are configured to process Customer Content in line with that framework.',
       'Related contracts carry the same residency commitment.',
@@ -470,7 +494,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Residency requirements apply to Customer Content. Operational Metadata (e.g., project IDs, billing logs, system status, and IP addresses) can be processed globally to ensure platform security, reliability, and accurate billing. Entities must ensure that metadata identifiers (such as Project IDs, folder names and labels) remain non-sensitive.',
-    checks: [
+        requirementAr:
+      'تسري متطلبات موطن حفظ البيانات على محتوى العميل، أما البيانات الوصفية التشغيلية مثل معرفات المشاريع وسجلات الفوترة وحالة الأنظمة وعناوين بروتوكول الإنترنت فيمكن معالجتها عالميا ضمانا لأمن المنصة وموثوقيتها ودقة الفوترة، وعلى الجهات التأكد من بقاء معرفات البيانات الوصفية مثل معرفات المشاريع وأسماء المجلدات والوسوم غير حساسة.',
+checks: [
       'The entity distinguishes Customer Content from Operational Metadata in its records.',
       'Project identifiers remain non sensitive.',
       'Folder names remain non sensitive.',
@@ -510,7 +536,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Cloud storage resources (e.g., object storage buckets) MUST be configured to block public access by default. Public exposure MUST be an explicit, documented exception approved by the data owner.',
-    checks: [
+        requirementAr:
+      'يجب تهيئة موارد التخزين السحابي مثل حاويات تخزين الكائنات لحجب الوصول العام افتراضيا، ويجب أن يكون أي كشف للعموم استثناء صريحا وموثقا ومعتمدا من مالك البيانات.',
+checks: [
       'Cloud storage resources block public access by default.',
       'The default applies at the organization or account level, not only per resource.',
       'Any public exposure exists as an explicit documented exception.',
@@ -548,7 +576,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'Enable audit logging for cloud projects. Logs MUST capture "Admin Activity" (configuration changes) and "Data Access" (who accessed data) for sensitive workloads. Retain logs for a minimum of 12 months.',
-    checks: [
+        requirementAr:
+      'تفعل الجهة تسجيل التدقيق لمشاريع السحابة، ويجب أن تلتقط السجلات النشاط الإداري أي تغييرات التهيئة والوصول إلى البيانات أي من اطلع عليها بالنسبة لأحمال العمل الحساسة، وتحفظ السجلات اثني عشر شهرا كحد أدنى.',
+checks: [
       'Audit logging is enabled for cloud projects.',
       'Logs capture admin activity covering configuration changes.',
       'Logs capture data access for sensitive workloads.',
@@ -586,7 +616,9 @@ export const CLOUD = [
     purposeSource: 'editorial',
     requirement:
       'All traffic between the entity and the cloud provider MUST be encrypted in transit using industry-standard protocols (e.g., TLS 1.2 or higher). Management interfaces MUST NOT be exposed directly to the public internet; use secure bastions, VPNs, or Identity-Aware Proxies.',
-    checks: [
+        requirementAr:
+      'يجب تشفير كل حركة البيانات بين الجهة ومزود الخدمة السحابية أثناء النقل باستخدام بروتوكولات قياسية في الصناعة مثل TLS 1.2 فأعلى، ولا يجوز كشف واجهات الإدارة مباشرة على الإنترنت العام، بل تستخدم مضيفات وسيطة آمنة أو شبكات خاصة افتراضية أو وكلاء واعين بالهوية.',
+checks: [
       'All traffic between the entity and the cloud provider is encrypted in transit.',
       'Encryption uses industry standard protocols such as TLS 1.2 or higher.',
       'Management interfaces are not exposed directly to the public internet.',

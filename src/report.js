@@ -134,7 +134,7 @@ function functionBlock(result) {
     .map((f) => {
       const fn = getFunction(f.id);
       return `<div class="fnrow">
-        <div class="nm">${esc(f.name)}<div class="muted" style="font-weight:400;font-size:.8rem">${esc(fn ? fn.nameAr : '')}</div></div>
+        <div class="nm">${esc(f.name)}</div>
         <div><div class="bar"><i style="width:${f.implementation}%;background:${f.color}"></i></div>
           <div class="muted" style="font-size:.78rem;margin-top:4px">${f.met} of ${f.controls} controls met, ${f.scoredChecks} checks scored</div></div>
         <div class="pc">${f.implementation}%</div>
@@ -246,7 +246,7 @@ export function renderReport(assessment, options = {}) {
       const fn = getFunction(f.id);
       return `<h3 style="margin:22px 0 10px;display:flex;gap:10px;align-items:baseline">
         <span style="width:9px;height:9px;border-radius:2px;background:${f.color};display:inline-block"></span>
-        ${esc(f.name)} <span class="muted" style="font-weight:400;font-size:.9rem">${esc(fn.nameAr)}</span>
+        ${esc(f.name)}
       </h3>${rows.map(controlDetail).join('')}`;
     })
     .join('');

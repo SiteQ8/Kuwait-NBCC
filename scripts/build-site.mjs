@@ -30,6 +30,7 @@ export function buildPayload() {
       purposeAr: c.purposeAr,
       purposeSource: c.purposeSource,
       requirement: c.requirement,
+      requirementAr: c.requirementAr,
       checks: c.checks,
       checksAr: c.checksAr,
       evidence: c.evidence,

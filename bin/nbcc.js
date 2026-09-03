@@ -196,20 +196,22 @@ function cmdCatalog(flags) {
   });
   if (flags.json) return out(JSON.stringify(list, null, 2));
 
-  out(`${C.bold}${REGULATION.title}${C.reset}  ${C.dim}${REGULATION.decision}${C.reset}`);
-  out(`${C.dim}${list.length} controls, ${list.reduce((n, c) => n + c.checks.length, 0)} checks${C.reset}\n`);
+  const ar = Boolean(flags.ar);
+  out(`${C.bold}${ar ? REGULATION.titleAr : REGULATION.title}${C.reset}  ${C.dim}${ar ? REGULATION.decisionAr : REGULATION.decision}${C.reset}`);
+  out(`${C.dim}${ar ? `${list.length} ضابطا و${list.reduce((n, c) => n + c.checks.length, 0)} بندا للتحقق`
+    : `${list.length} controls, ${list.reduce((n, c) => n + c.checks.length, 0)} checks`}${C.reset}\n`);
   let current = null;
   for (const c of list) {
     if (c.fn !== current) {
       current = c.fn;
       const fn = getFunction(c.fn);
-      out(`${C.bold}${C.cyan}${fn.name}${C.reset} ${C.dim}${fn.nameAr} \u00b7 ${fn.blurb}${C.reset}`);
+      out(`${C.bold}${C.cyan}${ar ? fn.nameAr : fn.name}${C.reset} ${C.dim}${ar ? fn.blurbAr : fn.blurb}${C.reset}`);
     }
     out(
-      `  ${C.bold}${pad(c.id, 9)}${C.reset} ${pad(c.title, 46)} ${C.dim}${padStart(c.checks.length, 3)} checks  phase ${c.phase}  ${c.effort}${C.reset}`
+      `  ${C.bold}${pad(c.id, 9)}${C.reset} ${pad(ar ? c.titleAr : c.title, 46)} ${C.dim}${padStart(c.checks.length, 3)}${ar ? ' بندا' : ' checks'}  ${ar ? 'مرحلة' : 'phase'} ${c.phase}${C.reset}`
     );
   }
-  out(`\n${C.dim}Run "nbcc show <id>" for the official minimum requirement.${C.reset}`);
+  out(`\n${C.dim}${ar ? 'استخدم "nbcc show <id> --ar" لعرض الحد الأدنى المطلوب.' : 'Run "nbcc show <id>" for the official minimum requirement.'}${C.reset}`);
 }
 
 function cmdShow(positional, flags) {
@@ -220,22 +222,39 @@ function cmdShow(positional, flags) {
   if (flags.json) return out(JSON.stringify({ ...c, mappings: mappingsFor(c.id) }, null, 2));
 
   const fn = getFunction(c.fn);
-  out(`${C.bold}${c.id}${C.reset}  ${C.bold}${c.title}${C.reset}`);
-  out(`${C.dim}${c.titleAr}${C.reset}`);
-  out(`${C.dim}${fn.name} \u00b7 phase ${c.phase} \u00b7 ${c.effort} effort \u00b7 ${c.cadence}${C.reset}\n`);
-  out(`${C.cyan}Purpose${C.reset}`);
-  out(`  ${c.purpose}${c.purposeSource === 'editorial' ? `  ${C.dim}(summary, not Annex text)${C.reset}` : ''}\n`);
-  out(`${C.cyan}Minimum requirement${C.reset}  ${C.dim}(official text)${C.reset}`);
+  const ar = Boolean(flags.ar);
+  const CADENCE_AR = { annual:'سنويا', biennial:'كل سنتين', 'per hire':'عند كل تعيين', weekly:'أسبوعيا',
+    monthly:'شهريا', quarterly:'ربع سنوي', continuous:'مستمر', 'per incident':'عند كل حادث',
+    'per engagement':'عند كل تعاقد' };
+  const EFFORT_AR = { low:'منخفض', medium:'متوسط', high:'مرتفع' };
+
+  out(`${C.bold}${c.id}${C.reset}  ${C.bold}${ar ? c.titleAr : c.title}${C.reset}`);
+  out(`${C.dim}${ar ? `${fn.nameAr} \u00b7 المرحلة ${c.phase} \u00b7 الجهد ${EFFORT_AR[c.effort] || c.effort} \u00b7 ${CADENCE_AR[c.cadence] || c.cadence}`
+    : `${fn.name} \u00b7 phase ${c.phase} \u00b7 ${c.effort} effort \u00b7 ${c.cadence}`}${C.reset}\n`);
+  out(`${C.cyan}${ar ? 'الغرض' : 'Purpose'}${C.reset}`);
+  const editorialNote = c.purposeSource === 'editorial'
+    ? `  ${C.dim}${ar ? '(تلخيص، وليس من نص الملحق)' : '(summary, not Annex text)'}${C.reset}` : '';
+  out(`  ${ar ? c.purposeAr : c.purpose}${editorialNote}\n`);
+  // Article 6 keeps the English Annex authoritative, so the Arabic is offered
+  // as a working translation and the official wording is printed after it.
+  out(`${C.cyan}${ar ? 'الحد الأدنى المطلوب' : 'Minimum requirement'}${C.reset}  ${C.dim}${ar ? '(ترجمة عاملة)' : '(official text)'}${C.reset}`);
   // The Annex uses bullets inside some requirements and they carry meaning,
   // so each one keeps its own hanging indent rather than running together.
-  for (const para of c.requirement.split('\n')) {
-    const bullet = para.startsWith('\u2022');
-    const body = bullet ? para.slice(1).trim() : para;
-    const lines = wrap(body, bullet ? 72 : 76);
-    lines.forEach((line, i) => out(bullet ? `    ${i === 0 ? '\u2022 ' : '  '}${line}` : `  ${line}`));
+  const printRequirement = (text) => {
+    for (const para of text.split('\n')) {
+      const bullet = para.startsWith('\u2022');
+      const body = bullet ? para.slice(1).trim() : para;
+      const lines = wrap(body, bullet ? 72 : 76);
+      lines.forEach((line, i) => out(bullet ? `    ${i === 0 ? '\u2022 ' : '  '}${line}` : `  ${line}`));
+    }
+  };
+  printRequirement(ar ? c.requirementAr : c.requirement);
+  if (ar) {
+    out('');
+    out(`${C.cyan}النص الرسمي بالإنجليزية${C.reset}`);
+    printRequirement(c.requirement);
   }
   out('');
-  const ar = Boolean(flags.ar);
   out(`${C.cyan}${ar ? 'بنود التحقق' : 'Checks'}${C.reset} ${C.dim}(${c.checks.length})${C.reset}`);
   (ar ? c.checksAr : c.checks).forEach((t, i) => {
     const lines = wrap(t, 72);
@@ -247,7 +266,7 @@ function cmdShow(positional, flags) {
   for (const e of (ar ? c.evidenceAr : c.evidence)) out(`  \u00b7 ${e}`);
   const m = mappingsFor(c.id);
   out('');
-  out(`${C.cyan}Maps to${C.reset}`);
+  out(`${C.cyan}${ar ? 'المواءمة مع الأطر' : 'Maps to'}${C.reset}`);
   out(`  NIST CSF 2.0    ${m.csf.join(', ')}`);
   out(`  CIS v8.1 IG1    ${m.cis.join(', ')}`);
   out(`  ISO 27001:2022  ${m.iso.join(', ')}`);
