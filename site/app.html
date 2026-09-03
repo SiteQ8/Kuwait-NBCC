@@ -315,6 +315,16 @@ th{text-align:start; font-weight:600; color:var(--slate-2); font-size:.78rem; pa
 td{padding:10px 14px 10px 2px; border-bottom:1px solid var(--rule); vertical-align:top}
 tr:last-child td{border-bottom:none}
 .tscroll{overflow:auto; max-height:72vh}
+@media(max-width:640px){
+  .tscroll{overflow:visible; max-height:none}
+  #cwTable, #cwTable tbody, #cwTable tr, #cwTable td{display:block; width:auto}
+  #cwTable thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+  #cwTable tr{border-top:1px solid var(--rule); padding:12px 0}
+  #cwTable tr:first-child{border-top:none}
+  #cwTable td{border:none; padding:2px 0; display:grid; grid-template-columns:8.5rem 1fr; gap:10px}
+  #cwTable td::before{content:attr(data-l); color:var(--slate-2); font-size:.78rem}
+  #cwTable td:empty{display:none}
+}
 .tscroll th{top:0}
 .tscroll table{font-size:.86rem}
 
@@ -723,6 +733,14 @@ const STR = {
     phaseChip:n=>`Phase ${n}`, effortFit:'of the time available',
     impl:'Implementation', post:'Defensible posture', cov:'Coverage', bandL:'Band',
     metL:'met', gapL:'no coverage', evL:'evidenced',
+    thControl:'Control', thTitle:'Title', passed:'passed', daysN:n=>`${n} days`,
+    planOpenN:n=>`${n} open`, planDaysN:n=>`${n} person days`,
+    segs:{ met:'Met', partial:'Partial', gap:'Gap', exception:'Exc', na:'N/A' },
+    states:{ met:'Met', partial:'Partial', gap:'Gap', 'covered-by-exception':'Exception',
+      unassessed:'Not assessed', 'not-applicable':'Not applicable',
+      'out-of-scope':'Out of scope', exception:'Exception', na:'Not applicable', unknown:'Not assessed' },
+    searchBaseline:'Search controls', searchBaselineA:'Search the baseline',
+    searchCw:'Search a control or a framework reference', searchCwA:'Search the crosswalk',
     reqL:'Minimum requirement', checksL:'Checks', evidenceL:'Evidence to retain',
     beyond:'beyond the Annex',
     beyondNote:'Sound practice this toolkit adds. The Annex does not state it.',
@@ -771,6 +789,14 @@ const STR = {
     phaseChip:n=>`المرحلة ${n}`, effortFit:'من الوقت المتاح',
     impl:'نسبة التطبيق', post:'الوضع القابل للإثبات', cov:'نسبة التقييم', bandL:'المستوى',
     metL:'مستوفى', gapL:'دون تغطية', evL:'موثق بالأدلة',
+    thControl:'الضابط', thTitle:'العنوان', passed:'انقضت', daysN:n=>`${n} يوما`,
+    planOpenN:n=>`${n} مفتوح`, planDaysN:n=>`${n} يوم عمل`,
+    segs:{ met:'مستوفى', partial:'جزئي', gap:'فجوة', exception:'استثناء', na:'لا ينطبق' },
+    states:{ met:'مستوفى', partial:'جزئي', gap:'فجوة', 'covered-by-exception':'استثناء',
+      unassessed:'لم يقيّم', 'not-applicable':'لا ينطبق',
+      'out-of-scope':'خارج النطاق', exception:'استثناء', na:'لا ينطبق', unknown:'لم يقيّم' },
+    searchBaseline:'ابحث في الضوابط', searchBaselineA:'البحث في الضوابط',
+    searchCw:'ابحث عن ضابط أو مرجع في إطار آخر', searchCwA:'البحث في المواءمة',
     reqL:'الحد الأدنى المطلوب', checksL:'بنود التحقق', evidenceL:'الأدلة الواجب حفظها',
     beyond:'زائد على الملحق',
     beyondNote:'ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
@@ -813,16 +839,10 @@ function t(k, ...a){
 }
 function L(o, key){ return lang === 'ar' && o[key + 'Ar'] ? o[key + 'Ar'] : o[key]; }
 
-const STATE_LABEL = {
-  met:['Met','مستوفى'], partial:['Partial','جزئي'], gap:['Gap','فجوة'],
-  'covered-by-exception':['Exception','استثناء'], unassessed:['Not assessed','لم يقيّم'],
-  'not-applicable':['Not applicable','لا ينطبق'], 'out-of-scope':['Out of scope','خارج النطاق'],
-  exception:['Exception','استثناء'], na:['Not applicable','لا ينطبق'], unknown:['Not assessed','لم يقيّم']
-};
 const PILL_CLASS = { met:'p-met', partial:'p-partial', gap:'p-gap', 'covered-by-exception':'p-exception',
   exception:'p-exception', na:'p-na', unknown:'p-unknown', unassessed:'p-unknown',
   'not-applicable':'p-na', 'out-of-scope':'p-na' };
-function pill(s){ const l = STATE_LABEL[s] || [s,s]; return `<span class="pill ${PILL_CLASS[s]||'p-unknown'}">${lang==='ar'?l[1]:l[0]}</span>`; }
+function pill(s){ return `<span class="pill ${PILL_CLASS[s]||'p-unknown'}">${esc(t('states')[s] || s)}</span>`; }
 function reqBody(text, isolate){
   let html = '', open = false;
   const cls = isolate ? ' ltx' : '';
@@ -1004,9 +1024,14 @@ function controlCard(c, open){
 function renderBaseline(){
   document.getElementById('blH').textContent = t('blH');
   document.getElementById('blP').textContent = t('blP');
-  document.getElementById('q').placeholder = lang==='ar' ? 'ابحث في الضوابط' : 'Search controls';
   renderChips();
   document.querySelectorAll('[data-phase]').forEach(b => { b.textContent = t('phaseChip', b.dataset.phase); });
+  const q = document.getElementById('q');
+  q.placeholder = t('searchBaseline');
+  q.setAttribute('aria-label', t('searchBaselineA'));
+  const cw = document.getElementById('cwq');
+  cw.placeholder = t('searchCw');
+  cw.setAttribute('aria-label', t('searchCwA'));
   const ea = document.getElementById('expandAll');
   ea.textContent = [...document.querySelectorAll('#blList details')].some(d => d.open) ? t('closeAll') : t('openAll');
   const list = CONTROLS.filter(matches);
@@ -1069,12 +1094,12 @@ function renderMain(s){
   const r = s.rows.find(x => x.c.id === current) || s.rows[0];
   const c = r.c, e = state.controls[c.id];
   const f = FN.get(c.fn);
-  const segs = [['met','Met','مستوفى'],['partial','Partial','جزئي'],['gap','Gap','فجوة'],['exception','Exc','استثناء'],['na','N/A','لا ينطبق']];
+  const segs = ['met', 'partial', 'gap', 'exception', 'na'].map(v => [v, t('segs')[v]]);
   const checks = kchecks(c).map((k,i) => `<div class="check${r.statuses[i] && r.statuses[i] !== 'unknown' ? ' answered' : ''}">
     <span class="n">${String(i + 1).padStart(2, '0')}</span>
     <div class="txt${ltx()}">${esc(k)}${beyondMark(c,i)}</div>
     <div class="seg" role="group" aria-label="${esc(k)}">
-      ${segs.map(([v,en,ar]) => `<button data-set="${i}" data-v="${v}" aria-pressed="${r.statuses[i]===v}">${lang==='ar'?ar:en}</button>`).join('')}
+      ${segs.map(([v,label]) => `<button data-set="${i}" data-v="${v}" aria-pressed="${r.statuses[i]===v}">${esc(label)}</button>`).join('')}
     </div>
   </div>`).join('');
 
@@ -1221,10 +1246,10 @@ function renderPlan(){
     const items = ranked.filter(x => x.r.c.phase === st.id);
     html += `<div class="phase">
       <div class="h">
-        <span class="cid">${lang==='ar'?'مرحلة':'Phase'} ${st.id}</span>
+        <span class="cid">${t('phase')} ${st.id}</span>
         <span class="nm">${esc(lang==='ar'?st.nameAr:st.name)}</span>
-        <span class="muted" style="font-size:.86rem">${st.due}, ${st.passed ? (lang==='ar'?'انقضت':'passed') : st.daysRemaining + (lang==='ar'?' يوما':' days')}</span>
-        <span class="muted" style="margin-inline-start:auto; font-size:.86rem">${items.length} ${lang==='ar'?'مفتوح':'open'}, ${items.reduce((n,x)=>n+x.ed,0)} ${lang==='ar'?'يوم عمل':'person days'}</span>
+        <span class="muted" style="font-size:.86rem">${st.due}, ${st.passed ? t('passed') : t('daysN', st.daysRemaining)}</span>
+        <span class="muted" style="margin-inline-start:auto; font-size:.86rem">${t('planOpenN', items.length)}, ${t('planDaysN', items.reduce((n,x)=>n+x.ed,0))}</span>
       </div>
       <div class="b">${items.length ? items.map(x => `<div class="prow">
         <span class="cid" style="justify-self:start">${x.r.c.id}</span>
@@ -1243,20 +1268,24 @@ function renderPlan(){
 function renderCrosswalk(){
   document.getElementById('cwH').textContent = t('cwH');
   document.getElementById('cwP').textContent = t('cwP');
+  const cwq = document.getElementById('cwq');
+  cwq.placeholder = t('searchCw');
+  cwq.setAttribute('aria-label', t('searchCwA'));
   const q = (document.getElementById('cwq').value || '').toLowerCase();
   const rows = CONTROLS.filter(c => {
     if (!q) return true;
     return [c.id, c.title, ...c.crosswalk.csf, ...c.crosswalk.cis, ...(ISO[c.id]||[])].join(' ').toLowerCase().includes(q);
   });
+  // Column labels double as row labels once the table stacks on a phone.
+  const cols = [t('thControl'), t('thTitle'), 'NIST CSF 2.0', 'CIS v8.1 IG1', 'ISO 27001:2022'];
   document.getElementById('cwTable').innerHTML = `<thead><tr>
-    <th>${lang==='ar'?'الضابط':'Control'}</th><th>${lang==='ar'?'العنوان':'Title'}</th>
-    <th>NIST CSF 2.0</th><th>CIS v8.1 IG1</th><th>ISO 27001:2022</th></tr></thead>
+    ${cols.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
   <tbody>${rows.map(c => `<tr>
-    <td><span class="cid">${c.id}</span></td>
-    <td>${esc(L(c,'title'))}</td>
-    <td class="mono" style="font-size:.8rem">${c.crosswalk.csf.join(' ')}</td>
-    <td class="mono" style="font-size:.8rem">${c.crosswalk.cis.join(' ')}</td>
-    <td class="mono" style="font-size:.8rem">${(ISO[c.id]||[]).join(' ')}</td>
+    <td data-l="${esc(cols[0])}"><span class="cid">${c.id}</span></td>
+    <td data-l="${esc(cols[1])}">${esc(L(c,'title'))}</td>
+    <td data-l="${esc(cols[2])}" class="mono ltx" style="font-size:.8rem">${c.crosswalk.csf.join(' ')}</td>
+    <td data-l="${esc(cols[3])}" class="mono ltx" style="font-size:.8rem">${c.crosswalk.cis.join(' ')}</td>
+    <td data-l="${esc(cols[4])}" class="mono ltx" style="font-size:.8rem">${(ISO[c.id]||[]).join(' ')}</td>
   </tr>`).join('')}</tbody>`;
 }
 

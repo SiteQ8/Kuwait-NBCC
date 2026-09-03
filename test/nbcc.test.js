@@ -163,6 +163,34 @@ test('no user facing Arabic is written inline in the command line tool', () => {
     'Arabic belongs in src/messages.js, not in a command body');
 });
 
+test('no user facing Arabic is written inline in the workbench either', () => {
+  // The equivalent test for the command line has been in place since v0.11.4.
+  // The workbench went unchecked, and the crosswalk header and its search
+  // field were still carrying their own literals.
+  const site = readFileSync(resolve(root, 'site/app.html'), 'utf8');
+  // The About panel is a paired long form block, which is the same pattern as
+  // the string table. The fault worth failing on is a conditional literal
+  // scattered through render code, because that is what half switches.
+  const stray = site.split('\n')
+    .filter((line) => /lang\s*===?\s*'ar'\s*\?/.test(line) && ARABIC.test(line))
+    // The language toggle names the language it switches to, so it cannot come
+    // from the table of the language currently in use.
+    .filter((line) => !line.includes("getElementById('lang')"));
+  assert.deepEqual(stray.map((l) => l.trim().slice(0, 70)), [],
+    'a language ternary with an Arabic literal belongs in the STR table');
+});
+
+test('the crosswalk is readable on a phone rather than scrolled sideways', () => {
+  // Five columns of framework references cannot be read on a 390 pixel screen,
+  // so each row stacks into a labelled record instead.
+  const site = buildSite();
+  assert.ok(site.includes('data-l="'), 'each cell must carry its own label for the stacked view');
+  assert.ok(site.includes("#cwTable td::before{content:attr(data-l)"),
+    'the stacked view must print the column label beside the value');
+  assert.ok(site.includes('#cwTable thead{position:absolute'),
+    'the header row must be hidden from sight but left for a screen reader');
+});
+
 test('Arabic counts agree with the noun they count', () => {
   // One takes the singular, two the dual, three to ten a plural, and eleven
   // upward a singular accusative. A template that always writes يوما is wrong
