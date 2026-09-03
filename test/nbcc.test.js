@@ -1371,6 +1371,25 @@ test('the Arabic report is Arabic throughout', () => {
   assert.ok(html.includes('The entity MUST designate an employee'), 'official text must survive');
 });
 
+test('Arabic gets Arabic typography, not Latin typography flipped', () => {
+  // The script is connected, so the negative tracking that tightens a Latin
+  // headline crushes the joins between Arabic letters. Arabic also sits taller
+  // on the line and needs more leading to read at the same comfort.
+  const surfaces = [
+    ['report', renderReport(scaffold(), { today: SEP, lang: 'ar' })],
+    ['workbench', buildSite()]
+  ];
+  for (const [name, html] of surfaces) {
+    assert.ok(/\[dir=rtl\]\s*h1[^{]*\{[^}]*letter-spacing:\s*normal/.test(html),
+      `${name} still applies Latin tracking to Arabic headings`);
+    assert.ok(/\[dir=rtl\]\s*body\{[^}]*line-height:\s*1\.8/.test(html),
+      `${name} gives Arabic the same leading as Latin`);
+  }
+  // And the Latin default must stay negative, since that is correct for Latin.
+  assert.ok(/h1,h2,h3,h4\{[^}]*letter-spacing:-\.0/.test(buildSite()),
+    'the Latin headings should keep their tracking');
+});
+
 test('the report is built to survive being printed', () => {
   // The report reaches a board and eventually the regulator as a PDF. Without
   // these rules a table row splits across a page boundary, a heading is

@@ -292,6 +292,11 @@ details.ctl[open] > summary{padding-bottom:3px}
 .official{margin-top:11px; border-top:1px dashed var(--line-2); padding-top:9px}
 .official > b{display:block; font-size:.8rem; color:var(--slate); margin-bottom:5px}
 .official > div{font-size:.86rem; color:var(--slate)}
+[dir=rtl] body{ line-height:1.85; font-size:16.5px }
+[dir=rtl] h1,[dir=rtl] h2,[dir=rtl] h3,[dir=rtl] h4{ letter-spacing:normal; line-height:1.4 }
+[dir=rtl] .masthead h1{ letter-spacing:normal; line-height:1.25 }
+[dir=rtl] .ctl .t{ letter-spacing:normal }
+[dir=rtl] .chk li,[dir=rtl] .req,[dir=rtl] td,[dir=rtl] .finding{ line-height:1.78 }
 .edmark{font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:3px; padding:1px 5px; color:var(--slate); vertical-align:1px}
 .req{background:var(--paper-alt); border-left:3px solid var(--ink); padding:12px 15px; border-radius:0 var(--r) var(--r) 0; font-size:.9rem; margin:0 0 15px}
 .chk{list-style:none; padding:0; margin:0 0 15px}

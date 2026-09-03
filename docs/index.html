@@ -204,6 +204,24 @@ body.working .hero{display:none}
 .req b{display:block; margin-bottom:3px; font-size:.82rem; color:var(--slate); font-weight:600}
 .ltx{direction:ltr; text-align:left}
 [dir=rtl] .ltx{unicode-bidi:isolate}
+/*
+ * Arabic typography is not Latin typography with the direction flipped.
+ * The script is connected, so the negative tracking that tightens a Latin
+ * headline crushes the joins between Arabic letters. And Arabic sits taller
+ * on the line with deeper descenders, so it needs more leading and a little
+ * more size to read at the same comfort.
+ */
+[dir=rtl] body{ line-height:1.85; font-size:16.5px }
+[dir=rtl] h1,[dir=rtl] h2,[dir=rtl] h3,[dir=rtl] h4{ letter-spacing:normal; line-height:1.4 }
+[dir=rtl] .hero h1{ letter-spacing:normal; line-height:1.28 }
+[dir=rtl] .hero .lede{ line-height:1.85 }
+[dir=rtl] .ctl .t,[dir=rtl] .wb-nm{ letter-spacing:normal }
+[dir=rtl] .check .txt,[dir=rtl] .klist li,[dir=rtl] .evd li{ line-height:1.75 }
+[dir=rtl] .req{ line-height:1.8 }
+[dir=rtl] .window .unit,[dir=rtl] .window .pub{ line-height:1.7 }
+/* Latin runs inside Arabic keep their own tracking. */
+[dir=rtl] .ltx,[dir=rtl] .mono,[dir=rtl] .cid,[dir=rtl] .kn{ letter-spacing:normal }
+
 .klist{list-style:none; padding:0; margin:0 0 16px}
 .klist li{display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--line); font-size:.9rem; align-items:baseline}
 .klist li:last-child{border-bottom:none}
