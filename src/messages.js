@@ -199,14 +199,14 @@ export const MESSAGES = {
     regRange: (a, b) => `جمعت بين ${a} و${b}`,
     regNoLocation: 'لم يسجل موضعه', regNoDate: 'دون تاريخ جمع',
     regNoRef: 'دون مرجع', regOld: (n) => `مضى عليه ${n} يوما`,
-    regAttention: 'يحتاج انتباها',
+    regAttention: 'يستدعي المعالجة',
     regClaimsHead: 'ادعي استيفاؤها دون دليل',
     regClaimsSub: 'ضوابط قيمت مستوفاة أو جزئية دون ما يثبتها.',
     regHint: 'أضف ‎--csv‎ لتصدير السجل، أو ‎--missing‎ أو ‎--stale‎ لتضييقه.',
 
     trendHead: 'الاتجاه',
-    trendSub: (n, a, b, d) => `${n} لقطات من ${a} إلى ${b}، ${d} يوما`,
-    trendSeries: 'السلسلة', trendRate: 'المعدل', trendForecast: 'التوقع',
+    trendSub: (n, a, b, d) => `${n} تقييمات من ${a} إلى ${b}، ${d} يوما`,
+    trendSeries: 'سلسلة التقييمات', trendRate: 'المعدل', trendForecast: 'التوقع',
     trendForecastSub: (d, n) => `خط مستقيم حتى ${d}، على بعد ${n} يوما`,
     trendMoved: (label, c, m) => `تحرك ${label} بمقدار ${c > 0 ? '+' : ''}${c} نقطة، أي ${m} شهريا`,
     trendDrift: (p, dir, m) =>
@@ -217,18 +217,18 @@ export const MESSAGES = {
     trendShort: (p, s) => `التوقع ${p}٪ عند الموعد النهائي، بعجز قدره ${s} نقطة.`,
     trendNeeded: (cur, need, mult) =>
       `المعدل الحالي ${cur} شهريا، والوصول في الموعد يحتاج ${need} شهريا، أي نحو ${mult} أضعاف المعدل الحالي.`,
-    trendEvidence: (p) => `تتوقع الأدلة عند ${p}٪، والضابط الذي لا يمكن إثباته لا يمكن الدفاع عنه.`,
-    trendByFunction: 'بحسب الوظيفة', worstFirst: 'الأسوأ توقعا أولا',
+    trendEvidence: (p) => `يتوقع أن تبلغ الأدلة ${p}٪، والضابط الذي لا يمكن إثباته لا يمكن الدفاع عنه.`,
+    trendByFunction: 'بحسب الوظيفة', worstFirst: 'الأدنى توقعا أولا',
     trendNow: 'الآن', trendProjected: 'متوقع', perMonth: '/شهر',
-    trendCaveat: 'هذا خط مستقيم يمر باللقطات، وعمل الامتثال نادرا ما يسير في خط واحد، فاقرأه اتجاها لا تاريخا.',
+    trendCaveat: 'هذا خط مستقيم يمر بالتقييمات، وعمل الامتثال نادرا ما يسير في خط واحد، فاقرأه اتجاها لا تاريخا.',
     verdicts: {
-      'on track': 'في المسار', close: 'قريب لكنه قاصر', behind: 'متأخر',
+      'on track': 'يسير على المسار', close: 'يقارب ولا يبلغ', behind: 'متأخر',
       stalled: 'متوقف', regressing: 'يتراجع', complete: 'مكتمل'
     },
     trendDupes: (d) => `تواريخ لقطات مكررة: ${d}`,
     trendSkipped: 'تخطي',
 
-    portfolioHead: 'المحفظة',
+    portfolioHead: 'نظرة المجموعة',
     portfolioSub: (n, d, dl) => `${n} جهات، و${d} يوما حتى ${dl}`,
     portfolioSeriesWarn: 'كل الملفات تحمل اسم الجهة نفسه.',
     portfolioSeriesHint: 'إن كانت هذه جهة واحدة عبر الزمن، فالأمر المطلوب هو "nbcc trend".',
@@ -237,13 +237,13 @@ export const MESSAGES = {
       `المدى من ${lo}٪ إلى ${hi}٪ بفارق ${sp} نقطة \u00b7 ${base} من ${tot} بلغت الحد الأدنى` +
       ` \u00b7 ${hf} ملاحظة مرتفعة \u00b7 ${uc} دعوى دون دليل`,
     entitiesHead: 'الجهات', mostExposed: 'الأكثر انكشافا أولا',
-    systemicHead: 'ثغرات عامة',
+    systemicHead: 'ثغرات مشتركة',
     systemicSub: (p) => `تخفق لدى ${p}٪ أو أكثر من الجهات التي تنطبق عليها`,
     systemicNote: 'هذه مشكلات على مستوى المجموعة وحلها يكون على مستوى المجموعة، ومعالجتها جهة جهة تهدر السنة.',
-    systemicNone: 'لا ضابط يخفق لدى معظم المحفظة',
+    systemicNone: 'لا ضابط يخفق لدى معظم الجهات',
     isolatedHead: 'ثغرات منفردة', isolatedSub: 'ضعيفة لدى بعض الجهات دون المجموعة',
     portfolioDupes: (d) => `أسماء جهات مكررة: ${d}`,
-    portfolioHint: 'أضف ‎--csv‎ لصف لكل جهة، أو ‎--systemic‎ لإخفاء قائمة المنفردة.',
+    portfolioHint: 'أضف ‎--csv‎ لصف لكل جهة، أو ‎--systemic‎ لإخفاء قائمة الثغرات المنفردة.',
     mean: 'متوسط', highShort: 'مرتفعة',
 
     crosswalkHead: 'مواءمة الضوابط الوطنية', crosswalkTo: 'مقابل الضوابط الوطنية',

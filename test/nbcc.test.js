@@ -150,6 +150,33 @@ test('the report renders bullets as a list rather than running prose', () => {
   assert.ok(!html.includes('\u2022'), 'raw bullet characters should not reach the report');
 });
 
+test('the Arabic interface carries no calqued English idioms', () => {
+  // Each of these was a phrase translated word for word out of the English and
+  // does not read as Arabic. They are named so they cannot come back.
+  const site = buildSite();
+  const report = renderReport(JSON.parse(readFileSync(EXAMPLE, 'utf8')), { today: SEP, lang: 'ar' });
+  const cli = readFileSync(resolve(root, 'src/messages.js'), 'utf8');
+  const surfaces = [site, report, cli].join('\n');
+  const calques = {
+    'أين تقف الجهة': 'Where the entity stands, translated literally',
+    'موقع الجهة اليوم': 'موقع reads as a physical location',
+    'قريب لكنه قاصر': 'close but short, translated literally',
+    'الأسوأ توقعا': 'worst projection, should be الأدنى توقعا',
+    'تتوقع الأدلة': 'makes the evidence the thing doing the projecting',
+    'لا ضابط يخفق لدى معظم المحفظة': 'a portfolio is not the thing that fails',
+    'يوما تبقى قبل أن يكون كل ضابط قائما': 'a control is مطبق, not قائم',
+    'مسح هذا الضابط': 'مسح is ambiguous between survey and erase',
+    'تعيين كل البنود': 'تعيين is appointing somebody to a post'
+  };
+  for (const [phrase, why] of Object.entries(calques)) {
+    assert.ok(!surfaces.includes(phrase), `${why}: found "${phrase}"`);
+  }
+  // And the corrected forms have to actually be present.
+  assert.ok(report.includes('الوضع الحالي للجهة'));
+  assert.ok(cli.includes('يسير على المسار'));
+  assert.ok(cli.includes('ثغرات مشتركة'));
+});
+
 test('Arabic checks lead with the verb rather than the English word order', () => {
   // Arabic is verb first. Writing "الحصر يشمل الخوادم" carries the English
   // order across and reads as translated text to an assessor.
