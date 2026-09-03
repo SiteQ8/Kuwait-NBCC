@@ -38,6 +38,8 @@ So every control here keeps its **official minimum requirement word for word**, 
 
 **All of it exists in Arabic as well as English**, including a working Arabic translation of all 44 minimum requirements. Pick a language and the whole instrument is in that language. No English labels inside the Arabic interface, no Arabic subtitles inside the English one.
 
+Meaning is checked, not only style. Every numeral and every qualifier in an English check ("at least", "annually", "where feasible", "unless", "only") has to be present in the Arabic, and every bilingual template has to carry the same values through both renderings. A qualifier dropped from a check changes the control however well the sentence reads.
+
 Counts agree with the noun they count, because Arabic changes it: `يوم واحد` at one, `يومان` at two, `4 أيام` between three and ten, `397 يوما` above that. A template that always writes `يوما` is wrong for every count below eleven, and near the deadline that is exactly the range the tool displays.
 
 Written as Arabic rather than translated into it. Interface phrasing avoids calqued English idioms: a report section is الوضع الحالي للجهة, not a literal rendering of "where the entity stands"; a forecast verdict is يسير على المسار; a control is مطبق rather than قائم. Checks lead with the verb, because Arabic is verb first and "الحصر يشمل الخوادم" carries the English word order across; the same statement as "يشمل الحصر الخوادم" reads as Arabic. Both properties are asserted in the test suite.
@@ -254,7 +256,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 133 tests
+node --test test/*.test.js     # 135 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

@@ -230,6 +230,69 @@ test('Arabic checks lead with the verb rather than the English word order', () =
   assert.deepEqual(offenders, [], `these read as translated English:\n${offenders.join('\n')}`);
 });
 
+test('a translated template never drops a value the English shows', () => {
+  // A template is a function, so a translation can quietly lose an argument
+  // and the number it carried simply stops appearing. Nothing else catches it.
+  const values = [11, 13, 17, 19, 23, 29, 31];
+  for (const key of Object.keys(MESSAGES.en)) {
+    const en = MESSAGES.en[key];
+    const ar = MESSAGES.ar[key];
+    if (typeof en !== 'function') {
+      assert.notEqual(typeof ar, 'function', `${key} is a function in Arabic only`);
+      continue;
+    }
+    assert.equal(typeof ar, 'function', `${key} is a function in English only`);
+    assert.equal(en.length, ar.length, `${key} takes ${en.length} arguments in English, ${ar.length} in Arabic`);
+    const args = values.slice(0, en.length);
+    const e = String(en(...args));
+    const a = String(ar(...args));
+    assert.ok(!a.includes('undefined'), `${key} prints undefined in Arabic`);
+    assert.ok(!e.includes('undefined'), `${key} prints undefined in English`);
+    for (const v of args) {
+      if (e.includes(String(v))) {
+        assert.ok(a.includes(String(v)), `${key} drops the value ${v} in Arabic`);
+      }
+    }
+  }
+});
+
+test('the Arabic says what the English says', () => {
+  // Style was corrected three times over. This checks meaning: a qualifier
+  // dropped from a check changes the control, however well the sentence reads.
+  const QUALIFIERS = [
+    [/\bat least\b/i, /على الأقل|كحد أدنى|بحد أدنى/, 'at least'],
+    [/\bannually\b|\byearly\b/i, /سنويا|كل سنة/, 'annually'],
+    [/\bquarterly\b/i, /ربع سنوي|كل ثلاثة أشهر/, 'quarterly'],
+    [/\bmonthly\b/i, /شهريا|كل شهر/, 'monthly'],
+    [/\bweekly\b/i, /أسبوعيا|كل أسبوع/, 'weekly'],
+    [/where feasible|where supported|where possible|wherever possible|where practical/i,
+      /متى أمكن|حيثما|متى كان ذلك عمليا/, 'where feasible'],
+    [/\bunless\b/i, /ما لم|إلا/, 'unless'],
+    [/\bonly\b/i, /فقط|وحده|وحدها|إلا |يقتصر|تقتصر|مقصور|تقصر/, 'only']
+  ];
+  const SPELLED = { 2: 'دقيقتين', 3: 'ثلاث', 8: 'ثمانية', 12: 'اثني عشر',
+    14: 'أربعة عشر', 15: 'خمس عشرة', 90: 'تسعين' };
+
+  const problems = [];
+  for (const c of CONTROLS) {
+    c.checks.forEach((en, i) => {
+      const ar = c.checksAr[i];
+      for (const d of en.match(/\b\d+\b/g) || []) {
+        const n = Number(d);
+        if (!ar.includes(d) && !(SPELLED[n] && ar.includes(SPELLED[n]))) {
+          problems.push(`${c.id} check ${i + 1}: the number ${n} is missing`);
+        }
+      }
+      for (const [enRe, arRe, name] of QUALIFIERS) {
+        if (enRe.test(en) && !arRe.test(ar)) {
+          problems.push(`${c.id} check ${i + 1}: "${name}" is dropped`);
+        }
+      }
+    });
+  }
+  assert.deepEqual(problems, [], problems.join('\n'));
+});
+
 test('one concept is not rendered two ways', () => {
   // Removable media had two renderings across the catalog for several
   // releases, which is the kind of thing a reader notices before a test does.
