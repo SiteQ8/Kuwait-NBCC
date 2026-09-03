@@ -147,6 +147,21 @@ test('the report renders bullets as a list rather than running prose', () => {
   assert.ok(!html.includes('\u2022'), 'raw bullet characters should not reach the report');
 });
 
+test('the Arabic title follows the corrected English one', () => {
+  // These renderings were drafted against titles that turned out to be wrong,
+  // so they have to move whenever the official wording is corrected.
+  assert.ok(getControl('PR-1').titleAr.includes('تجزئة الشبكة'),
+    'PR-1 covers network segmentation and the Arabic must say so');
+  assert.ok(!getControl('PR-3').titleAr.includes('التدريب'),
+    'PR-3 is Awareness & Human Factors, not awareness and training');
+  assert.ok(getControl('CLD-3').titleAr.includes('('), 'CLD-3 keeps its parenthetical');
+  assert.ok(getControl('CLD-12').titleAr.includes('('), 'CLD-12 keeps its parenthetical');
+  for (const c of CONTROLS) {
+    assert.ok(c.titleAr && c.titleAr.trim().length > 2, `${c.id} has no Arabic title`);
+    assert.ok(/[\u0600-\u06FF]/.test(c.titleAr), `${c.id} Arabic title has no Arabic script`);
+  }
+});
+
 /* -------------------------------------------------------------- scoping */
 
 test('cloud controls drop out when the entity uses no cloud', () => {
