@@ -105,11 +105,32 @@ function parseArgs(argv) {
   return { flags, positional };
 }
 
+/*
+ * An assessment file is untrusted input. A portfolio roll up reads six of them
+ * from six subsidiaries, and a terminal renders whatever it is handed, so a
+ * name carrying an escape sequence can erase its own line and print a forged
+ * result in its place. Control characters are stripped at the boundary, once,
+ * rather than left for every print site to remember.
+ */
+// eslint-disable-next-line no-control-regex
+const CONTROL_CHARS = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u2028\u2029]/g;
+
+function scrub(value) {
+  if (typeof value === 'string') return value.replace(CONTROL_CHARS, '');
+  if (Array.isArray(value)) return value.map(scrub);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) out[scrub(k)] = scrub(v);
+    return out;
+  }
+  return value;
+}
+
 function readJSON(path) {
   const full = resolve(process.cwd(), path);
   if (!existsSync(full)) fail(`file not found: ${path}`);
   try {
-    return JSON.parse(readFileSync(full, 'utf8'));
+    return scrub(JSON.parse(readFileSync(full, 'utf8')));
   } catch (e) {
     return fail(`could not parse ${path} as JSON. ${e.message}`);
   }

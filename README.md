@@ -286,6 +286,14 @@ Annex Section 1 aligns the NBCC with **NIST CSF 2.0** and **CIS Controls v8.1 IG
 nbcc crosswalk --to cis      # what an existing CIS IG1 programme already earns you
 ```
 
+## Hostile input
+
+An assessment file is untrusted. A portfolio roll up reads six of them from six subsidiaries, and a consultant hands one over without the entity seeing inside it.
+
+A terminal renders whatever it is handed, so a name carrying `\u001b[2K\r` erases its own line and prints whatever follows in its place. A subsidiary could hand up a file whose line in the roll up reads **All 44 controls met** while the score behind it is zero. Control characters are now stripped once at the read boundary rather than left for every print site to remember.
+
+The report escapes everything, checked by generating one from a file carrying script, image and SVG payloads in the entity name, the assessor, the owner and an evidence reference, in both languages. The browser workbench was checked the same way by driving its real import path: nothing executed, and the payloads land in input values, which are not parsed as markup.
+
 ## Accessibility
 
 Checked rather than claimed. Every text colour was measured against its real background in a browser across all five surfaces in both languages, and the secondary slate and the ochre both had to darken to clear the 4.5 to 1 ratio WCAG AA asks for. Tokens are asserted in the test suite so a future palette change cannot quietly drop below it.
@@ -322,7 +330,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 160 tests
+node --test test/*.test.js     # 162 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

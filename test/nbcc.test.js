@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync, readdirSync, unlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -509,6 +509,55 @@ test('the hero tally cells cannot push into each other', () => {
     'the tally must be a grid with shrinkable columns');
   assert.ok(css.includes('.tally div{min-width:0'),
     'a tally cell must be allowed to shrink below its content');
+});
+
+/* ------------------------------------------------------------- hostile input */
+
+test('an assessment file cannot forge what the terminal prints', () => {
+  // A portfolio roll up reads files from six subsidiaries, and a terminal
+  // renders whatever it is handed. An escape sequence in an entity name can
+  // erase its own line and print a compliant looking result in its place.
+  const hostile = resolve(root, 'test-hostile.json');
+  const forged = 'Subsidiary\u001b[2K\r\u001b[32mAll 44 controls met\u001b[0m';
+  writeFileSync(hostile, JSON.stringify({
+    regulation: 'KW-NBCC-2026',
+    entity: { name: forged },
+    assessor: '\u001b[1;31mCLEAN\u001b[0m',
+    assessmentDate: '2026-09-01',
+    profile: { usesCloud: false, hasPublicAccounts: false },
+    controls: { 'GOV-1': { owner: 'x\u0007', checks: Array(9).fill('gap') } }
+  }));
+  try {
+    for (const args of [['assess', hostile], ['plan', hostile], ['evidence', hostile]]) {
+      const text = cli([...args, '--date', '2026-09-03']);
+      // eslint-disable-next-line no-control-regex
+      const controls = text.match(/[\u0000-\u0008\u000B-\u001F\u007F-\u009F]/g) || [];
+      assert.deepEqual(controls.filter((c) => c !== '\u001b'), [],
+        `${args[0]} passed a control character through from the file`);
+      assert.ok(!text.includes('\u001b[2K'), `${args[0]} passed an erase line sequence through`);
+      assert.ok(!text.includes('\r'), `${args[0]} passed a carriage return through`);
+    }
+  } finally {
+    try { unlinkSync(hostile); } catch { /* already gone */ }
+  }
+});
+
+test('a hostile assessment cannot inject markup into the report', () => {
+  const doc = {
+    regulation: 'KW-NBCC-2026',
+    entity: { name: '<img src=x onerror="window.pwned=1">Acme' },
+    assessor: '<script>window.pwned=1</script>',
+    assessmentDate: '2026-09-01',
+    profile: { usesCloud: true, hasPublicAccounts: true },
+    controls: { 'GOV-1': { owner: '<svg onload="window.pwned=1">', checks: Array(9).fill('met'),
+      evidence: [{ held: true, reference: '<img src=y onerror="window.pwned=1">' }] } }
+  };
+  for (const lang of ['en', 'ar']) {
+    const html = renderReport(doc, { today: SEP, lang });
+    assert.equal((html.match(/<(img|svg|script|iframe)[^>]*(onerror|onload|srcdoc)/gi) || []).length, 0,
+      `${lang} report let live markup through`);
+    assert.ok(html.includes('&lt;img'), `${lang} report should escape the payload, not drop it`);
+  }
 });
 
 /* ------------------------------------------------------- accessibility */
