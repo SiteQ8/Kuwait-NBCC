@@ -26,6 +26,7 @@ import { evidenceRegister, unevidencedClaims, renderRegisterCSV } from '../src/e
 import { forecast } from '../src/trend.js';
 import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
 import { MESSAGES } from '../src/messages.js';
+import { DOCUMENTS, getDocument, renderDraft, DRAFT_STATS } from '../src/drafts.js';
 
 // Language is chosen once from the flags and every printed string comes from
 // the message table, so a command cannot half switch.
@@ -767,6 +768,33 @@ function cmdDiff(positional, flags) {
   if (!d.changes.length) out(`\n${C.dim}No control changed state between the two assessments.${C.reset}`);
 }
 
+function cmdDraft(positional, flags) {
+  const id = positional[0];
+  const lang = flags.ar ? 'ar' : 'en';
+
+  if (!id) {
+    if (flags.json) return out(JSON.stringify(DOCUMENTS, null, 2));
+    out(`${C.bold}${m('draftHead')}${C.reset}`);
+    out(`${C.dim}${m('draftSub', DRAFT_STATS.documents, DRAFT_STATS.controlsCovered)}${C.reset}\n`);
+    for (const d of DOCUMENTS) {
+      const clauses = d.controls.reduce((n, c) => n + getControl(c).checks.length, 0);
+      out(`  ${C.bold}${pad(d.id, 22)}${C.reset} ${pad(arabic() ? d.titleAr : d.title, 44)}` +
+          `  ${C.dim}${padStart(clauses, 3)} ${m('checksUnit')} \u00b7 ${d.kind === 'policy' ? m('draftPolicy') : m('draftRegister')}${C.reset}`);
+    }
+    return out(`\n${C.dim}${m('draftHint')}${C.reset}`);
+  }
+
+  const doc = getDocument(id);
+  if (!doc) return fail(m('draftUnknown', id));
+  const body = renderDraft(doc.id, { lang, entity: flags.entity });
+  const clauses = doc.controls.reduce((n, c) => n + getControl(c).checks.length, 0);
+
+  if (!flags.out) return emit(body);
+  writeOut(flags.out, body);
+  out(`${C.green}${m('draftWrote', flags.out, clauses)}${C.reset}`);
+  out(`  ${C.dim}${doc.controls.join(', ')}${C.reset}`);
+}
+
 function cmdDoctor(flags) {
   const catalogProblems = validateCatalog();
   if (flags.json) return out(JSON.stringify({ catalog: catalogProblems, stats: CATALOG_STATS }, null, 2));
@@ -829,6 +857,9 @@ function main() {
       return cmdTrend(positional, flags);
     case 'diff':
       return cmdDiff(positional, flags);
+    case 'draft':
+    case 'drafts':
+      return cmdDraft(positional, flags);
     case 'doctor':
       return cmdDoctor(flags);
     default:

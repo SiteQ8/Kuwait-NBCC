@@ -88,6 +88,20 @@ The scorer is deliberately unforgiving about the paper:
 - An exception **within 90 days of expiry** is surfaced before it lapses.
 - A control claimed met at the control level, with no per check answers behind it, still scores, but is recorded as unevidenced.
 
+## Starter documents
+
+GOV-2 names seven policies an entity must hold, GOV-5 wants a dated self assessment record, and 70 of the 164 evidence artifacts are a written document of some kind. Reporting all of them as missing and handing the entity nothing to begin from is half a job.
+
+```bash
+nbcc draft                                    # list the twelve documents
+nbcc draft incident-response --out ir.md      # write one
+nbcc draft data-classification --ar --out p.md
+```
+
+**The clauses are generated from the checks**, not written as generic text. A document that satisfies the draft satisfies what the assessment tests, which is a promise a template downloaded from anywhere cannot make. Nine policies and three registers, 279 clauses across 33 controls, in either language.
+
+Each draft carries the `beyond the Annex` marking through, so a clause the regulation does not actually demand is visible as such inside the policy itself. Every one says on its face that it is a drafting aid with no standing at NCSC.
+
 ## The evidence register
 
 Knowing which artifacts a control needs is only half of it. GOV-5 requires the record to be retained for three years and produced for NCSC on request, so the register tracks what is actually held, where it lives, when it was collected, and whether it is still current.
@@ -139,6 +153,7 @@ Measure an entity
 Produce artifacts
   report <file> --out x.html [--ar]  Self contained HTML report
   export <file> --as md|csv|json|register
+  draft [<id>] --out x.md       Starter policy or register, clauses from the checks
   doctor                        Verify catalog integrity
 ```
 
@@ -264,7 +279,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 144 tests
+node --test test/*.test.js     # 150 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

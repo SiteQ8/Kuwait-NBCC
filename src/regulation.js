@@ -35,7 +35,9 @@ export const REGULATION = {
   ],
   alignedWith: ['NIST CSF 2.0', 'CIS Controls v8.1 Implementation Group 1'],
   selfAssessmentCadenceMonths: 12,
-  recordRetentionYears: 3
+  recordRetentionYears: 3,
+  // GOV-2 asks for a policy review at least every two years.
+  policyReviewYears: 2
 };
 
 export const FUNCTIONS = [

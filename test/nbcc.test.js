@@ -18,6 +18,7 @@ import { evidenceRegister, unevidencedClaims, renderRegisterCSV, readEvidenceRec
 import { forecast, buildSeries } from '../src/trend.js';
 import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
 import { MESSAGES, count } from '../src/messages.js';
+import { DOCUMENTS, getDocument, renderDraft, validateDocuments, DRAFT_STATS } from '../src/drafts.js';
 import { buildSite, buildPayload } from '../scripts/build-site.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -1492,6 +1493,76 @@ test('the Arabic catalog listing uses Arabic titles and headings', () => {
   assert.ok(text.includes('الحوكمة والأدوار'));
   assert.ok(!text.includes('Governance & Roles'));
   assert.ok(!text.includes('checks'), 'the English unit label should not appear');
+});
+
+/* ------------------------------------------------------ starter drafts */
+
+test('every policy GOV-2 names by hand has a draft behind it', () => {
+  assert.deepEqual(validateDocuments(), []);
+  // GOV-2 lists seven policies. A toolkit that reports them as missing and
+  // hands the entity nothing to start from has done only half the work.
+  for (const id of ['acceptable-use', 'secure-configuration', 'data-classification',
+    'access-control', 'backup-recovery', 'incident-response', 'third-party']) {
+    assert.ok(getDocument(id), `GOV-2 names a policy with no draft: ${id}`);
+  }
+  assert.equal(DRAFT_STATS.documents, 12);
+  assert.ok(DRAFT_STATS.controlsCovered >= 30);
+});
+
+test('a draft clause always traces to a real check', () => {
+  // The clauses are generated rather than written, so a document that
+  // satisfies the draft satisfies what the assessment tests.
+  for (const doc of DOCUMENTS) {
+    const md = renderDraft(doc.id);
+    for (const cid of doc.controls) {
+      const c = getControl(cid);
+      assert.ok(md.includes(c.title), `${doc.id} does not name ${cid}`);
+      for (const check of c.checks) {
+        assert.ok(md.includes(check), `${doc.id} is missing a clause for a ${cid} check`);
+      }
+      for (const e of c.evidence) {
+        assert.ok(md.includes(e), `${doc.id} does not list the evidence for ${cid}`);
+      }
+    }
+  }
+});
+
+test('a draft says on its face that it is not official', () => {
+  for (const doc of DOCUMENTS) {
+    for (const lang of ['en', 'ar']) {
+      const md = renderDraft(doc.id, { lang });
+      const disclaimer = lang === 'ar' ? 'ليست وثيقة رسمية' : 'not an official instrument';
+      assert.ok(md.includes(disclaimer), `${doc.id} in ${lang} carries no disclaimer`);
+      assert.ok(md.startsWith('# '), `${doc.id} in ${lang} has no title`);
+    }
+  }
+});
+
+test('a draft carries the beyond the Annex marking through', () => {
+  // GOV-1 has a check that goes past the requirement, so the policy generated
+  // from it has to say which clause the regulation does not actually demand.
+  const md = renderDraft('roles');
+  assert.ok(md.includes('beyond the Annex'), 'the marking is lost in the draft');
+  const ar = renderDraft('roles', { lang: 'ar' });
+  assert.ok(ar.includes('زائد على الملحق'));
+});
+
+test('drafts render in Arabic without falling back to English', () => {
+  const md = renderDraft('incident-response', { lang: 'ar' });
+  assert.ok(/[\u0600-\u06FF]/.test(md));
+  assert.ok(!md.includes('Starter document'));
+  assert.ok(!md.includes('Controls covered'));
+  assert.ok(md.includes('وثيقة مبدئية'));
+});
+
+test('cli draft lists the documents and writes one', () => {
+  const list = cli(['draft']);
+  assert.ok(list.includes('Starter documents'));
+  assert.ok(list.includes('acceptable-use'));
+  assert.throws(() => cli(['draft', 'no-such-doc']), (e) => /unknown document/.test(String(e.stderr)));
+  const body = cli(['draft', 'physical-security']);
+  assert.ok(body.includes('# Physical Protection of IT Assets Policy'));
+  assert.ok(body.includes(getControl('PR-6').checks[0]));
 });
 
 /* ---------------------------------------------------------- crosswalk */

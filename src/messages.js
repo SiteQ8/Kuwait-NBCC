@@ -164,6 +164,14 @@ export const MESSAGES = {
     beyond: 'beyond the Annex',
     beyondNote: 'Marked checks are sound practice this toolkit adds. The Annex does not state them.',
 
+    // drafts
+    draftHead: 'Starter documents',
+    draftSub: (n, c) => `${n} documents covering ${c} controls, clauses generated from the checks`,
+    draftHint: 'Run "nbcc draft <id> --out policy.md" to write one. Add --ar for Arabic.',
+    draftUnknown: (id) => `unknown document "${id}". Run "nbcc draft" to list them.`,
+    draftWrote: (p, n) => `Wrote ${p} with ${n} clauses`,
+    draftPolicy: 'policy', draftRegister: 'register',
+
     // doctor
     doctorHead: 'Self check', doctorOk: 'Catalog is internally consistent.',
     docControls: 'Controls', docChecks: 'Checks', docEvidence: 'Evidence items',
@@ -291,6 +299,13 @@ export const MESSAGES = {
     checksUnit: 'بندا',
     beyond: 'زائد على الملحق',
     beyondNote: 'البنود الموسومة ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
+
+    draftHead: 'الوثائق المبدئية',
+    draftSub: (n, c) => `${n} وثيقة تغطي ${c} ضابطا، وبنودها مولدة من بنود التحقق`,
+    draftHint: 'شغل "nbcc draft <id> --out policy.md" لكتابة إحداها، وأضف ‎--ar‎ للعربية.',
+    draftUnknown: (id) => `وثيقة غير معروفة "${id}". شغل "nbcc draft" لعرض القائمة.`,
+    draftWrote: (p, n) => `أنشئ ${p} بـ ${n} بندا`,
+    draftPolicy: 'سياسة', draftRegister: 'سجل',
 
     doctorHead: 'الفحص الذاتي', doctorOk: 'فهرس الضوابط متسق داخليا.',
     docControls: 'الضوابط', docChecks: 'بنود التحقق', docEvidence: 'عناصر الأدلة',
