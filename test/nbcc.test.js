@@ -603,6 +603,65 @@ test('the score is what it claims to be', () => {
   assert.ok(cloud.scoredChecks > onPrem.scoredChecks);
 });
 
+test('the forecast verdict describes what actually happened', () => {
+  // A flat score has not gone backwards. The old test asked whether every
+  // point was less than or equal to the one before, which an unchanged score
+  // satisfies, so a score that had not moved was reported as regressing. That
+  // is a false alarm on the one reading a CISO acts on.
+  const P = { usesCloud: false, hasPublicAccounts: false };
+  const inScope = CONTROLS.filter((c) => (c.appliesWhen || []).every((f) => P[f] === true));
+  const total = inScope.reduce((n, c) => n + c.checks.length, 0);
+  const at = (pct, date) => {
+    let want = Math.round((total * pct) / 100);
+    const controls = {};
+    for (const c of inScope) {
+      const met = Math.min(c.checks.length, want);
+      want -= met;
+      controls[c.id] = { checks: [...Array(met).fill('met'), ...Array(c.checks.length - met).fill('gap')] };
+    }
+    return { regulation: 'KW-NBCC-2026', entity: { name: 'T' }, assessmentDate: date, profile: P, controls };
+  };
+  const verdict = (snaps) => forecast(snaps, { today: SEP }).implementation.verdict;
+
+  assert.equal(verdict([at(40, '2026-06-03'), at(40, '2026-07-03'), at(40, '2026-08-02')]), 'stalled',
+    'a score that has not moved is stalled, not regressing');
+  assert.equal(verdict([at(50, '2026-06-03'), at(40, '2026-07-03'), at(30, '2026-08-02')]), 'regressing');
+  assert.equal(verdict([at(40, '2026-06-03'), at(55, '2026-07-03'), at(40, '2026-08-02')]), 'stalled',
+    'up then back to where it started is stalled');
+  assert.equal(verdict([at(20, '2026-06-03'), at(30, '2026-07-03'), at(40, '2026-08-02')]), 'on track');
+
+  // Ten points per thirty days should read as about ten per month.
+  const rate = forecast([at(20, '2026-06-03'), at(30, '2026-07-03'), at(40, '2026-08-02')],
+    { today: SEP }).implementation.perMonth;
+  assert.ok(Math.abs(rate - 10) < 0.5, `expected about 10 per month, got ${rate}`);
+
+  // Snapshots that all share a date carry no rate, and saying so beats guessing.
+  const same = forecast([at(10, '2026-06-03'), at(80, '2026-06-03')], { today: SEP });
+  assert.equal(same.ok, false);
+  assert.ok(same.reason.includes('same date'));
+});
+
+test('systemic means what the threshold says it means', () => {
+  const P = { usesCloud: false, hasPublicAccounts: false };
+  const ent = (name, failing) => ({
+    regulation: 'KW-NBCC-2026', entity: { name }, assessmentDate: '2026-09-01', profile: P,
+    controls: Object.fromEntries(CONTROLS
+      .filter((c) => (c.appliesWhen || []).every((f) => P[f] === true))
+      .map((c) => [c.id, { checks: Array(c.checks.length).fill(failing.includes(c.id) ? 'gap' : 'met') }]))
+  });
+  const isSystemic = (files) => rollUp(files, { today: SEP }).systemic.some((c) => c.id === 'GOV-4');
+  const five = (n) => Array.from({ length: 5 }, (_, i) => ent(`E${i}`, i < n ? ['GOV-4'] : []));
+
+  assert.equal(SYSTEMIC_SHARE, 0.6);
+  assert.equal(isSystemic(five(2)), false, '2 of 5 is 40 percent, under the threshold');
+  assert.equal(isSystemic(five(3)), true, '3 of 5 is exactly the threshold and counts');
+  assert.equal(isSystemic(five(4)), true, '4 of 5 is over it');
+
+  const spread = rollUp([ent('A', []), ent('B', CONTROLS.map((c) => c.id))], { today: SEP }).scores;
+  assert.equal(spread.meanImplementation, 50);
+  assert.equal(spread.spread, 100);
+});
+
 test('the score denominator is not described as work already done', () => {
   // scoredChecks is the denominator, so on an untouched assessment the old
   // wording announced that 263 checks had been scored when none were answered.

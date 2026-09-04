@@ -71,6 +71,8 @@ Article 6 makes the English Annex authoritative, so the Arabic requirement is la
 
 Cloud controls fall out of scope automatically for an entity that runs none.
 
+The forecast and the portfolio roll up are checked the same way: ten points gained over thirty days reads as about ten per month, a score that has not moved is stalled rather than regressing, a score that fell is regressing, snapshots that all share one date are refused rather than guessed at, and a control failing at exactly three of five entities crosses the systemic threshold while two of five does not.
+
 The arithmetic is checked against hand computed cases rather than against itself: every check met is 100, every check a gap is 0, a partial is worth half, a control marked not applicable leaves the denominator rather than scoring zero, a valid exception raises the defensible posture and never the implementation, an expired one shelters nothing, and turning the cloud appendix on moves the denominator by exactly 16 controls.
 
 ## Two scores, because Article 4 gives you two positions
@@ -336,7 +338,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 166 tests
+node --test test/*.test.js     # 168 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

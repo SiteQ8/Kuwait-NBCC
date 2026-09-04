@@ -154,8 +154,13 @@ export function forecast(assessments, options = {}) {
 
     let verdict;
     if (current >= 100) verdict = 'complete';
-    else if (slope <= 0) verdict = points.every((p, i) => i === 0 || p[key] <= points[i - 1][key])
-      ? 'regressing' : 'stalled';
+    else if (slope <= 0) {
+      // A flat line has not gone backwards. The old test asked whether every
+      // point was less than or equal to the one before it, which an unchanged
+      // score satisfies, so a score that had not moved was reported as
+      // regressing. Only an actual fall is a regression.
+      verdict = last[key] < first[key] ? 'regressing' : 'stalled';
+    }
     else if (projected >= 100) verdict = 'on track';
     else if (projected >= 90) verdict = 'close';
     else verdict = 'behind';
