@@ -100,6 +100,8 @@ nbcc draft data-classification --ar --out p.md
 
 **The clauses are generated from the checks**, not written as generic text. A document that satisfies the draft satisfies what the assessment tests, which is a promise a template downloaded from anywhere cannot make. Nine policies and three registers, 279 clauses across 33 controls, in either language.
 
+The same twelve are in the [workbench](https://siteq8.github.io/Kuwait-NBCC/) under **Documents**, where each one shows how many open checks it would help close, taken from the live assessment, so the list answers which document to write first. Downloading uses the entity name already recorded and the language currently selected.
+
 Each draft carries the `beyond the Annex` marking through, so a clause the regulation does not actually demand is visible as such inside the policy itself. Every one says on its face that it is a drafting aid with no standing at NCSC.
 
 ## The evidence register
@@ -292,7 +294,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 153 tests
+node --test test/*.test.js     # 154 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

@@ -519,7 +519,7 @@ test('the shipped page carries the landmarks and links its tabs to its panels', 
   }
   // A tab that does not name its panel leaves a screen reader user guessing.
   const tabs = [...html.matchAll(/role="tab"\s+id="tab-(\w+)"\s+aria-controls="panel-(\w+)"/g)];
-  assert.equal(tabs.length, 5, 'every tab should declare the panel it controls');
+  assert.equal(tabs.length, 6, 'every tab should declare the panel it controls');
   for (const [, id, controls] of tabs) {
     assert.equal(id, controls);
     assert.ok(html.includes(`id="panel-${controls}" role="tabpanel" aria-labelledby="tab-${controls}"`),
@@ -1591,6 +1591,24 @@ test('drafts render in Arabic without falling back to English', () => {
   assert.ok(!md.includes('Starter document'));
   assert.ok(!md.includes('Controls covered'));
   assert.ok(md.includes('وثيقة مبدئية'));
+});
+
+test('the workbench and the command line generate the same draft', () => {
+  // Two implementations of one document is how a workbench copy quietly drifts
+  // from the authoritative one, so the outputs are compared word for word.
+  const site = buildSite();
+  assert.ok(site.includes('function draftMarkdown'), 'the workbench needs its own generator');
+  assert.ok(site.includes('documents: DOCUMENTS') || site.includes('"documents"'),
+    'the payload must carry the document list');
+  // The wording each side prints has to match, or the two documents differ.
+  for (const key of ['docStarter', 'docNotOfficial', 'docCoversH', 'docGenerated',
+    'docClauses', 'docClauseNote', 'docEvidenceH', 'docColumns', 'docOneRow']) {
+    assert.ok(site.includes(`${key}:`), `the workbench is missing the string ${key}`);
+  }
+  // And every document must be reachable from the browser.
+  for (const d of DOCUMENTS) {
+    assert.ok(site.includes(`"${d.id}"`), `${d.id} is not in the shipped payload`);
+  }
 });
 
 test('cli draft lists the documents and writes one', () => {

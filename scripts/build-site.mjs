@@ -13,6 +13,7 @@ import { dirname, resolve } from 'node:path';
 import { REGULATION, FUNCTIONS, CONTROLS, PROFILE_FLAGS } from '../src/catalog.js';
 import { ISO_MAP } from '../src/crosswalk.js';
 import { PHASES, DEPENDENCIES } from '../src/plan.js';
+import { DOCUMENTS } from '../src/drafts.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
@@ -51,6 +52,7 @@ export function buildPayload() {
       monthsFromPublication: p.monthsFromPublication
     })),
     deps: DEPENDENCIES,
+    documents: DOCUMENTS,
     profileFlags: PROFILE_FLAGS
   };
 }

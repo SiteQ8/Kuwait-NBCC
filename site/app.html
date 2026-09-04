@@ -192,6 +192,15 @@ body.working .hero{display:none}
 .evfields input{font:inherit; font-size:.85rem; padding:6px 9px; border:1px solid var(--line-2); border-radius:6px; background:var(--paper); color:var(--ink); width:100%}
 .evfields input:focus{outline:2px solid var(--green); outline-offset:-1px}
 @media(max-width:640px){.evfields{grid-template-columns:1fr}}
+.doc{border-top:1px solid var(--rule); padding:16px 2px}
+.doc:last-child{border-bottom:1px solid var(--rule)}
+.doc-h{display:flex; gap:14px; align-items:baseline; flex-wrap:wrap}
+.doc-t{font-weight:600; font-size:1.02rem; flex:1 1 260px}
+.doc-h .muted{font-size:.82rem}
+.doc-h .btn{flex:none}
+.doc-c{display:flex; gap:6px; flex-wrap:wrap; align-items:center}
+.doc-c .cid{min-width:auto}
+.doc-open{font-size:.8rem; color:var(--ochre); margin-inline-start:6px}
 .natl{margin:0 0 13px; padding:9px 12px; border-inline-start:3px solid var(--green);
   background:rgba(5,104,57,.055); font-size:.89rem; line-height:1.6; border-radius:0 3px 3px 0}
 .natl b{color:var(--green)}
@@ -430,6 +439,7 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
       <button role="tab" id="tab-assess" aria-controls="panel-assess" aria-selected="false" data-tab="assess"></button>
       <button role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false" data-tab="plan"></button>
       <button role="tab" id="tab-crosswalk" aria-controls="panel-crosswalk" aria-selected="false" data-tab="crosswalk"></button>
+      <button role="tab" id="tab-docs" aria-controls="panel-docs" aria-selected="false" data-tab="docs"></button>
       <button role="tab" id="tab-about" aria-controls="panel-about" aria-selected="false" data-tab="about"></button>
     </nav>
     <button class="langbtn" id="lang" aria-label="Switch language">عربي</button>
@@ -518,6 +528,13 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
 </div>
 
 <!-- ============ ABOUT ============ -->
+<div class="panel" id="panel-docs" role="tabpanel" aria-labelledby="tab-docs" tabindex="0">
+  <div class="wrap">
+    <div class="phead"><h2 id="docH"></h2><p id="docP"></p></div>
+    <div id="docList"></div>
+  </div>
+</div>
+
 <div class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="0">
   <div class="wrap" id="aboutBody"></div>
 </div>
@@ -547,7 +564,7 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
 <script>
 "use strict";
 const DATA = JSON.parse(document.getElementById('nbcc-data').textContent);
-const { regulation: REG, functions: FUNCS, controls: CONTROLS, iso: ISO, phases: PHASES, deps: DEPS, profileFlags: FLAGS } = DATA;
+const { regulation: REG, functions: FUNCS, controls: CONTROLS, iso: ISO, phases: PHASES, deps: DEPS, profileFlags: FLAGS, documents: DOCS } = DATA;
 const BY_ID = new Map(CONTROLS.map(c => [c.id, c]));
 const FN = new Map(FUNCS.map(f => [f.id, f]));
 const STORE = 'nbcc.assessment.v1';
@@ -789,7 +806,24 @@ const STR = {
     noResults:'No control matches that search.',
     scopeQ:'Scope', profileNote:'A control is in scope until you record a reason it is not.',
     brandSub:'National Basic Cybersecurity Controls',
-    tabs:{ baseline:'The baseline', assess:'Assess', plan:'Plan', crosswalk:'Crosswalk', about:'About' },
+    tabs:{ baseline:'The baseline', assess:'Assess', plan:'Plan', crosswalk:'Crosswalk', docs:'Documents', about:'About' },
+    docH:'Documents you have to hold',
+    docP:'GOV-2 names seven policies, GOV-5 wants a dated self assessment record, and 70 of the 164 evidence artifacts are a written document. Each draft below has its clauses generated from the checks of the controls it covers, so a document that satisfies the draft satisfies what the assessment tests.',
+    docDownload:'Download', docClauses:'clauses', docCovers:'covers',
+    docOpen:'open checks in these controls', docPolicy:'policy', docRegister:'register',
+    docClauses2:'clauses', docPlaceholder:'name of the entity', docStarter:'Starter document',
+    docNotOfficial:'This is a drafting aid produced by the Kuwait NBCC Toolkit. It is not an official instrument and carries no standing with NCSC. Read it, cut what does not apply to the entity, and replace every bracketed placeholder before it is approved.',
+    docEntity:'Entity', docOwner:'Document owner', docApproved:'Approved by',
+    docApprovedDate:'Date of approval', docReview:'Next review', docVersion:'Version',
+    docReviewNote:'GOV-2 asks for a review at least every 2 years.',
+    docCoversH:'Controls covered',
+    docGenerated:'Every clause below is generated from the checks of those controls, so a document that satisfies this draft satisfies what the assessment tests.',
+    docColumns:'Columns', docOneRow:'One row per entry.',
+    docClauses:'Clauses',
+    docClauseNote:'Each clause restates one check. Where a clause does not apply, record an exception in the exception register rather than deleting the clause.',
+    docBeyondNote:'Marked clauses go beyond what the Annex states. They are sound practice this toolkit adds.',
+    docEvidenceH:'Evidence this document supports',
+    docSource:'Derived from Annex (1) to Decision No. 2 of 2026, published in Kuwait Al Youm, issue 1785, year 72.',
     fName:'Kuwait NBCC Toolkit', fBody:'An open toolkit for Annex (1) to Decision No. 2 of 2026 of the National Cyber Security Center of the State of Kuwait. Built by',
     fNotH:'Not an official instrument',
     fNot:'This is a readiness aid. The authoritative text is the Annex as published in Kuwait Al Youm issue 1785. Nothing here is a determination of compliance by NCSC.',
@@ -849,7 +883,24 @@ const STR = {
     noResults:'لا يوجد ضابط يطابق البحث.',
     scopeQ:'النطاق', profileNote:'يظل الضابط ضمن النطاق حتى تسجل سببا لاستبعاده.',
     brandSub:'الضوابط الوطنية الأساسية للأمن السيبراني',
-    tabs:{ baseline:'الضوابط', assess:'التقييم', plan:'الخطة', crosswalk:'المواءمة', about:'عن الأداة' },
+    tabs:{ baseline:'الضوابط', assess:'التقييم', plan:'الخطة', crosswalk:'المواءمة', docs:'الوثائق', about:'عن الأداة' },
+    docH:'وثائق يجب أن تحوزها',
+    docP:'يسمي الضابط GOV-2 سبع سياسات، ويطلب GOV-5 سجل تقييم ذاتي مؤرخا، و70 من الأدلة الـ164 وثائق مكتوبة. وكل مسودة أدناه بنودها مولدة من بنود التحقق الخاصة بالضوابط التي تغطيها، فالوثيقة التي تستوفي المسودة تستوفي ما يختبره التقييم.',
+    docDownload:'تنزيل', docClauses:'بندا', docCovers:'تغطي',
+    docOpen:'بندا مفتوحا في هذه الضوابط', docPolicy:'سياسة', docRegister:'سجل',
+    docClauses2:'بندا', docPlaceholder:'اسم الجهة', docStarter:'وثيقة مبدئية',
+    docNotOfficial:'هذه مسودة أعدتها أدوات الضوابط الوطنية الأساسية للأمن السيبراني، وليست وثيقة رسمية ولا صفة لها لدى المركز. اقرأها واحذف ما لا ينطبق على الجهة واستبدل كل ما بين المعقوفين قبل اعتمادها.',
+    docEntity:'الجهة', docOwner:'مالك الوثيقة', docApproved:'اعتمدها',
+    docApprovedDate:'تاريخ الاعتماد', docReview:'المراجعة القادمة', docVersion:'الإصدار',
+    docReviewNote:'يطلب الضابط GOV-2 مراجعة كل سنتين على الأقل.',
+    docCoversH:'الضوابط المغطاة',
+    docGenerated:'كل بند أدناه مولد من بنود التحقق الخاصة بتلك الضوابط، فالوثيقة التي تستوفي هذه المسودة تستوفي ما يختبره التقييم.',
+    docColumns:'الأعمدة', docOneRow:'صف واحد لكل مدخل.',
+    docClauses:'البنود',
+    docClauseNote:'كل بند يعيد صياغة بند تحقق واحد، وحيثما لا ينطبق بند فسجل استثناء في سجل الاستثناءات بدل حذفه.',
+    docBeyondNote:'البنود الموسومة زائدة على ما ينص عليه الملحق، وهي ممارسة سليمة تضيفها الأداة.',
+    docEvidenceH:'الأدلة التي تدعمها هذه الوثيقة',
+    docSource:'مستمدة من الملحق الأول من قرار رقم (2) لسنة 2026 المنشور في جريدة الكويت اليوم، العدد 1785، السنة الثانية والسبعون.',
     fName:'أدوات الضوابط الوطنية الأساسية للأمن السيبراني', fBody:'أدوات مفتوحة المصدر للملحق الأول من القرار رقم 2 لسنة 2026 الصادر عن المركز الوطني للأمن السيبراني في دولة الكويت، من إعداد',
     fNotH:'ليست وثيقة رسمية',
     fNot:'هذه أداة تعين على الاستعداد، والنص المعتمد هو الملحق كما نشر في جريدة الكويت اليوم بالعدد 1785، ولا يعد أي مما ورد هنا حكما بالامتثال من المركز.',
@@ -1302,6 +1353,89 @@ function renderPlan(){
 }
 
 /* ---------- crosswalk ---------- */
+
+/*
+ * The starter documents, in the browser. The clauses are generated from the
+ * checks of the controls each document covers, which is the same rule the
+ * command line follows; a test compares the two outputs so they cannot drift.
+ */
+function draftMarkdown(doc, entity){
+  const ar = lang === 'ar';
+  const L = (o, k) => (ar && o[k + 'Ar'] ? o[k + 'Ar'] : o[k]);
+  const who = entity || `[${t('docPlaceholder')}]`;
+  const out = [];
+  out.push(`# ${L(doc,'title')}`, '', `**${t('docStarter')}** \u00b7 ${who}`, '',
+           `> ${t('docNotOfficial')}`, '', L(doc,'intro'));
+  if (doc.note) out.push('', `**${L(doc,'note')}**`);
+  out.push('', '| | |', '|---|---|',
+    `| ${t('docEntity')} | ${who} |`, `| ${t('docOwner')} | [ ] |`,
+    `| ${t('docApproved')} | [ ] |`, `| ${t('docApprovedDate')} | [ ] |`,
+    `| ${t('docReview')} | [ ] |`, `| ${t('docVersion')} | 0.1 |`, '',
+    `_${t('docReviewNote')}_`, '', `## ${t('docCoversH')}`, '');
+  for (const cid of doc.controls) out.push(`- **${cid}** ${L(BY_ID.get(cid),'title')}`);
+  out.push('', t('docGenerated'), '');
+  if (doc.kind === 'register') {
+    const cols = ar ? doc.columnsAr : doc.columns;
+    out.push(`## ${t('docColumns')}`, '', `| ${cols.join(' | ')} |`,
+      `|${cols.map(()=>'---').join('|')}|`, `| ${cols.map(()=>' ').join(' | ')} |`, '',
+      `_${t('docOneRow')}_`, '');
+  }
+  out.push(`## ${t('docClauses')}`, '', `_${t('docClauseNote')}_`, '');
+  let n = 0, anyBeyond = false;
+  for (const cid of doc.controls) {
+    const c = BY_ID.get(cid);
+    out.push(`### ${cid} \u00b7 ${L(c,'title')}`, '');
+    (ar ? c.checksAr : c.checks).forEach((text, i) => {
+      n += 1;
+      const beyond = (c.beyondAnnex || []).includes(i);
+      if (beyond) anyBeyond = true;
+      out.push(`${n}. ${text}${beyond ? ` _(${t('beyond')})_` : ''}`);
+    });
+    out.push('');
+  }
+  if (anyBeyond) out.push(`_${t('docBeyondNote')}_`, '');
+  out.push(`## ${t('docEvidenceH')}`, '');
+  for (const cid of doc.controls) {
+    const c = BY_ID.get(cid);
+    for (const e of (ar ? c.evidenceAr : c.evidence)) out.push(`- ${e} \u00b7 ${cid}`);
+  }
+  out.push('', '---', '', `_${t('docSource')}_`, '');
+  return out.join('\n');
+}
+
+function renderDocs(){
+  document.getElementById('docH').textContent = t('docH');
+  document.getElementById('docP').textContent = t('docP');
+  const sc = score();
+  document.getElementById('docList').innerHTML = DOCS.map(d => {
+    const clauses = d.controls.reduce((n, id) => n + BY_ID.get(id).checks.length, 0);
+    // How much open work this document would help close, from the live
+    // assessment, so the list answers which one to write first.
+    const open = d.controls.reduce((n, id) => {
+      const row = sc.rows.find(x => x.c.id === id);
+      return n + (row ? row.statuses.filter(s => s === 'unknown' || s === 'gap').length : 0);
+    }, 0);
+    return `<div class="doc">
+      <div class="doc-h">
+        <span class="doc-t">${esc(lang==='ar'?d.titleAr:d.title)}</span>
+        <span class="muted">${clauses} ${t('docClauses2')} \u00b7 ${d.kind==='policy'?t('docPolicy'):t('docRegister')}</span>
+        <button class="btn" data-doc="${d.id}">${t('docDownload')}</button>
+      </div>
+      <p class="muted" style="margin:6px 0 8px; font-size:.9rem">${esc(lang==='ar'?d.introAr:d.intro)}</p>
+      <div class="doc-c">${d.controls.map(id=>`<span class="cid">${id}</span>`).join('')}
+        ${open ? `<span class="doc-open">${open} ${t('docOpen')}</span>` : ''}</div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('[data-doc]').forEach(b => b.onclick = () => {
+    const d = DOCS.find(x => x.id === b.dataset.doc);
+    const md = draftMarkdown(d, (state.entity && state.entity.name) || '');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([md], { type:'text/markdown;charset=utf-8' }));
+    a.download = `${d.id}${lang==='ar'?'.ar':''}.md`;
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+}
+
 function renderCrosswalk(){
   document.getElementById('cwH').textContent = t('cwH');
   document.getElementById('cwP').textContent = t('cwP');
@@ -1423,12 +1557,13 @@ function importJSON(){
 
 /* ---------- tabs and language ---------- */
 function switchTab(name){
-  document.body.classList.toggle('working', name === 'assess' || name === 'plan' || name === 'crosswalk');
+  document.body.classList.toggle('working', name === 'assess' || name === 'plan' || name === 'crosswalk' || name === 'docs');
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + name));
   if (name === 'assess') renderWB();
   if (name === 'plan') renderPlan();
   if (name === 'crosswalk') renderCrosswalk();
+  if (name === 'docs') renderDocs();
   if (name === 'about') renderAbout();
   if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name);
   window.scrollTo({ top:0, behavior:'auto' });
