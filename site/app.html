@@ -532,6 +532,8 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
   <div class="wrap">
     <div class="phead"><h2 id="docH"></h2><p id="docP"></p></div>
     <div id="docList"></div>
+    <div class="phead" style="margin-top:44px"><h2 id="clH"></h2><p id="clP"></p></div>
+    <div id="clList"></div>
   </div>
 </div>
 
@@ -564,7 +566,7 @@ footer .cols{display:flex; gap:30px; flex-wrap:wrap; justify-content:space-betwe
 <script>
 "use strict";
 const DATA = JSON.parse(document.getElementById('nbcc-data').textContent);
-const { regulation: REG, functions: FUNCS, controls: CONTROLS, iso: ISO, phases: PHASES, deps: DEPS, profileFlags: FLAGS, documents: DOCS } = DATA;
+const { regulation: REG, functions: FUNCS, controls: CONTROLS, iso: ISO, phases: PHASES, deps: DEPS, profileFlags: FLAGS, documents: DOCS, roles: ROLES } = DATA;
 const BY_ID = new Map(CONTROLS.map(c => [c.id, c]));
 const FN = new Map(FUNCS.map(f => [f.id, f]));
 const STORE = 'nbcc.assessment.v1';
@@ -807,6 +809,15 @@ const STR = {
     scopeQ:'Scope', profileNote:'A control is in scope until you record a reason it is not.',
     brandSub:'National Basic Cybersecurity Controls',
     tabs:{ baseline:'The baseline', assess:'Assess', plan:'Plan', crosswalk:'Crosswalk', docs:'Documents', about:'About' },
+    clH:'Checklists to hand out',
+    clP:'The baseline is 329 checks and no one person can work it. Every control is owned by exactly one desk, and the split is a partition, so hand each desk its sheet and between them everything is covered, nothing twice and nothing dropped. Who owns what is this project\'s own reading, since GOV-1 is the only place the Annex names a role.',
+    clFor:'for', clTick:'tick boxes', clTitle:'NBCC field checklist', controls2:'controls',
+    clNational:'national obligation',
+    scopeLine2:(c,k)=>`${c} control${c===1?'':'s'}, ${k} check${k===1?'':'s'}`,
+    clIntro:'One line per check, in the order the work falls. Tick what holds today, note where the evidence sits, and carry the rest into the assessment.',
+    clAssign:'Who owns what is this project\'s own reading. The Annex names no roles beyond GOV-1, which requires a designated manager and documented responsibilities.',
+    clAssessor:'Assessor', clDate:'Date', clEvidence:'Evidence to collect', clRef:'Evidence reference',
+    clNotOfficial:'A readiness aid, not an official instrument. The authoritative text is the Annex as published in Kuwait Al Youm issue 1785.',
     docH:'Documents you have to hold',
     docP:'GOV-2 names seven policies, GOV-5 wants a dated self assessment record, and 70 of the 164 evidence artifacts are a written document. Each draft below has its clauses generated from the checks of the controls it covers, so a document that satisfies the draft satisfies what the assessment tests.',
     docDownload:'Download', docClauses:'clauses', docCovers:'covers',
@@ -884,6 +895,15 @@ const STR = {
     scopeQ:'النطاق', profileNote:'يظل الضابط ضمن النطاق حتى تسجل سببا لاستبعاده.',
     brandSub:'الضوابط الوطنية الأساسية للأمن السيبراني',
     tabs:{ baseline:'الضوابط', assess:'التقييم', plan:'الخطة', crosswalk:'المواءمة', docs:'الوثائق', about:'عن الأداة' },
+    clH:'قوائم تحقق تسلّمها',
+    clP:'الأساس 329 بندا لا يستطيع شخص واحد العمل بها. وكل ضابط يملكه مكتب واحد بالضبط، والتقسيم قسمة تامة: تسلّم كل مكتب ورقته فيكون بينها كل شيء مغطى، لا مكرر ولا ساقط. وتوزيع المسؤوليات اجتهاد هذه الأداة، فالضابط GOV-1 هو الموضع الوحيد الذي يسمي فيه الملحق دورا.',
+    clFor:'لـ', clTick:'مربعات تأشير', clTitle:'قائمة تحقق ميدانية للضوابط الوطنية الأساسية', controls2:'ضابطا',
+    clNational:'التزام وطني',
+    scopeLine2:(c,k)=>`${arCount(c,'control')} و${arCount(k,'check')}`,
+    clIntro:'سطر لكل بند، بالترتيب الذي يقع فيه العمل. أشر إلى ما هو قائم اليوم وسجل موضع الدليل واحمل الباقي إلى التقييم.',
+    clAssign:'توزيع المسؤوليات اجتهاد هذه الأداة، فالملحق لا يسمي أدوارا عدا ما يوجبه الضابط GOV-1 من تعيين مدير وتوثيق المسؤوليات.',
+    clAssessor:'المقيّم', clDate:'التاريخ', clEvidence:'الأدلة الواجب جمعها', clRef:'مرجع الدليل',
+    clNotOfficial:'أداة للاستعداد لا وثيقة رسمية، والنص المعتمد هو الملحق كما نشر في جريدة الكويت اليوم بالعدد 1785.',
     docH:'وثائق يجب أن تحوزها',
     docP:'يسمي الضابط GOV-2 سبع سياسات، ويطلب GOV-5 سجل تقييم ذاتي مؤرخا، و70 من الأدلة الـ164 وثائق مكتوبة. وكل مسودة أدناه بنودها مولدة من بنود التحقق الخاصة بالضوابط التي تغطيها، فالوثيقة التي تستوفي المسودة تستوفي ما يختبره التقييم.',
     docDownload:'تنزيل', docClauses:'بندا', docCovers:'تغطي',
@@ -1403,6 +1423,88 @@ function draftMarkdown(doc, entity){
   return out.join('\n');
 }
 
+
+/*
+ * The role checklists, in the browser. Same rule as the drafts: this mirrors
+ * the command line generator and a test compares the wording of the two.
+ */
+/*
+ * Arabic counts change the noun after them, so the browser needs the same
+ * rule the command line uses or the two documents disagree at every count
+ * below eleven.
+ */
+const AR_COUNTED = {
+  control: ['ضابط واحد', 'ضابطان', 'ضوابط', 'ضابطا'],
+  check: ['بند واحد', 'بندان', 'بنود', 'بندا']
+};
+function arCount(n, kind){
+  const [one, two, few, many] = AR_COUNTED[kind];
+  const c = Math.abs(Math.round(Number(n) || 0));
+  if (c === 1) return one;
+  if (c === 2) return two;
+  if (c >= 3 && c <= 10) return `${c} ${few}`;
+  return `${c} ${many}`;
+}
+
+function checklistMarkdown(role){
+  const ar = lang === 'ar';
+  const L = (o, k) => (ar && o[k + 'Ar'] ? o[k + 'Ar'] : o[k]);
+  const controls = role.controls.map(id => BY_ID.get(id)).filter(inScope)
+    .sort((a,b) => a.phase - b.phase || a.id.localeCompare(b.id));
+  const checks = controls.reduce((n,c) => n + c.checks.length, 0);
+  const name = L(role, 'name');
+  // The Arabic preposition assimilates into the definite article.
+  const forName = ar ? (name.startsWith('ال') ? `لل${name.slice(2)}` : `لـ${name}`) : `${t('clFor')} ${name}`;
+  const out = [];
+  out.push(`# ${t('clTitle')} \u00b7 ${forName}`, '',
+    `_${t('scopeLine2', controls.length, checks)}_`, '',
+    `| ${t('docEntity')} | ${t('clAssessor')} | ${t('clDate')} |`, '|---|---|---|',
+    `| ${(state.entity && state.entity.name) || '[ ]'} | [ ] | [ ] |`, '',
+    t('clIntro'), '', `> ${t('clAssign')}`, '');
+  for (const c of controls) {
+    out.push(`### ${c.id} \u00b7 ${L(c,'title')}`, '');
+    const tags = [`${t('phase')} ${c.phase}`];
+    if (c.nationalObligation) tags.push(`**${t('clNational')}**`);
+    out.push(`_${tags.join(' \u00b7 ')}_`, '');
+    (ar ? c.checksAr : c.checks).forEach((text, i) => {
+      const beyond = (c.beyondAnnex || []).includes(i);
+      out.push(`- [ ] ${text}${beyond ? ` _(${t('beyond')})_` : ''}`);
+    });
+    out.push('', `**${t('clEvidence')}**`, '');
+    for (const e of (ar ? c.evidenceAr : c.evidence)) out.push(`- [ ] ${e}  \u00b7  ${t('clRef')}: ______________`);
+    out.push('');
+  }
+  out.push('---', '', `_${t('clNotOfficial')}_`, '', `_${ar ? REG.decisionAr : REG.decision}_`, '');
+  return out.join('\n');
+}
+
+function renderChecklists(){
+  document.getElementById('clH').textContent = t('clH');
+  document.getElementById('clP').textContent = t('clP');
+  document.getElementById('clList').innerHTML = ROLES.map(r => {
+    const controls = r.controls.map(id => BY_ID.get(id)).filter(inScope);
+    if (!controls.length) return '';
+    const checks = controls.reduce((n,c) => n + c.checks.length, 0);
+    const ev = controls.reduce((n,c) => n + c.evidence.length, 0);
+    return `<div class="doc">
+      <div class="doc-h">
+        <span class="doc-t">${esc(lang==='ar'?r.nameAr:r.name)}</span>
+        <span class="muted">${controls.length} ${t('controls2')} \u00b7 ${checks + ev} ${t('clTick')}</span>
+        <button class="btn" data-role="${r.id}">${t('docDownload')}</button>
+      </div>
+      <p class="muted" style="margin:6px 0 8px; font-size:.9rem">${esc(lang==='ar'?r.blurbAr:r.blurb)}</p>
+      <div class="doc-c">${controls.map(c=>`<span class="cid">${c.id}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('[data-role]').forEach(b => b.onclick = () => {
+    const r = ROLES.find(x => x.id === b.dataset.role);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([checklistMarkdown(r)], { type:'text/markdown;charset=utf-8' }));
+    a.download = `checklist-${r.id}${lang==='ar'?'.ar':''}.md`;
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+}
+
 function renderDocs(){
   document.getElementById('docH').textContent = t('docH');
   document.getElementById('docP').textContent = t('docP');
@@ -1563,7 +1665,7 @@ function switchTab(name){
   if (name === 'assess') renderWB();
   if (name === 'plan') renderPlan();
   if (name === 'crosswalk') renderCrosswalk();
-  if (name === 'docs') renderDocs();
+  if (name === 'docs'){ renderDocs(); renderChecklists(); }
   if (name === 'about') renderAbout();
   if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name);
   window.scrollTo({ top:0, behavior:'auto' });

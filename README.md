@@ -111,6 +111,8 @@ Every control is assigned to exactly one owning role, and **the split is a parti
 | Human resources | 2 | 18 |
 | Facilities | 1 | 8 |
 
+The same eight sheets are in the [workbench](https://siteq8.github.io/Kuwait-NBCC/) under **Documents**, alongside the starter drafts, and download in the language currently selected with the entity name already filled in. Their output is byte identical to the command line, checked across every role in both languages.
+
 Each sheet carries a tick box per check and per evidence artifact, respects scope so an entity with no cloud is not handed the Appendix A sheet, and carries the `national obligation` and `beyond the Annex` markings through. Who owns what is this project's own reading, and every sheet says so, because GOV-1 is the only place the Annex names a role at all.
 
 ## Starter documents
@@ -320,7 +322,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 159 tests
+node --test test/*.test.js     # 160 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

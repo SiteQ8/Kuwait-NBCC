@@ -1555,6 +1555,32 @@ test('a checklist says the role assignment is not the Annex talking', () => {
   assert.ok(renderChecklist({ role: 'leadership' }).includes('beyond the Annex'));
 });
 
+test('the workbench checklist matches the command line word for word', () => {
+  // Two generators for one sheet is how a browser copy diverges. The wording
+  // each side prints is compared, since that is what actually drifts.
+  const site = buildSite();
+  assert.ok(site.includes('function checklistMarkdown'));
+  assert.ok(site.includes('function arCount'),
+    'the browser needs the counted noun rule or Arabic counts disagree below eleven');
+  assert.ok(site.includes('clNational:'),
+    'the checklist tag needs its own string, not a stripped copy of the card one');
+  for (const r of ROLES) assert.ok(site.includes(`"${r.id}"`), `${r.id} is not in the payload`);
+  // The strings the two sides print have to be the same strings.
+  const cli = renderChecklist({ role: 'facilities' });
+  // The workbench escapes the apostrophe in source, so match around it.
+  for (const line of ['NBCC field checklist', 'Evidence to collect',
+    'own reading', 'A readiness aid, not an official instrument']) {
+    assert.ok(cli.includes(line), `the command line lost: ${line}`);
+    assert.ok(site.includes(line), `the workbench lost: ${line}`);
+  }
+  // A curly apostrophe on one side and a straight one on the other is drift.
+  // The official Annex text uses one and must not be touched, so this checks
+  // the string table rather than the whole page.
+  const table = site.slice(site.indexOf('const STR = {'), site.indexOf('function t('));
+  assert.ok(!table.includes('\u2019'),
+    'the workbench string table should use a straight apostrophe, as the command line does');
+});
+
 test('cli checklist lists the roles and writes a sheet', () => {
   const list = cli(['checklist']);
   assert.ok(list.includes('Field checklists'));

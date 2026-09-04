@@ -14,6 +14,7 @@ import { REGULATION, FUNCTIONS, CONTROLS, PROFILE_FLAGS } from '../src/catalog.j
 import { ISO_MAP } from '../src/crosswalk.js';
 import { PHASES, DEPENDENCIES } from '../src/plan.js';
 import { DOCUMENTS } from '../src/drafts.js';
+import { ROLES } from '../src/checklists.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
@@ -53,6 +54,7 @@ export function buildPayload() {
     })),
     deps: DEPENDENCIES,
     documents: DOCUMENTS,
+    roles: ROLES,
     profileFlags: PROFILE_FLAGS
   };
 }
