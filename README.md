@@ -292,6 +292,10 @@ An assessment file is untrusted. A portfolio roll up reads six of them from six 
 
 A terminal renders whatever it is handed, so a name carrying `\u001b[2K\r` erases its own line and prints whatever follows in its place. A subsidiary could hand up a file whose line in the roll up reads **All 44 controls met** while the score behind it is zero. Control characters are now stripped once at the read boundary rather than left for every print site to remember.
 
+Keys named `__proto__`, `constructor` and `prototype` are skipped outright and every other key is set through `defineProperty`, because assigning a key named `__proto__` replaces the object's prototype rather than adding a property, and every lookup that then misses an own key falls through to whatever the file supplied.
+
+Twelve malformed shapes are run through assess, plan, evidence, the report in both languages and validation, and none of them may throw. A broken export should be told what is wrong, not handed a stack trace.
+
 The report escapes everything, checked by generating one from a file carrying script, image and SVG payloads in the entity name, the assessor, the owner and an evidence reference, in both languages. The browser workbench was checked the same way by driving its real import path: nothing executed, and the payloads land in input values, which are not parsed as markup.
 
 ## Accessibility
@@ -330,7 +334,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 162 tests
+node --test test/*.test.js     # 164 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

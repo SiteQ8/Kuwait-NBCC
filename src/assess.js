@@ -294,7 +294,8 @@ export function assess(assessment = {}, options = {}) {
 
   return {
     regulation: REGULATION,
-    entity: assessment.entity || { name: 'Unnamed entity' },
+    // No name is left as no name, so each surface labels it in its own language.
+    entity: assessment.entity && typeof assessment.entity === 'object' ? assessment.entity : {},
     assessor: assessment.assessor || null,
     assessmentDate: (assessment.assessmentDate || asOf.toISOString().slice(0, 10)).slice(0, 10),
     profile,
@@ -361,26 +362,29 @@ export function validateAssessment(assessment) {
     return ['Assessment is not an object.'];
   }
   if (!assessment.controls || typeof assessment.controls !== 'object') {
-    problems.push('Assessment has no controls object.');
+    problems.push({ en: 'Assessment has no controls object.',
+      ar: 'لا يتضمن ملف التقييم كائن الضوابط.' });
     return problems;
   }
   if (assessment.assessmentDate && !isoDate(assessment.assessmentDate)) {
-    problems.push(`assessmentDate "${assessment.assessmentDate}" is not a valid date.`);
+    problems.push({ en: `assessmentDate "${assessment.assessmentDate}" is not a valid date.`,
+      ar: `قيمة assessmentDate "${assessment.assessmentDate}" ليست تاريخا صحيحا.` });
   }
   for (const [id, entry] of Object.entries(assessment.controls)) {
     const control = getControl(id);
     if (!control) {
-      problems.push(`Unknown control id "${id}".`);
+      problems.push({ en: `Unknown control id "${id}".`, ar: `معرف ضابط غير معروف "${id}".` });
       continue;
     }
     if (!entry || typeof entry !== 'object') {
-      problems.push(`${id} entry is not an object.`);
+      problems.push({ en: `${id} entry is not an object.`, ar: `مدخل ${id} ليس كائنا.` });
       continue;
     }
     if (Array.isArray(entry.checks) && entry.checks.length !== control.checks.length) {
-      problems.push(
-        `${id} has ${entry.checks.length} check statuses but the catalog defines ${control.checks.length}.`
-      );
+      problems.push({
+        en: `${id} has ${entry.checks.length} check statuses but the catalog defines ${control.checks.length}.`,
+        ar: `في ${id} عدد حالات البنود ${entry.checks.length} والكتالوج يعرف ${control.checks.length}.`
+      });
     }
     const values = Array.isArray(entry.checks)
       ? entry.checks
@@ -390,17 +394,21 @@ export function validateAssessment(assessment) {
     for (const v of values) {
       if (v === null || v === undefined || v === '') continue;
       if (!STATUSES.includes(String(v).trim().toLowerCase()) && normalizeStatus(v) === 'unknown') {
-        problems.push(`${id} has unrecognised check status "${v}".`);
+        problems.push({ en: `${id} has unrecognised check status "${v}".`,
+          ar: `حالة بند غير معروفة في ${id} وهي "${v}".` });
       }
     }
     if (entry.status !== undefined && normalizeStatus(entry.status) === 'unknown' && entry.status !== 'unknown') {
-      problems.push(`${id} has unrecognised control status "${entry.status}".`);
+      problems.push({ en: `${id} has unrecognised control status "${entry.status}".`,
+        ar: `حالة ضابط غير معروفة في ${id} وهي "${entry.status}".` });
     }
     if (entry.targetDate && !isoDate(entry.targetDate)) {
-      problems.push(`${id} has invalid targetDate "${entry.targetDate}".`);
+      problems.push({ en: `${id} has invalid targetDate "${entry.targetDate}".`,
+        ar: `قيمة targetDate في ${id} غير صحيحة وهي "${entry.targetDate}".` });
     }
     if (entry.exception && entry.exception.expiry && !isoDate(entry.exception.expiry)) {
-      problems.push(`${id} has invalid exception expiry "${entry.exception.expiry}".`);
+      problems.push({ en: `${id} has invalid exception expiry "${entry.exception.expiry}".`,
+        ar: `تاريخ انتهاء الاستثناء في ${id} غير صحيح وهو "${entry.exception.expiry}".` });
     }
   }
   return problems;

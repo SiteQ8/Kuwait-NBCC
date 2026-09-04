@@ -22,7 +22,8 @@ const COUNTED = {
   assessment: ['تقييم واحد', 'تقييمان', 'تقييمات', 'تقييما'],
   year: ['سنة واحدة', 'سنتان', 'سنوات', 'سنة'],
   point: ['نقطة واحدة', 'نقطتان', 'نقاط', 'نقطة'],
-  evidence: ['دليل واحد', 'دليلان', 'أدلة', 'دليلا']
+  evidence: ['دليل واحد', 'دليلان', 'أدلة', 'دليلا'],
+  issue: ['مسألة واحدة', 'مسألتان', 'مسائل', 'مسألة']
 };
 
 export function count(n, kind) {
@@ -163,6 +164,11 @@ export const MESSAGES = {
     checksUnit: 'checks',
     beyond: 'beyond the Annex',
     beyondNote: 'Marked checks are sound practice this toolkit adds. The Annex does not state them.',
+
+    warnIssues: (n) => `the assessment file has ${n} issue${n === 1 ? '' : 's'}:`,
+    warnFile: (p, n) => `${p} has ${n} validation issue${n === 1 ? '' : 's'}`,
+    warnWord: 'warning',
+    reportLine: (name, pct, band) => `${name} \u00b7 ${pct}% implementation \u00b7 ${band}`,
 
     checklistHead: 'Field checklists',
     checklistSub: (r, c, k) => `${r} roles covering all ${c} controls and ${k} checks, with no control owned twice`,
@@ -311,6 +317,11 @@ export const MESSAGES = {
     checksUnit: 'بندا',
     beyond: 'زائد على الملحق',
     beyondNote: 'البنود الموسومة ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
+
+    warnIssues: (n) => `في ملف التقييم ${count(n, 'issue')}:`,
+    warnFile: (p, n) => `في ${p} ${count(n, 'issue')} في التحقق`,
+    warnWord: 'تنبيه',
+    reportLine: (name, pct, band) => `${name} \u00b7 نسبة التطبيق ${pct}٪ \u00b7 ${band}`,
 
     checklistHead: 'قوائم التحقق الميدانية',
     checklistSub: (r, c, k) => `${r} أدوار تغطي الضوابط الـ${c} كلها و${k} بندا، دون أن يملك ضابط واحد دوران`,

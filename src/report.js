@@ -603,7 +603,7 @@ export function renderMarkdown(assessment, options = {}) {
   const s = result.scores;
   const lines = [];
 
-  lines.push(`# ${result.entity.name || 'Unnamed entity'} NBCC readiness`);
+  lines.push(`# ${result.entity.name || tr('unnamed')} NBCC readiness`);
   lines.push('');
   lines.push(`${REGULATION.decision}, ${REGULATION.title}. Assessed ${result.assessmentDate}.`);
   lines.push('');

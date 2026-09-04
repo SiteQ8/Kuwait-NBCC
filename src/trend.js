@@ -204,7 +204,7 @@ export function forecast(assessments, options = {}) {
 
   return {
     ok: true,
-    entity: (last.label) || 'Unnamed entity',
+    entity: last.label || '',
     snapshots: points.length,
     from: first.date,
     to: last.date,

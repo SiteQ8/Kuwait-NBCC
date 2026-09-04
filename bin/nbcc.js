@@ -115,12 +115,25 @@ function parseArgs(argv) {
 // eslint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\u0000-\u0008\u000B-\u001F\u007F-\u009F\u2028\u2029]/g;
 
+// Assigning a key named __proto__ replaces the object's prototype rather than
+// adding a property, so every lookup that misses an own key then falls through
+// to whatever the file supplied. defineProperty never runs a setter, and the
+// three inherited names are skipped outright since no assessment file has a
+// legitimate use for them.
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 function scrub(value) {
   if (typeof value === 'string') return value.replace(CONTROL_CHARS, '');
   if (Array.isArray(value)) return value.map(scrub);
   if (value && typeof value === 'object') {
     const out = {};
-    for (const [k, v] of Object.entries(value)) out[scrub(k)] = scrub(v);
+    for (const [k, v] of Object.entries(value)) {
+      const key = scrub(k);
+      if (UNSAFE_KEYS.has(key)) continue;
+      Object.defineProperty(out, key, {
+        value: scrub(v), enumerable: true, writable: true, configurable: true
+      });
+    }
     return out;
   }
   return value;
@@ -143,12 +156,14 @@ function loadAssessment(path, options = {}) {
   // A trend reads many files at once, so it summarises rather than repeating
   // the same warning block for each of them.
   if (problems.length && !options.quiet) {
-    process.stderr.write(`${C.yellow}warning${C.reset} the assessment file has ${problems.length} issue(s):\n`);
-    for (const p of problems.slice(0, 12)) process.stderr.write(`  ${p}\n`);
-    if (problems.length > 12) process.stderr.write(`  and ${problems.length - 12} more\n`);
+    process.stderr.write(`${C.yellow}${m('warnWord')}${C.reset} ${m('warnIssues', problems.length)}\n`);
+    for (const p of problems.slice(0, 12)) {
+      process.stderr.write(`  ${typeof p === 'string' ? p : (arabic() ? p.ar : p.en)}\n`);
+    }
+    if (problems.length > 12) process.stderr.write(`  ${m('findingsMore', problems.length - 12)}\n`);
     process.stderr.write('\n');
   } else if (problems.length) {
-    process.stderr.write(`${C.yellow}warning${C.reset} ${path} has ${problems.length} validation issue(s)\n`);
+    process.stderr.write(`${C.yellow}${m('warnWord')}${C.reset} ${m('warnFile', path, problems.length)}\n`);
   }
   return data;
 }
@@ -726,7 +741,8 @@ function cmdReport(positional, flags) {
   writeFileSync(resolve(process.cwd(), path), html, 'utf8');
   const r = assess(data);
   out(`${C.green}Wrote${C.reset} ${path} ${C.dim}(${Math.round(html.length / 1024)} KB)${C.reset}`);
-  out(`  ${r.entity.name || 'Unnamed entity'} \u00b7 ${r.scores.implementation}% implementation \u00b7 ${r.scores.band.label}`);
+  out(`  ${m('reportLine', r.entity.name || m('notRecorded'),
+    r.scores.implementation, arabic() ? r.scores.band.labelAr : r.scores.band.label)}`);
   out(`  ${C.dim}Open it in a browser or print it to PDF. Nothing loads from the network except the web font.${C.reset}`);
 }
 

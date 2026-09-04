@@ -244,7 +244,7 @@ export function evidenceRegister(assessment, asOf = new Date()) {
   const dated = items.filter((i) => i.collected).map((i) => i.collected).sort();
 
   return {
-    entity: (doc.entity && doc.entity.name) || 'Unnamed entity',
+    entity: (doc.entity && doc.entity.name) || '',
     assessmentDate: doc.assessmentDate || null,
     retentionYears: REGULATION.recordRetentionYears,
     totalArtifacts: items.length,

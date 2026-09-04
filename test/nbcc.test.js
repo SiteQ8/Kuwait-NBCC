@@ -320,7 +320,7 @@ test('the Arabic says what the English says', () => {
       }
     });
   }
-  assert.deepEqual(problems, [], problems.join('\n'));
+  assert.deepEqual(problems, [], problems.map((p) => p.en).join('\n'));
 });
 
 test('one concept is not rendered two ways', () => {
@@ -540,6 +540,43 @@ test('an assessment file cannot forge what the terminal prints', () => {
   } finally {
     try { unlinkSync(hostile); } catch { /* already gone */ }
   }
+});
+
+test('no command crashes on a malformed assessment file', () => {
+  // A broken export, a hand edit, or a file from a system that guessed at the
+  // shape. The tool should say what is wrong, not print a stack trace.
+  const cases = {
+    empty: {},
+    nullControls: { regulation: 'KW-NBCC-2026', controls: null },
+    arrayControls: { regulation: 'KW-NBCC-2026', controls: [1, 2, 3] },
+    checksNotArray: { controls: { 'GOV-1': { checks: 'met' } } },
+    checksTooMany: { controls: { 'GOV-1': { checks: Array(500).fill('met') } } },
+    checksNumbers: { controls: { 'GOV-1': { checks: [1, 2, 3, 4, 5, 6, 7, 8, 9] } } },
+    unknownControl: { controls: { 'ZZ-99': { checks: ['met'] } } },
+    badDate: { assessmentDate: 'soon', controls: { 'GOV-1': { checks: Array(9).fill('met') } } },
+    entityNotObject: { entity: 'a string', controls: { 'GOV-1': { checks: Array(9).fill('met') } } },
+    evidenceBad: { controls: { 'GOV-1': { checks: Array(9).fill('met'), evidence: 'nope' } } },
+    evidenceNulls: { controls: { 'GOV-1': { checks: Array(9).fill('met'), evidence: [null, { held: 'maybe' }] } } },
+    exceptionBad: { controls: { 'GOV-1': { status: 'exception', exception: { expiry: 'soon' } } } }
+  };
+  for (const [name, doc] of Object.entries(cases)) {
+    assert.doesNotThrow(() => assess(doc), `assess threw on ${name}`);
+    assert.doesNotThrow(() => buildPlan(doc, { today: SEP }), `plan threw on ${name}`);
+    assert.doesNotThrow(() => evidenceRegister(doc, SEP), `evidence threw on ${name}`);
+    assert.doesNotThrow(() => renderReport(doc, { today: SEP }), `report threw on ${name}`);
+    assert.doesNotThrow(() => renderReport(doc, { today: SEP, lang: 'ar' }), `Arabic report threw on ${name}`);
+    assert.doesNotThrow(() => validateAssessment(doc), `validate threw on ${name}`);
+  }
+});
+
+test('a file without a name is labelled in the reader language', () => {
+  // The engine used to invent the words "Unnamed entity", which then printed
+  // in English in the middle of an Arabic report.
+  const r = assess({ controls: {} });
+  assert.equal(r.entity.name, undefined, 'the engine should not invent a name');
+  const ar = renderReport({ controls: {} }, { today: SEP, lang: 'ar' });
+  assert.ok(!ar.includes('Unnamed entity'), 'the Arabic report fell back to English');
+  assert.ok(ar.includes('جهة دون اسم'));
 });
 
 test('a hostile assessment cannot inject markup into the report', () => {
@@ -834,10 +871,18 @@ test('assessment validation catches the mistakes a hand edit makes', () => {
   bad.controls['GOV-2'].targetDate = 'next Tuesday';
   bad.assessmentDate = 'soon';
   const problems = validateAssessment(bad);
-  assert.ok(problems.some((p) => p.includes('NOT-A-CONTROL')));
-  assert.ok(problems.some((p) => p.includes('GOV-1') && p.includes('catalog defines')));
-  assert.ok(problems.some((p) => p.includes('targetDate')));
-  assert.ok(problems.some((p) => p.includes('assessmentDate')));
+  assert.ok(problems.some((p) => p.en.includes('NOT-A-CONTROL')));
+  // A problem carries both languages now, so the English is what is matched.
+  const en = problems.map((p) => p.en);
+  assert.ok(en.some((p) => p.includes('GOV-1') && p.includes('catalog defines')));
+  // And every one has to exist in Arabic, since a broken file is where a
+  // reader most needs the message in their own language.
+  for (const p of problems) {
+    assert.ok(p.en && p.ar, 'a validation problem is missing a language');
+    assert.ok(/[\u0600-\u06FF]/.test(p.ar), `no Arabic in: ${p.en}`);
+  }
+  assert.ok(problems.some((p) => p.en.includes('targetDate')));
+  assert.ok(problems.some((p) => p.en.includes('assessmentDate')));
   assert.deepEqual(validateAssessment(null), ['Assessment is not an object.']);
 });
 
