@@ -27,6 +27,7 @@ import { forecast } from '../src/trend.js';
 import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
 import { MESSAGES } from '../src/messages.js';
 import { DOCUMENTS, getDocument, renderDraft, DRAFT_STATS } from '../src/drafts.js';
+import { ROLES, getRole, buildChecklist, renderChecklist, CHECKLIST_STATS } from '../src/checklists.js';
 
 // Language is chosen once from the flags and every printed string comes from
 // the message table, so a command cannot half switch.
@@ -768,6 +769,35 @@ function cmdDiff(positional, flags) {
   if (!d.changes.length) out(`\n${C.dim}No control changed state between the two assessments.${C.reset}`);
 }
 
+function cmdChecklist(positional, flags) {
+  const role = positional[0];
+  const lang = flags.ar ? 'ar' : 'en';
+  const profile = flags['no-cloud'] ? { usesCloud: false } : {};
+
+  if (!role) {
+    if (flags.json) return out(JSON.stringify(ROLES, null, 2));
+    out(`${C.bold}${m('checklistHead')}${C.reset}`);
+    out(`${C.dim}${m('checklistSub', CHECKLIST_STATS.roles, CHECKLIST_STATS.controls, CHECKLIST_STATS.checks)}${C.reset}\n`);
+    for (const r of ROLES) {
+      const l = buildChecklist({ role: r.id, profile });
+      out(`  ${C.bold}${pad(r.id, 15)}${C.reset} ${pad(arabic() ? r.nameAr : r.name, 30)}` +
+          `  ${C.dim}${padStart(l.controls, 2)} ${m('controls')} \u00b7 ${padStart(l.checks, 3)} ${m('checksUnit')}${C.reset}`);
+      for (const line of wrap(arabic() ? r.blurbAr : r.blurb, 70)) out(`  ${' '.repeat(15)} ${C.dim}${line}${C.reset}`);
+    }
+    return out(`\n${C.dim}${m('checklistHint')}${C.reset}`);
+  }
+
+  if (!getRole(role)) return fail(m('checklistUnknown', role));
+  const opts = { role, lang, profile, entity: flags.entity, phase: flags.phase, fn: flags.fn };
+  const built = buildChecklist(opts);
+  if (built.controls === 0) return fail(m('checklistEmpty'));
+  const body = renderChecklist(opts);
+
+  if (!flags.out) return emit(body);
+  writeOut(flags.out, body);
+  out(`${C.green}${m('checklistWrote', flags.out, built.controls, built.checks)}${C.reset}`);
+}
+
 function cmdNational(flags) {
   const rows = CONTROLS.filter((c) => c.nationalObligation);
   if (flags.json) return out(JSON.stringify(rows.map((c) => ({
@@ -875,6 +905,9 @@ function main() {
       return cmdTrend(positional, flags);
     case 'diff':
       return cmdDiff(positional, flags);
+    case 'checklist':
+    case 'checklists':
+      return cmdChecklist(positional, flags);
     case 'national':
     case 'obligations':
       return cmdNational(flags);

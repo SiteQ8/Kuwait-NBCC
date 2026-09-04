@@ -88,6 +88,31 @@ The scorer is deliberately unforgiving about the paper:
 - An exception **within 90 days of expiry** is surfaced before it lapses.
 - A control claimed met at the control level, with no per check answers behind it, still scores, but is recorded as unevidenced.
 
+## Field checklists
+
+The baseline is 329 checks and an entity cannot hand that to one person. The work belongs to different desks: whoever hardens a server does not run the security screening, and neither of them signs the cloud contract.
+
+```bash
+nbcc checklist                              # the eight roles
+nbcc checklist it-operations --out sheet.md # one desk
+nbcc checklist procurement --phase 1 --ar   # one milestone, in Arabic
+```
+
+Every control is assigned to exactly one owning role, and **the split is a partition**: hand each desk its sheet and between them the whole baseline is covered, with nothing dropped and nothing done twice. A test asserts that, because a split that quietly loses a control is worse than no split.
+
+| Role | Controls | Checks |
+|---|---|---|
+| IT operations | 12 | 110 |
+| Security operations | 7 | 72 |
+| Procurement and contracts | 8 | 35 |
+| Leadership and governance | 3 | 30 |
+| Data and records | 4 | 30 |
+| Cloud engineering | 7 | 26 |
+| Human resources | 2 | 18 |
+| Facilities | 1 | 8 |
+
+Each sheet carries a tick box per check and per evidence artifact, respects scope so an entity with no cloud is not handed the Appendix A sheet, and carries the `national obligation` and `beyond the Annex` markings through. Who owns what is this project's own reading, and every sheet says so, because GOV-1 is the only place the Annex names a role at all.
+
 ## Starter documents
 
 GOV-2 names seven policies an entity must hold, GOV-5 wants a dated self assessment record, and 70 of the 164 evidence artifacts are a written document of some kind. Reporting all of them as missing and handing the entity nothing to begin from is half a job.
@@ -156,6 +181,7 @@ Produce artifacts
   report <file> --out x.html [--ar]  Self contained HTML report
   export <file> --as md|csv|json|register
   draft [<id>] --out x.md       Starter policy or register, clauses from the checks
+  checklist [<role>]            Field checklist for one desk, with tick boxes
   national                      Controls no international certification discharges
   doctor                        Verify catalog integrity
 ```
@@ -294,7 +320,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 154 tests
+node --test test/*.test.js     # 159 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

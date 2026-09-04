@@ -164,6 +164,13 @@ export const MESSAGES = {
     beyond: 'beyond the Annex',
     beyondNote: 'Marked checks are sound practice this toolkit adds. The Annex does not state them.',
 
+    checklistHead: 'Field checklists',
+    checklistSub: (r, c, k) => `${r} roles covering all ${c} controls and ${k} checks, with no control owned twice`,
+    checklistHint: 'Run "nbcc checklist <role> --out sheet.md" for one sheet. Add --phase 1 to work a milestone, or --ar for Arabic.',
+    checklistUnknown: (id) => `unknown role "${id}". Run "nbcc checklist" to list them.`,
+    checklistWrote: (p, c, k) => `Wrote ${p} with ${c} control${c === 1 ? '' : 's'} and ${k} check${k === 1 ? '' : 's'}`,
+    checklistEmpty: 'Nothing matches those filters.',
+
     nationalHead: 'National obligations',
     nationalSub: (n) => `${n} controls require an act toward a Kuwaiti authority or compliance with Kuwaiti law`,
     nationalNote: 'No international certification discharges these. An entity holding ISO 27001 or running CIS IG1 still has to do them.',
@@ -304,6 +311,13 @@ export const MESSAGES = {
     checksUnit: 'بندا',
     beyond: 'زائد على الملحق',
     beyondNote: 'البنود الموسومة ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
+
+    checklistHead: 'قوائم التحقق الميدانية',
+    checklistSub: (r, c, k) => `${r} أدوار تغطي الضوابط الـ${c} كلها و${k} بندا، دون أن يملك ضابط واحد دوران`,
+    checklistHint: 'شغل "nbcc checklist <role> --out sheet.md" لورقة واحدة، وأضف ‎--phase 1‎ للعمل على مرحلة أو ‎--ar‎ للعربية.',
+    checklistUnknown: (id) => `دور غير معروف "${id}". شغل "nbcc checklist" لعرض القائمة.`,
+    checklistWrote: (p, c, k) => `أنشئ ${p} بـ ${count(c, 'control')} و${count(k, 'check')}`,
+    checklistEmpty: 'لا شيء يطابق هذه المرشحات.',
 
     nationalHead: 'الالتزامات الوطنية',
     nationalSub: (n) => `${n} ضوابط تستلزم فعلا تجاه جهة كويتية أو امتثالا لقانون كويتي`,

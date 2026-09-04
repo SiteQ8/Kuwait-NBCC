@@ -44,6 +44,7 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 | Sequence the work | `nbcc plan entity.json` |
 | Evidence register | `nbcc evidence entity.json` |
 | Starter policy or register | `nbcc draft incident-response --out ir.md` |
+| Checklist for one desk | `nbcc checklist it-operations --out sheet.md` |
 | Only what has gone stale | `nbcc evidence entity.json --stale` |
 | HTML report | `nbcc report entity.json --out report.html` |
 | Arabic HTML report | `nbcc report entity.json --out report.html --ar` |

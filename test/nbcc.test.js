@@ -19,6 +19,7 @@ import { forecast, buildSeries } from '../src/trend.js';
 import { rollUp, renderPortfolioCSV, SYSTEMIC_SHARE } from '../src/portfolio.js';
 import { MESSAGES, count } from '../src/messages.js';
 import { DOCUMENTS, getDocument, renderDraft, validateDocuments, DRAFT_STATS } from '../src/drafts.js';
+import { ROLES, buildChecklist, renderChecklist, validateRoles, CHECKLIST_STATS } from '../src/checklists.js';
 import { buildSite, buildPayload } from '../scripts/build-site.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -1493,6 +1494,77 @@ test('the Arabic catalog listing uses Arabic titles and headings', () => {
   assert.ok(text.includes('الحوكمة والأدوار'));
   assert.ok(!text.includes('Governance & Roles'));
   assert.ok(!text.includes('checks'), 'the English unit label should not appear');
+});
+
+/* ------------------------------------------------------------ checklists */
+
+test('the role split is a partition of the whole baseline', () => {
+  // This is the property that makes the split worth having. Hand each desk its
+  // sheet and between them everything is covered, nothing twice and nothing
+  // dropped. A control owned by nobody is the failure GOV-1 exists to prevent.
+  assert.deepEqual(validateRoles(), []);
+  const owned = ROLES.flatMap((r) => r.controls);
+  assert.equal(owned.length, new Set(owned).size, 'a control is owned twice');
+  assert.equal(owned.length, CONTROLS.length, 'a control is owned by nobody');
+  assert.deepEqual([...owned].sort(), CONTROLS.map((c) => c.id).sort());
+  assert.equal(CHECKLIST_STATS.checks, CATALOG_STATS.checks);
+});
+
+test('a checklist respects scope and the filters', () => {
+  const all = buildChecklist({});
+  assert.equal(all.controls, 44);
+  assert.equal(all.checks, CATALOG_STATS.checks);
+
+  // An entity with no cloud should not be handed the Appendix A sheet.
+  const onPrem = buildChecklist({ profile: { usesCloud: false } });
+  assert.equal(onPrem.controls, 28);
+  assert.ok(!onPrem.sections.some((s) => s.role.id === 'cloud'));
+
+  const phase1 = buildChecklist({ phase: 1 });
+  assert.ok(phase1.controls > 0 && phase1.controls < 44);
+  assert.ok(phase1.sections.every((s) => s.controls.every((c) => c.phase === 1)));
+
+  const gov = buildChecklist({ fn: 'GOV' });
+  assert.ok(gov.sections.every((s) => s.controls.every((c) => c.fn === 'GOV')));
+});
+
+test('a checklist prints a tick box for every check and every artifact', () => {
+  for (const role of ROLES) {
+    const md = renderChecklist({ role: role.id });
+    const built = buildChecklist({ role: role.id });
+    const boxes = (md.match(/- \[ \]/g) || []).length;
+    assert.equal(boxes, built.checks + built.sections[0].evidence,
+      `${role.id} does not offer a box for every check and artifact`);
+    for (const c of built.sections[0].controls) {
+      for (const check of c.checks) assert.ok(md.includes(check), `${role.id} lost a ${c.id} check`);
+    }
+  }
+});
+
+test('a checklist says the role assignment is not the Annex talking', () => {
+  // GOV-1 is the only place the instrument names a role, so an entity must not
+  // read this split as something the regulator prescribed.
+  for (const lang of ['en', 'ar']) {
+    const md = renderChecklist({ role: 'hr', lang });
+    const claim = lang === 'ar' ? 'اجتهاد هذه الأداة' : "this project's own reading";
+    assert.ok(md.includes(claim), `${lang} checklist does not disclaim the assignment`);
+    assert.ok(md.includes('GOV-1'), `${lang} checklist does not cite GOV-1`);
+  }
+  // The national obligation and beyond the Annex markings carry through.
+  assert.ok(renderChecklist({ role: 'hr' }).includes('national obligation'));
+  assert.ok(renderChecklist({ role: 'leadership' }).includes('beyond the Annex'));
+});
+
+test('cli checklist lists the roles and writes a sheet', () => {
+  const list = cli(['checklist']);
+  assert.ok(list.includes('Field checklists'));
+  assert.ok(list.includes('it-operations'));
+  assert.throws(() => cli(['checklist', 'nobody']), (e) => /unknown role/.test(String(e.stderr)));
+  const sheet = cli(['checklist', 'facilities']);
+  assert.ok(sheet.includes('1 control, 8 checks'), 'counts should read naturally at one');
+  const ar = cli(['checklist', 'hr', '--ar']);
+  assert.ok(ar.includes('للموارد البشرية'), 'the preposition must assimilate into the article');
+  assert.ok(ar.includes('ضابطان'), 'two controls takes the dual');
 });
 
 /* -------------------------------------------------- national obligations */
