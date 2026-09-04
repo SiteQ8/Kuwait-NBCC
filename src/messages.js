@@ -81,7 +81,7 @@ export const MESSAGES = {
     implementation: 'Implementation', posture: 'Defensible posture', coverage: 'Coverage',
     scoreLine: (m, p, g, u, e) =>
       `${m} met \u00b7 ${p} partial \u00b7 ${g} gap \u00b7 ${u} unassessed \u00b7 ${e} excepted`,
-    scopeLine: (i, o, k) => `${i} controls in scope, ${o} out of scope, ${k} checks scored`,
+    scopeLine: (i, o, k) => `${i} controls in scope, ${o} out of scope, ${k} checks counting toward the score`,
     byFunction: 'By function', metShort: 'met',
     controlsHead: 'Controls', findingsHead: 'Findings',
     findingsMore: (n) => `and ${n} more, see "nbcc report"`,
@@ -239,7 +239,7 @@ export const MESSAGES = {
     implementation: 'نسبة التطبيق', posture: 'الوضع القابل للإثبات', coverage: 'نسبة التغطية',
     scoreLine: (m, p, g, u, e) =>
       `${m} مستوف \u00b7 ${p} جزئي \u00b7 ${g} فجوة \u00b7 ${u} غير مقيم \u00b7 ${e} مستثنى`,
-    scopeLine: (i, o, k) => `${count(i, 'control')} ضمن النطاق، و${o} خارجه، و${count(k, 'check')} مقيسا`,
+    scopeLine: (i, o, k) => `${count(i, 'control')} ضمن النطاق، و${o} خارجه، و${count(k, 'check')} محسوبا في النتيجة`,
     byFunction: 'بحسب الوظيفة', metShort: 'مستوف',
     controlsHead: 'الضوابط', findingsHead: 'الملاحظات',
     findingsMore: (n) => `و${n} أخرى، انظر "nbcc report"`,

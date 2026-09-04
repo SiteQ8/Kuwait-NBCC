@@ -569,6 +569,51 @@ test('no command crashes on a malformed assessment file', () => {
   }
 });
 
+test('the score is what it claims to be', () => {
+  // The heart of the tool, checked against hand computed cases rather than
+  // against itself. A wrong score makes everything above it decoration.
+  const P = { usesCloud: false, hasPublicAccounts: false };
+  const inScope = CONTROLS.filter((c) => (c.appliesWhen || []).every((f) => P[f] === true));
+  const fill = (c, v) => ({ checks: Array(c.checks.length).fill(v) });
+  const all = (v) => Object.fromEntries(inScope.map((c) => [c.id, fill(c, v)]));
+  const run = (controls) => assess({ profile: P, assessmentDate: '2026-09-01', controls }).scores;
+
+  assert.equal(run(all('met')).implementation, 100);
+  assert.equal(run(all('gap')).implementation, 0);
+  assert.equal(run(all('partial')).implementation, 50, 'a partial is worth half');
+  assert.equal(run(all('na')).scoredChecks, 0, 'not applicable leaves the denominator');
+  assert.equal(run({}).coverage, 0, 'nothing answered is nothing covered');
+
+  // An exception raises the defensible posture and never the implementation,
+  // which is the distinction Article 4 turns on.
+  const ex = (e) => run({ 'GOV-1': { status: 'exception', exception: e } });
+  const valid = ex({ reason: 'r', riskAccepted: true, expiry: '2027-01-01' });
+  assert.equal(valid.implementation, 0, 'an exception must never raise implementation');
+  assert.ok(valid.posture > 0, 'a valid exception should raise posture');
+  assert.equal(ex({ reason: 'r', riskAccepted: true, expiry: '2026-01-01' }).posture, 0,
+    'an expired exception shelters nothing');
+  assert.equal(ex({ reason: 'r', expiry: '2027-01-01' }).posture, 0,
+    'an exception with no recorded risk acceptance shelters nothing');
+
+  // Scope changes the denominator rather than adding failures.
+  const cloud = assess({ profile: { usesCloud: true, hasPublicAccounts: false },
+    assessmentDate: '2026-09-01', controls: {} }).scores;
+  const onPrem = run({});
+  assert.equal(cloud.controlsInScope - onPrem.controlsInScope, 16, 'the cloud appendix is 16 controls');
+  assert.ok(cloud.scoredChecks > onPrem.scoredChecks);
+});
+
+test('the score denominator is not described as work already done', () => {
+  // scoredChecks is the denominator, so on an untouched assessment the old
+  // wording announced that 263 checks had been scored when none were answered.
+  const empty = cli(['assess', resolve(root, 'templates/example-assessment.json'), '--date', '2026-09-03']);
+  assert.ok(!empty.includes('checks scored'), 'the label reads as work already done');
+  assert.ok(empty.includes('counting toward the score'));
+  const ar = cli(['assess', resolve(root, 'templates/example-assessment.json'), '--date', '2026-09-03', '--ar']);
+  assert.ok(!ar.includes('مقيسا'));
+  assert.ok(ar.includes('محسوبا في النتيجة'));
+});
+
 test('a file without a name is labelled in the reader language', () => {
   // The engine used to invent the words "Unnamed entity", which then printed
   // in English in the middle of an Arabic report.

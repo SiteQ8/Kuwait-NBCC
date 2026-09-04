@@ -71,6 +71,8 @@ Article 6 makes the English Annex authoritative, so the Arabic requirement is la
 
 Cloud controls fall out of scope automatically for an entity that runs none.
 
+The arithmetic is checked against hand computed cases rather than against itself: every check met is 100, every check a gap is 0, a partial is worth half, a control marked not applicable leaves the denominator rather than scoring zero, a valid exception raises the defensible posture and never the implementation, an expired one shelters nothing, and turning the cloud appendix on moves the denominator by exactly 16 controls.
+
 ## Two scores, because Article 4 gives you two positions
 
 Most compliance tools report one number. That number cannot answer the question a regulator actually asks.
@@ -334,7 +336,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 164 tests
+node --test test/*.test.js     # 166 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 
