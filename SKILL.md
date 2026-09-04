@@ -37,6 +37,7 @@ Decision No. 2 of 2026 of the National Cyber Security Center, published 5 April 
 | Anything in Arabic | add `--ar` to any command |
 | Find controls by text | `nbcc search MFA` |
 | Map onto another framework | `nbcc crosswalk --to cis` |
+| What no certification covers | `nbcc national` |
 | Time remaining | `nbcc deadline` |
 | Start an assessment | `nbcc init --out entity.json` |
 | Score it | `nbcc assess entity.json` |
@@ -115,6 +116,10 @@ Scope is respected, so an entity running no cloud shrinks the denominator on App
 ## Checks that go beyond the Annex
 
 Nine checks ask for more than the requirement states and are marked `beyond the Annex` in every output. When reporting a gap on one of them, say so: the entity is not failing the regulation, it is failing a practice this toolkit recommends. The nine sit in GOV-1, CLD-1, CLD-2, CLD-4, CLD-5, CLD-6, CLD-9, CLD-13 and CLD-14.
+
+## When an entity says it is already certified
+
+Every NBCC control maps to ISO 27001, CIS and NIST CSF, so a crosswalk alone implies an existing certification covers the baseline. Nine controls require an act toward a Kuwaiti authority or compliance with Kuwaiti law, and no standard discharges those. Run `nbcc national` and report them, because they are the part of the position an ISO certified entity is most likely to have missed.
 
 ## Cautions
 

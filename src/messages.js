@@ -164,6 +164,11 @@ export const MESSAGES = {
     beyond: 'beyond the Annex',
     beyondNote: 'Marked checks are sound practice this toolkit adds. The Annex does not state them.',
 
+    nationalHead: 'National obligations',
+    nationalSub: (n) => `${n} controls require an act toward a Kuwaiti authority or compliance with Kuwaiti law`,
+    nationalNote: 'No international certification discharges these. An entity holding ISO 27001 or running CIS IG1 still has to do them.',
+    nationalTag: 'national obligation',
+
     // drafts
     draftHead: 'Starter documents',
     draftSub: (n, c) => `${n} documents covering ${c} controls, clauses generated from the checks`,
@@ -299,6 +304,11 @@ export const MESSAGES = {
     checksUnit: 'بندا',
     beyond: 'زائد على الملحق',
     beyondNote: 'البنود الموسومة ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
+
+    nationalHead: 'الالتزامات الوطنية',
+    nationalSub: (n) => `${n} ضوابط تستلزم فعلا تجاه جهة كويتية أو امتثالا لقانون كويتي`,
+    nationalNote: 'لا تغني عنها أي شهادة دولية، فالجهة الحاصلة على الأيزو 27001 أو المطبقة لضوابط CIS تظل ملزمة بها.',
+    nationalTag: 'التزام وطني',
 
     draftHead: 'الوثائق المبدئية',
     draftSub: (n, c) => `${n} وثيقة تغطي ${c} ضابطا، وبنودها مولدة من بنود التحقق`,

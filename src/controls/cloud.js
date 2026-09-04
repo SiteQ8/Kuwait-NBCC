@@ -31,6 +31,10 @@ export const CLOUD = [
         requirementAr:
       'يجب على الجهات التأكد من أن مزود الخدمة السحابية مرخص له بالعمل في دولة الكويت وفقا للوائح الصادرة عن الجهات الوطنية المختصة',
 beyondAnnex: [2],
+nationalObligation: {
+  en: 'The cloud provider must be licensed to operate in the State of Kuwait under the relevant national authorities.',
+  ar: 'يجب أن يكون مزود الخدمة السحابية مرخصا له بالعمل في دولة الكويت وفق الجهات الوطنية المختصة.'
+},
 checks: [
       'Every cloud service provider in use is authorized to operate in the State of Kuwait.',
       'Authorization is verified against regulations issued by the relevant national authorities.',
@@ -422,6 +426,10 @@ checks: [
       'All data at rest in the cloud MUST be encrypted. Entities SHOULD utilize the CSP\u2019s default encryption (platform-managed keys) as a minimum standard. For Sensitive data, Entities MAY opt for Customer-Managed Encryption Keys (CMEK) on cloud, based on a risk assessment. In accordance with Decision (1) of 2025.',
         requirementAr:
       'يجب تشفير جميع البيانات المحفوظة في السحابة، وينبغي أن تستخدم الجهات التشفير الافتراضي لدى مزود الخدمة السحابية أي المفاتيح المدارة من المنصة بوصفه حدا أدنى، أما البيانات الحساسة فيجوز أن تختار الجهات لها مفاتيح تشفير يديرها العميل في السحابة بناء على تقييم للمخاطر، وذلك وفقا للقرار رقم 1 لسنة 2025.',
+nationalObligation: {
+  en: 'Key management for sensitive data follows Decision No. 1 of 2025.',
+  ar: 'تتبع إدارة مفاتيح البيانات الحساسة القرار رقم 1 لسنة 2025.'
+},
 checks: [
       'All data at rest in the cloud is encrypted.',
       'Platform managed keys are used at minimum.',
@@ -462,6 +470,10 @@ checks: [
       'The Entity MUST configure cloud services and related contracts to store and process Customer Content (files, databases, application data) according to the National Data Classification Framework (Decision No. 1 of 2025).',
         requirementAr:
       'يجب على الجهة تهيئة الخدمات السحابية والعقود المرتبطة بها لحفظ محتوى العميل، أي الملفات وقواعد البيانات وبيانات التطبيقات، ومعالجته وفقا للإطار الوطني لتصنيف البيانات الصادر بالقرار رقم 1 لسنة 2025.',
+nationalObligation: {
+  en: 'Customer Content must be stored and processed in accordance with the National Data Classification Framework.',
+  ar: 'يجب حفظ محتوى العميل ومعالجته وفقا للإطار الوطني لتصنيف البيانات.'
+},
 checks: [
       'Cloud services are configured to store Customer Content in line with the National Data Classification Framework.',
       'Cloud services are configured to process Customer Content in line with that framework.',

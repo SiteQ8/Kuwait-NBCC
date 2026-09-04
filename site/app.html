@@ -192,6 +192,10 @@ body.working .hero{display:none}
 .evfields input{font:inherit; font-size:.85rem; padding:6px 9px; border:1px solid var(--line-2); border-radius:6px; background:var(--paper); color:var(--ink); width:100%}
 .evfields input:focus{outline:2px solid var(--green); outline-offset:-1px}
 @media(max-width:640px){.evfields{grid-template-columns:1fr}}
+.natl{margin:0 0 13px; padding:9px 12px; border-inline-start:3px solid var(--green);
+  background:rgba(5,104,57,.055); font-size:.89rem; line-height:1.6; border-radius:0 3px 3px 0}
+.natl b{color:var(--green)}
+[dir=rtl] .natl{border-radius:3px 0 0 3px}
 .reqp{display:block}
 .reqp + .reqp{margin-top:7px}
 .unofficial{font-weight:500; font-size:.73rem; border:1px solid var(--rule-2); border-radius:3px; padding:1px 6px; color:var(--slate); margin-inline-start:7px}
@@ -760,6 +764,7 @@ const STR = {
     searchBaseline:'Search controls', searchBaselineA:'Search the baseline',
     searchCw:'Search a control or a framework reference', searchCwA:'Search the crosswalk',
     reqL:'Minimum requirement', checksL:'Checks', evidenceL:'Evidence to retain',
+    nationalTag:'National obligation.',
     beyond:'beyond the Annex',
     beyondNote:'Sound practice this toolkit adds. The Annex does not state it.',
     edmark:'summary', edmarkT:'Appendix A prints no Purpose column, so this summary is not Annex text.',
@@ -816,6 +821,7 @@ const STR = {
     searchBaseline:'ابحث في الضوابط', searchBaselineA:'البحث في الضوابط',
     searchCw:'ابحث عن ضابط أو مرجع في إطار آخر', searchCwA:'البحث في المواءمة',
     reqL:'الحد الأدنى المطلوب', checksL:'بنود التحقق', evidenceL:'الأدلة الواجب حفظها',
+    nationalTag:'التزام وطني.',
     beyond:'زائد على الملحق',
     beyondNote:'ممارسة سليمة تضيفها الأداة، ولا ينص عليها الملحق.',
     edmark:'تلخيص', edmarkT:'لا يتضمن الملحق الأول عمود الغرض، لذا فهذا التلخيص ليس من نص الملحق.',
@@ -959,6 +965,15 @@ function ltx(){ return lang === 'ar' ? '' : ' ltx'; }
  * adds, and an assessor arguing a position with NCSC has to be able to tell it
  * from a check that restates the requirement.
  */
+/*
+ * An obligation owed to a Kuwaiti authority is not discharged by holding an
+ * international certification, so it is called out where the control is read.
+ */
+function nationalHTML(c){
+  if (!c.nationalObligation) return '';
+  return `<p class="natl"><b>${esc(t('nationalTag'))}</b> ${esc(lang === 'ar' ? c.nationalObligation.ar : c.nationalObligation.en)}</p>`;
+}
+
 function beyondMark(c, i){
   return (c.beyondAnnex || []).includes(i)
     ? ` <span class="edmark" title="${esc(t('beyondNote'))}">${esc(t('beyond'))}</span>` : '';
@@ -1026,6 +1041,7 @@ function controlCard(c, open){
     </summary>
     <div class="body">
       <p class="muted" style="margin:0 0 13px">${purposeHTML(c)}</p>
+      ${nationalHTML(c)}
       <div class="req">${reqHTML(c)}</div>
       <h3 style="margin:0 0 7px; font-size:.95rem">${t('checksL')}</h3>
       <ul class="klist${ltx()}">${kchecks(c).map((k,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')}</span><span>${esc(k)}${beyondMark(c,i)}</span></li>`).join('')}</ul>

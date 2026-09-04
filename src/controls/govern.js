@@ -146,6 +146,10 @@ checks: [
       'Implement a data classification program aligned with the National Data Classification Framework, using at least Sensitive, Restricted, and Public categories, with clear criteria and examples. Issue a Data Classification Policy/Document approved by senior management and submitted to NCSC for approval, in accordance with Decision No. 1 of 2025. Tag or label data (and related systems/records) with its classification and ensure protection measures increase with sensitivity (for example: stronger access controls and encryption for Sensitive data). Storing or processing Sensitive data outside Kuwait MUST follow the national approval process and receive explicit NCSC approval before use (per applicable regulations).',
         requirementAr:
       'تطبق الجهة برنامجا لتصنيف البيانات موائما للإطار الوطني لتصنيف البيانات يستخدم فئات حساس ومقيد وعام على الأقل بمعايير وأمثلة واضحة، وتصدر سياسة أو وثيقة لتصنيف البيانات معتمدة من الإدارة العليا ومرفوعة إلى المركز لاعتمادها وفقا للقرار رقم 1 لسنة 2025، ثم توسم البيانات والأنظمة والسجلات المرتبطة بها بتصنيفها وتضمن تصاعد تدابير الحماية مع درجة الحساسية، ومن ذلك مثلا ضوابط وصول وتشفير أقوى للبيانات الحساسة، أما حفظ البيانات الحساسة أو معالجتها خارج الكويت فيجب أن يتبع آلية الاعتماد الوطنية وأن يحصل على موافقة صريحة من المركز قبل الاستخدام وفق اللوائح المعمول بها.',
+nationalObligation: {
+  en: 'Alignment with the National Data Classification Framework, and submission of the classification document to NCSC under Decision No. 1 of 2025.',
+  ar: 'الموائمة مع الإطار الوطني لتصنيف البيانات، ورفع وثيقة التصنيف إلى المركز وفق القرار رقم 1 لسنة 2025.'
+},
 checks: [
       'A data classification program is implemented and aligned with the National Data Classification Framework.',
       'The scheme uses at least the Sensitive, Restricted and Public categories.',
@@ -202,6 +206,10 @@ checks: [
       'For key cybersecurity roles (e.g., SOC analysts, administrators, incident responders), prioritize qualified Kuwaiti nationals where feasible and consistent with national HR frameworks and local laws and regulations. For staff in such sensitive roles, perform basic pre-employment screening (e.g., identity verification, employment history, conflict-of-interest checks) in line with applicable laws and HR policies. Maintain a simple list of designated "sensitive cyber roles" and ensure screening is documented.',
         requirementAr:
       'في الأدوار السيبرانية الرئيسية، ومنها مثلا محللو مركز العمليات الأمنية ومسؤولو الأنظمة والمستجيبون للحوادث، تعطى الأولوية للكوادر الكويتية المؤهلة متى كان ذلك ممكنا وبما يتسق مع أطر الموارد البشرية الوطنية والقوانين واللوائح المحلية، ويجرى للعاملين في هذه الأدوار الحساسة مسح أمني أساسي قبل التعيين يشمل مثلا التحقق من الهوية والتاريخ الوظيفي وتعارض المصالح بما يتفق مع القوانين وسياسات الموارد البشرية السارية، كما تحفظ قائمة مبسطة بالأدوار السيبرانية الحساسة المحددة مع توثيق عمليات المسح الأمني.',
+nationalObligation: {
+  en: 'Prioritisation of Kuwaiti nationals in key cyber roles, consistent with national HR frameworks and local law.',
+  ar: 'إعطاء الأولوية للكوادر الكويتية في الأدوار السيبرانية الرئيسية بما يتسق مع أطر الموارد البشرية الوطنية والقوانين المحلية.'
+},
 checks: [
       'Qualified Kuwaiti nationals are prioritized for key cybersecurity roles where feasible.',
       'The prioritization approach is consistent with national HR frameworks and local law.',
@@ -250,6 +258,10 @@ checks: [
       'At least once per year, complete a self-assessment against this baseline using an NCSC-issued or NCSC-approved checklist. Document the results, key gaps, actions, and target dates. Retain the record for at least three years and make it available to NCSC upon request. Use major incidents or audits to update priorities.',
         requirementAr:
       'تستكمل الجهة مرة واحدة سنويا على الأقل تقييما ذاتيا مقابل هذه الضوابط باستخدام قائمة تحقق صادرة عن المركز أو معتمدة منه، وتوثق النتائج والفجوات الرئيسية والإجراءات والتواريخ المستهدفة، ثم تحفظ السجل ثلاث سنوات على الأقل وتتيحه للمركز عند الطلب، وتستفيد من الحوادث الكبرى وعمليات التدقيق في تحديث الأولويات.',
+nationalObligation: {
+  en: 'The self assessment uses a checklist issued or accepted by NCSC, and the record is produced for NCSC on request.',
+  ar: 'يستخدم التقييم الذاتي قائمة تحقق صادرة عن المركز أو معتمدة منه، ويقدم السجل للمركز عند الطلب.'
+},
 checks: [
       'A self assessment against the baseline is completed at least once per year.',
       'The self assessment uses an NCSC issued or NCSC approved checklist.',

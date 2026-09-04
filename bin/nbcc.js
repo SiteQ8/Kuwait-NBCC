@@ -768,6 +768,24 @@ function cmdDiff(positional, flags) {
   if (!d.changes.length) out(`\n${C.dim}No control changed state between the two assessments.${C.reset}`);
 }
 
+function cmdNational(flags) {
+  const rows = CONTROLS.filter((c) => c.nationalObligation);
+  if (flags.json) return out(JSON.stringify(rows.map((c) => ({
+    id: c.id, title: c.title, titleAr: c.titleAr, obligation: c.nationalObligation
+  })), null, 2));
+
+  out(`${C.bold}${m('nationalHead')}${C.reset}`);
+  out(`${C.dim}${m('nationalSub', rows.length)}${C.reset}\n`);
+  out(`${C.dim}${m('nationalNote')}${C.reset}\n`);
+  for (const c of rows) {
+    out(`${C.bold}${pad(c.id, 9)}${C.reset} ${cl(c, 'title')}`);
+    for (const l of wrap(arabic() ? c.nationalObligation.ar : c.nationalObligation.en, 74)) {
+      out(`  ${C.dim}${l}${C.reset}`);
+    }
+    out('');
+  }
+}
+
 function cmdDraft(positional, flags) {
   const id = positional[0];
   const lang = flags.ar ? 'ar' : 'en';
@@ -857,6 +875,9 @@ function main() {
       return cmdTrend(positional, flags);
     case 'diff':
       return cmdDiff(positional, flags);
+    case 'national':
+    case 'obligations':
+      return cmdNational(flags);
     case 'draft':
     case 'drafts':
       return cmdDraft(positional, flags);

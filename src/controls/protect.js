@@ -605,6 +605,10 @@ checks: [
       'Implement regular, automated backups for critical systems and data, with priority to Sensitive and Restricted data. Store backups in at least one separate location (for example, a separate network segment, storage system, or cloud account). Protect backup data from unauthorized access and tampering (e.g., access controls, encryption). Test restoration of backups for key systems at least annually. Define and apply retention periods and secure disposal procedures aligned with legal requirements and the National Data Classification Framework, ensuring Sensitive data is securely erased or destroyed when no longer needed. For Sensitive data, if backups involve storage outside Kuwait (such as cloud backups), obtain any required approvals in line with data sovereignty requirements.',
         requirementAr:
       'تنفذ الجهة نسخا احتياطية آلية منتظمة للأنظمة والبيانات الحرجة مع إعطاء الأولوية للبيانات الحساسة والمقيدة، وتحفظ النسخ في موقع منفصل واحد على الأقل كمقطع شبكي مستقل أو نظام تخزين آخر أو حساب سحابي، وتحمي بيانات النسخ الاحتياطي من الوصول غير المصرح به ومن العبث بضوابط الوصول والتشفير، وتختبر استعادة النسخ للأنظمة الرئيسية سنويا على الأقل، وتحدد وتطبق مدد الحفظ وإجراءات الإتلاف الآمن بما يتوافق مع المتطلبات القانونية ومع الإطار الوطني لتصنيف البيانات وبما يضمن محو البيانات الحساسة أو إتلافها بصورة آمنة عند انتفاء الحاجة إليها، أما البيانات الحساسة فإذا انطوت نسخها الاحتياطية على حفظ خارج الكويت كالنسخ السحابية وجب الحصول على أي موافقات مطلوبة وفق متطلبات سيادة البيانات.',
+nationalObligation: {
+  en: 'Retention and disposal follow the National Data Classification Framework, and sensitive backups held outside Kuwait need the required approvals.',
+  ar: 'يتبع الحفظ والإتلاف الإطار الوطني لتصنيف البيانات، وتحتاج النسخ الاحتياطية الحساسة المحفوظة خارج الكويت إلى الموافقات المطلوبة.'
+},
 checks: [
       'Regular automated backups run for critical systems and data.',
       'Sensitive and Restricted data receive backup priority.',

@@ -154,6 +154,7 @@ Produce artifacts
   report <file> --out x.html [--ar]  Self contained HTML report
   export <file> --as md|csv|json|register
   draft [<id>] --out x.md       Starter policy or register, clauses from the checks
+  national                      Controls no international certification discharges
   doctor                        Verify catalog integrity
 ```
 
@@ -235,6 +236,18 @@ Three phases divide the statutory window:
 | Engineer | 2027-05-05 | The technical work that needs design, budget and change windows |
 | Evidence | 2027-10-05 | Prove the baseline works and assemble the pack |
 
+## Nine controls no certification can discharge
+
+Every one of the 44 maps to ISO 27001, CIS and NIST CSF, so a crosswalk on its own would tell an entity that its existing certification covers the whole baseline. It does not.
+
+```bash
+nbcc national
+```
+
+Nine controls require an act toward a Kuwaiti authority or compliance with Kuwaiti law: alignment with the National Data Classification Framework and submission to NCSC under Decision No. 1 of 2025 (GOV-3, PR-5, CLD-11, CLD-12), prioritisation of Kuwaiti nationals in key cyber roles (GOV-4), a self assessment on a checklist NCSC issues or accepts (GOV-5), incident notification to NCSC and triage of its notifications (RS-1, RS-2), and a cloud provider licensed to operate in the State of Kuwait (CLD-1).
+
+An entity holding ISO 27001 still has all nine in front of it. Each is called out where the control is read, not only in its own command, and a test checks the marking against the requirement text rather than trusting the label.
+
 ## Crosswalk
 
 Annex Section 1 aligns the NBCC with **NIST CSF 2.0** and **CIS Controls v8.1 IG1**, and both mappings are reproduced here. An **ISO 27001:2022 Annex A** column is added as a convenience for entities already certified. That third mapping is this project's own reading and is flagged as unofficial everywhere it appears.
@@ -279,7 +292,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 150 tests
+node --test test/*.test.js     # 153 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

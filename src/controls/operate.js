@@ -124,6 +124,10 @@ export const RESPOND = [
       'Establish and communicate a simple incident reporting process so that staff know how to report suspected incidents (for example, phishing, data loss, or system compromise). Appoint one person as the incident response lead and at least one backup to coordinate incident handling, even if external service providers are used. Maintain up-to-date contact details for the incident lead, backup, relevant service providers, and NCSC. Where an actual or suspected cybersecurity incident or threat may be reportable under NCSC-issued incident management or reporting guidance, the Entity MUST notify NCSC promptly through the official channels and within the applicable timelines set by NCSC. Where appropriate, the Entity MUST use out-of-band communication channels during active incidents or where normal channels may be affected. The Entity MUST provide follow-up updates and information as required by applicable NCSC reporting guidance.',
         requirementAr:
       'تنشئ الجهة آلية مبسطة للإبلاغ عن الحوادث وتعممها بحيث يعرف الموظفون كيف يبلغون عن الحوادث المشتبه بها، ومنها مثلا التصيد أو فقد البيانات أو اختراق الأنظمة، وتعين شخصا واحدا مسؤولا عن الاستجابة للحوادث وبديلا واحدا على الأقل لتنسيق التعامل معها حتى مع الاستعانة بمزودي خدمة خارجيين، وتحفظ بيانات اتصال محدثة للمسؤول وبديله ولمزودي الخدمة المعنيين وللمركز، وحيثما كان الحادث أو التهديد السيبراني القائم أو المشتبه به مما يجب الإبلاغ عنه بموجب إرشادات المركز في إدارة الحوادث أو الإبلاغ عنها، وجب على الجهة إخطار المركز فورا عبر القنوات الرسمية وضمن المهل التي يحددها، وعند الاقتضاء يجب على الجهة استخدام قنوات اتصال بديلة أثناء الحوادث النشطة أو حين تتأثر القنوات المعتادة، كما يجب عليها تقديم التحديثات والمعلومات اللاحقة وفق إرشادات الإبلاغ المعمول بها لدى المركز.',
+nationalObligation: {
+  en: 'Reportable incidents must be notified to NCSC through official channels and within the timeframes it sets.',
+  ar: 'يجب إخطار المركز بالحوادث الواجب الإبلاغ عنها عبر القنوات الرسمية وضمن المهل التي يحددها.'
+},
 checks: [
       'A simple incident reporting process is established.',
       'The reporting process is communicated so staff know how to report suspected incidents.',
@@ -184,6 +188,10 @@ checks: [
       'Maintain a short written incident response procedure that covers: initial triage, containment, communication, evidence preservation, recovery, and reporting/escalation (including when and how to notify NCSC and other regulators or law enforcement). When NCSC or another competent authority notifies the entity of a potential incident, promptly triage and investigate, take reasonable remedial actions, and provide feedback where requested. After significant incidents, perform a brief lessons-learned review and record key improvements to be implemented, and share relevant lessons learned with NCSC or sector authorities where appropriate.',
         requirementAr:
       'تحفظ الجهة إجراء مكتوبا موجزا للاستجابة للحوادث يغطي الفرز الأولي والاحتواء والتواصل وحفظ الأدلة والتعافي والإبلاغ والتصعيد بما في ذلك متى وكيف يخطر المركز وسائر الجهات الرقابية أو جهات إنفاذ القانون، وحين يخطر المركز أو جهة مختصة أخرى الجهة بحادث محتمل، تفرزه وتحقق فيه فورا وتتخذ إجراءات معالجة معقولة وتقدم تغذية راجعة عند طلبها، وبعد الحوادث الجوهرية تجري مراجعة موجزة للدروس المستفادة وتسجل التحسينات الرئيسية الواجب تنفيذها وتشارك الدروس ذات الصلة مع المركز أو جهات القطاع عند الاقتضاء.',
+nationalObligation: {
+  en: 'Notifications from NCSC must be triaged and investigated, with feedback provided when requested.',
+  ar: 'يجب فرز إخطارات المركز والتحقيق فيها وتقديم تغذية راجعة عند طلبها.'
+},
 checks: [
       'A written incident response procedure exists.',
       'The procedure covers initial triage.',

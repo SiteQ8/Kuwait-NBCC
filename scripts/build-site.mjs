@@ -33,6 +33,7 @@ export function buildPayload() {
       requirementAr: c.requirementAr,
       checks: c.checks,
       beyondAnnex: c.beyondAnnex || [],
+      nationalObligation: c.nationalObligation || null,
       checksAr: c.checksAr,
       evidence: c.evidence,
       evidenceAr: c.evidenceAr,

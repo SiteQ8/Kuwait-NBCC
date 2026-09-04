@@ -1495,6 +1495,44 @@ test('the Arabic catalog listing uses Arabic titles and headings', () => {
   assert.ok(!text.includes('checks'), 'the English unit label should not appear');
 });
 
+/* -------------------------------------------------- national obligations */
+
+test('controls owed to a Kuwaiti authority are marked as such', () => {
+  // Every one of the 44 maps to ISO, CIS and NIST, so a crosswalk alone would
+  // tell an entity that its certification covers everything. It does not. Nine
+  // controls require an act toward the State that no standard discharges.
+  const marked = CONTROLS.filter((c) => c.nationalObligation);
+  assert.equal(marked.length, 9);
+  assert.equal(CATALOG_STATS.nationalObligations, 9);
+  assert.deepEqual(marked.map((c) => c.id),
+    ['GOV-3', 'GOV-4', 'GOV-5', 'PR-5', 'RS-1', 'RS-2', 'CLD-1', 'CLD-11', 'CLD-12']);
+  for (const c of marked) {
+    assert.ok(c.nationalObligation.en, `${c.id} has no reason in English`);
+    assert.ok(/[\u0600-\u06FF]/.test(c.nationalObligation.ar), `${c.id} has no reason in Arabic`);
+  }
+});
+
+test('a marked control actually names a Kuwaiti authority or instrument', () => {
+  // The marking has to be checkable against the requirement, not asserted.
+  const NATIONAL = /NCSC|Kuwait|national authorities|National Data Classification|Decision \(1\)|Decision No\./i;
+  for (const c of CONTROLS.filter((x) => x.nationalObligation)) {
+    assert.ok(NATIONAL.test(c.requirement),
+      `${c.id} is marked national but its requirement names no Kuwaiti authority`);
+  }
+});
+
+test('the national obligation reaches the reader, not just its own command', () => {
+  const site = buildSite();
+  assert.ok(site.includes('nationalObligation'), 'the payload must carry it');
+  assert.ok(site.includes('nationalHTML'), 'the workbench must render it');
+  const shown = execFileSync(process.execPath, [CLI, 'national'], { encoding: 'utf8' });
+  assert.ok(shown.includes('National obligations'));
+  assert.ok(shown.includes('GOV-4'));
+  assert.ok(shown.includes('No international certification discharges these'));
+  const ar = execFileSync(process.execPath, [CLI, 'national', '--ar'], { encoding: 'utf8' });
+  assert.ok(ar.includes('الالتزامات الوطنية'));
+});
+
 /* ------------------------------------------------------ starter drafts */
 
 test('every policy GOV-2 names by hand has a draft behind it', () => {

@@ -125,6 +125,14 @@ export function validateCatalog() {
     if (!Array.isArray(c.evidence) || c.evidence.length === 0) {
       problems.push(`${where} has no evidence items.`);
     }
+    // A national obligation is the reason an international certification does
+    // not discharge the control, so it has to say what that reason is.
+    if (c.nationalObligation !== undefined) {
+      const n = c.nationalObligation;
+      if (!n || typeof n !== 'object' || !n.en || !n.ar) {
+        problems.push(`${where} has a nationalObligation without both languages.`);
+      }
+    }
     // A beyondAnnex entry has to point at a check that exists, or the marker
     // would attach to the wrong statement or to nothing.
     if (c.beyondAnnex !== undefined) {
@@ -167,6 +175,7 @@ export const CATALOG_STATS = Object.freeze({
   controls: CONTROLS.length,
   checks: CONTROLS.reduce((n, c) => n + c.checks.length, 0),
   checksBeyondAnnex: CONTROLS.reduce((n, c) => n + (c.beyondAnnex || []).length, 0),
+  nationalObligations: CONTROLS.filter((c) => c.nationalObligation).length,
   translatedStrings: CONTROLS.reduce(
     (n, c) => n + c.checksAr.length + c.evidenceAr.length + 2, 0
   ),
