@@ -1620,6 +1620,50 @@ test('the type scale is a scale, not a drift', () => {
   const spacing = [...new Set(css.match(/letter-spacing:\s*-?\.?[\d.]+em/g) || [])];
   assert.deepEqual(spacing, [], `raw letter-spacing outside the scale: ${spacing.join(', ')}`);
   assert.ok(/--t-xs\s*:/.test(css) && /--t-3xl\s*:/.test(css), 'the scale tokens are missing');
+
+  // Spacing had thirty one values across two hundred and thirty three uses,
+  // including 11, 13, 17, 26, 34, 46 and 62. Those are not decisions.
+  const props = '(?:margin|padding|gap|row-gap|column-gap|margin-top|margin-bottom'
+    + '|margin-left|margin-right|margin-inline|margin-inline-start|margin-inline-end'
+    + '|padding-top|padding-bottom|padding-left|padding-right|padding-inline'
+    + '|padding-inline-start|padding-inline-end)';
+  const loose = new Set();
+  for (const m of css.matchAll(new RegExp(`\\b${props}\\s*:\\s*([^;{}]+)`, 'g'))) {
+    for (const n of m[1].match(/(?<![\d.])\d{1,2}px/g) || []) loose.add(n);
+  }
+  assert.deepEqual([...loose], [], `spacing values outside the scale: ${[...loose].join(', ')}`);
+  assert.ok(/--s-1\s*:/.test(css) && /--s-12\s*:/.test(css), 'the spacing tokens are missing');
+});
+
+test('the measure is drawn at the width it occupies', () => {
+  // The labels keep their real size only if the viewBox matches the rendered
+  // width. One measurement at render time was not enough: a language switch
+  // re-renders the hero before the new direction has laid out, clientWidth
+  // comes back zero, the 900 fallback applies, and the axis draws at a third
+  // of scale with labels nobody can read. That shipped in Arabic on a phone.
+  const site = buildSite();
+  assert.ok(/new ResizeObserver\(/.test(site),
+    'the measure must redraw when its box changes, not once at render');
+  assert.ok(/function paintAxis\(/.test(site) && /watchAxis\(\)/.test(site));
+  assert.ok(!/scaleSVG\(900,/.test(site), 'the measure should never be hard coded to 900');
+});
+
+test('the phone shows the window on the first screen', () => {
+  // The hero was 708px of an 844px viewport, so the window, which is the whole
+  // design, sat below the fold and the first impression was a wall of text.
+  // On a phone the window comes before the lede and the citation sheds the
+  // gazette issue, which costs a line the headline needs more.
+  const css = buildSite().match(/<style>([\s\S]*?)<\/style>/)[1];
+  const phone = css.slice(css.indexOf('@media(max-width:640px)'));
+  assert.ok(/\.hero \.head\{display:contents\}/.test(phone),
+    'the headline and lede must unwrap so the window can sit between them');
+  assert.ok(/\.hero \.window\{order:2/.test(phone) && /\.hero \.lede\{order:3/.test(phone),
+    'the window must come before the lede on a phone');
+  assert.ok(/\.hero \.kick \.issue\{display:none\}/.test(phone),
+    'the gazette issue should not cost a line in the citation on a phone');
+  // Six tabs do not fit on a phone, so the overflow has to be visible.
+  assert.ok(/mask-image:linear-gradient/.test(phone), 'the tab overflow has no fade');
+  assert.ok(/min-height:44px/.test(css), 'tab targets must reach 44px');
 });
 
 test('the function colours carry the structure of the instrument', () => {
