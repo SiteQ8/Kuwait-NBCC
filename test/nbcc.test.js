@@ -1586,8 +1586,77 @@ test('Arabic gets Arabic typography, not Latin typography flipped', () => {
       `${name} gives Arabic the same leading as Latin`);
   }
   // And the Latin default must stay negative, since that is correct for Latin.
-  assert.ok(/h1,h2,h3,h4\{[^}]*letter-spacing:-\.0/.test(buildSite()),
-    'the Latin headings should keep their tracking');
+  // Tracking is a token now, so the rule is followed to the token rather than
+  // matched as a literal, and the token itself has to be a negative em.
+  const site = buildSite();
+  const head = site.match(/h1,h2,h3,h4\{[^}]*letter-spacing:\s*var\(--(ls-[a-z]+)\)/);
+  assert.ok(head, 'the Latin headings should set tracking from the scale');
+  const token = site.match(new RegExp(`--${head[1]}\\s*:\\s*(-?\\.?[\\d.]+)em`));
+  assert.ok(token && parseFloat(token[1]) < 0,
+    `--${head[1]} should be negative for Latin, got ${token && token[1]}`);
+});
+
+test('no control in the workbench renders the word undefined', () => {
+  // The bulk marking buttons destructured a three element shape from a two
+  // element one, so in Arabic all five printed the string undefined. Nothing
+  // in the shipped page should carry that word as visible text.
+  const site = buildSite();
+  const script = site.slice(site.indexOf('<script>'), site.lastIndexOf('</script>'));
+  assert.ok(!/>\$\{lang==='ar'\?ar:en\}</.test(script),
+    'a template still reads a language field that the data does not carry');
+  // segs is a pair of value and label, so nothing may destructure three.
+  const segUse = [...script.matchAll(/segs\.map\(\(\[([^\]]*)\]\)/g)].map((m) => m[1].split(',').length);
+  for (const n of segUse) assert.equal(n, 2, 'segs carries a value and one label, not three');
+});
+
+test('the type scale is a scale, not a drift', () => {
+  // Thirty distinct rem sizes had collected in the stylesheet, seventeen of
+  // them between .72 and .95rem. Those are differences nobody can see, and
+  // they leave every surface looking slightly unresolved. Sizes come from the
+  // scale now, and a raw rem outside a clamp() means one has crept back.
+  const css = buildSite().match(/<style>([\s\S]*?)<\/style>/)[1];
+  const raw = [...new Set(css.match(/font-size:\s*\.?\d[\d.]*rem/g) || [])];
+  assert.deepEqual(raw, [], `raw font sizes outside the scale: ${raw.join(', ')}`);
+  const spacing = [...new Set(css.match(/letter-spacing:\s*-?\.?[\d.]+em/g) || [])];
+  assert.deepEqual(spacing, [], `raw letter-spacing outside the scale: ${spacing.join(', ')}`);
+  assert.ok(/--t-xs\s*:/.test(css) && /--t-3xl\s*:/.test(css), 'the scale tokens are missing');
+});
+
+test('the function colours carry the structure of the instrument', () => {
+  // The six defensive functions are a sequence, so they are one arc and the
+  // step records position. Appendix A applies only to an entity that consumes
+  // public cloud, so it is not a seventh peer and leaves the arc. They were a
+  // stock rainbow, which said nothing about either fact.
+  const lum = (h) => {
+    const c = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
+      .map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  };
+  const seq = ['GOV', 'ID', 'PR', 'DE', 'RS', 'RC']
+    .map((id) => FUNCTIONS.find((f) => f.id === id).color);
+  for (let i = 1; i < seq.length; i++) {
+    assert.ok(lum(seq[i]) < lum(seq[i - 1]),
+      `the arc should darken along the sequence, but ${seq[i]} is not darker than ${seq[i - 1]}`);
+  }
+  const cloud = FUNCTIONS.find((f) => f.id === 'CLD').color;
+  assert.ok(!seq.includes(cloud), 'the conditional appendix should sit outside the arc');
+
+  // Every one has to stay legible on the paper it is drawn on.
+  const paper = '#F3F5F2';
+  const ratio = (a, b) => {
+    const [x, y] = [lum(a), lum(b)];
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+  };
+  for (const f of FUNCTIONS) {
+    assert.ok(ratio(f.color, paper) >= 3,
+      `${f.id} at ${f.color} is below 3:1 on the paper`);
+  }
+  // And the site must ship the same values the catalog does.
+  const css = buildSite();
+  for (const f of FUNCTIONS) {
+    assert.ok(css.includes(`--${f.id.toLowerCase()}:${f.color}`),
+      `the workbench and the catalog disagree about ${f.id}`);
+  }
 });
 
 test('the report is built to survive being printed', () => {

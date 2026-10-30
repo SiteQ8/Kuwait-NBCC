@@ -1,10 +1,11 @@
 /*
  * Design tokens shared by the generated report and the web workbench.
  *
- * The palette is drawn from the subject rather than from a template. The base
- * is a deep petrol ink that reads as an official document rather than a
- * dashboard, the primary accent is the green of the Kuwaiti flag deepened for
- * text contrast, and the alert tones are the flag red and a desert ochre. Type
+ * The palette is drawn from the subject rather than from a template. The paper
+ * carries the green of the Kuwaiti flag rather than announcing it with an
+ * accent on a warm cream, which is the commonest look of a generated page, and
+ * the ink is a green black mixed from that same green rather than a tint of
+ * neutral. The alert tones are the flag red and a desert ochre. Type
  * is IBM Plex Sans Arabic, which carries Latin and Arabic in one family so a
  * bilingual instrument does not change voice when it changes script, with IBM
  * Plex Mono reserved for control identifiers and figures, which genuinely are
@@ -12,19 +13,19 @@
  */
 
 export const TOKENS = {
-  ink: '#10202B',
-  inkSoft: '#1D3340',
-  paper: '#FBFAF6',
-  paperAlt: '#F1EFE8',
-  line: '#DAD6CB',
+  ink: '#0C1E16',
+  inkSoft: '#17332A',
+  paper: '#F3F5F2',
+  paperAlt: '#E7EBE6',
+  line: '#D2D9D2',
   green: '#056839',
   greenSoft: '#E4EFE7',
   ochre: '#8A6203',
   ochreSoft: '#F7EEDA',
   crimson: '#B3202E',
   crimsonSoft: '#F8E5E6',
-  slate: '#5D6E74',
-  slateSoft: '#8B9AA0'
+  slate: '#566A5F',
+  slateSoft: '#7E8C82'
 };
 
 export const BASE_CSS = `
@@ -108,33 +109,45 @@ export function windowScaleSVG(status, opts = {}) {
   // A milestone sits at its own share of the window, which is fixed by the
   // Decision rather than by today. elapsedDays + daysRemaining is the milestone
   // measured from publication, whichever side of today it falls on.
-  const ticks = status.milestones.map((m) => {
-    const frac = clamp((status.elapsedDays + m.daysRemaining) / status.totalDays);
-    return {
-      ...m,
-      x: padL + track * frac,
-      // The track runs edge to edge, so the end labels anchor inward or they
-      // would be drawn outside the drawing itself.
-      anchor: frac > 0.95 ? 'end' : frac < 0.05 ? 'start' : 'middle'
-    };
-  });
+  const ticks = status.milestones.map((m) => ({
+    ...m,
+    frac: clamp((status.elapsedDays + m.daysRemaining) / status.totalDays)
+  }));
+
+  // Both ends of the window carry their date and what the date is, because the
+  // two dates this instrument fixes beyond argument are its ends. The last gate
+  // falls on the deadline itself, so it IS the right end rather than a separate
+  // mark printed on top of one.
+  const cap = (px, anchor, date, label) => `
+    <text x="${px}" y="${y - 20}" text-anchor="${anchor}" font-family="var(--mono)" font-size="10.5" fill="${TOKENS.slateSoft}">${date}</text>
+    <text x="${px}" y="${y + 30}" text-anchor="${anchor}" font-family="var(--sans)" font-size="11.5" fill="${TOKENS.slate}">${label}</text>`;
+
+  const atEnd = ticks.filter((m) => m.frac >= 0.999);
+  const endLabel = atEnd.length
+    ? (opts.lang === 'ar' ? (atEnd[0].nameAr || atEnd[0].name) : atEnd[0].name)
+    : (opts.lang === 'ar' ? 'الاستحقاق' : 'due');
 
   const tickMarkup = ticks
-    .map(
-      (t) => `
-    <line x1="${t.x.toFixed(1)}" y1="${y - 11}" x2="${t.x.toFixed(1)}" y2="${y + 11}" stroke="${TOKENS.line}" stroke-width="1.5"/>
-    <text x="${t.x.toFixed(1)}" y="${y + 30}" text-anchor="${t.anchor}" font-family="var(--sans)" font-size="11.5" fill="${TOKENS.slate}">${opts.lang === 'ar' ? (t.nameAr || t.name) : t.name}</text>
-    <text x="${t.x.toFixed(1)}" y="${y - 18}" text-anchor="${t.anchor}" font-family="var(--mono)" font-size="10.5" fill="${TOKENS.slateSoft}">${t.due}</text>`
-    )
+    .filter((m) => m.frac < 0.999)
+    .map((m) => {
+      const tx = (padL + track * m.frac).toFixed(1);
+      return `
+    <line x1="${tx}" y1="${y - 10}" x2="${tx}" y2="${y + 10}" stroke="${TOKENS.line}" stroke-width="1.5"/>
+    ${cap(tx, 'middle', m.due, opts.lang === 'ar' ? (m.nameAr || m.name) : m.name)}`;
+    })
     .join('');
 
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" direction="ltr" style="width:100%;height:auto;display:block;direction:ltr" role="img"
   aria-label="Compliance window from ${status.publishedOn} to ${status.deadline}, ${status.elapsedPercent} percent elapsed">
-  <line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="${TOKENS.line}" stroke-width="3.5" stroke-linecap="round"/>
-  <line x1="${padL}" y1="${y}" x2="${x.toFixed(1)}" y2="${y}" stroke="${TOKENS.green}" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="${TOKENS.line}" stroke-width="3"/>
+  <line x1="${padL}" y1="${y}" x2="${x.toFixed(1)}" y2="${y}" stroke="${TOKENS.green}" stroke-width="3"/>
+  <line x1="${padL + 1}" y1="${y - 14}" x2="${padL + 1}" y2="${y + 14}" stroke="${TOKENS.green}" stroke-width="2.5"/>
+  ${cap(padL, 'start', status.publishedOn, opts.lang === 'ar' ? 'النشر' : 'published')}
   ${tickMarkup}
-  <line x1="${x.toFixed(1)}" y1="${y - 15}" x2="${x.toFixed(1)}" y2="${y + 15}" stroke="${TOKENS.ink}" stroke-width="2"/>
-  <circle cx="${x.toFixed(1)}" cy="${y}" r="3.5" fill="${TOKENS.ink}"/>
+  <line x1="${w - padR - 1}" y1="${y - 15}" x2="${w - padR - 1}" y2="${y + 15}" stroke="${TOKENS.ink}" stroke-width="3"/>
+  ${cap(w - padR, 'end', status.deadline, endLabel)}
+  <line x1="${x.toFixed(1)}" y1="${y - 17}" x2="${x.toFixed(1)}" y2="${y + 17}" stroke="${TOKENS.ink}" stroke-width="2"/>
+  <circle cx="${x.toFixed(1)}" cy="${y}" r="4" fill="${TOKENS.ink}"/>
 </svg>`;
 }
 
@@ -156,10 +169,15 @@ export function statusPill(state, lang = 'en') {
   return `<span class="pill ${cls}">${lang === 'ar' ? ar : en}</span>`;
 }
 
+/*
+ * A score runs from a gap to met, so the ramp runs crimson to green and does
+ * not detour through a stock blue and a chocolate on the way. Every step clears
+ * 4.5:1 on the paper.
+ */
 export function scoreColor(percent) {
   if (percent >= 95) return TOKENS.green;
-  if (percent >= 75) return '#2563EB';
+  if (percent >= 75) return '#4A6B1E';
   if (percent >= 50) return TOKENS.ochre;
-  if (percent >= 25) return '#D2691E';
+  if (percent >= 25) return '#A4471A';
   return TOKENS.crimson;
 }

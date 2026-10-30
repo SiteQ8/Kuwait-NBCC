@@ -290,6 +290,20 @@ Annex Section 1 aligns the NBCC with **NIST CSF 2.0** and **CIS Controls v8.1 IG
 nbcc crosswalk --to cis      # what an existing CIS IG1 programme already earns you
 ```
 
+## The design
+
+The page had three defaults in it that had nothing to do with Kuwait.
+
+**The function colours were a stock rainbow.** Violet, teal, blue, amber, red, emerald, cyan, straight out of a utility framework and pasted onto a legal taxonomy. But the six defensive functions are a sequence, Govern through Recover, and Appendix A is not a seventh peer: it applies only to an entity that consumes public cloud. So the six are one analogous arc that darkens along the sequence, which means the colour now tells you where in the sequence a control sits, and the cloud appendix leaves the arc entirely because its legal status is different. Every step clears 4.5:1 on the paper and the arc is monotonic in lightness, so the ordering survives greyscale and colour blindness.
+
+**The hero was a big number with a label and four supporting stats**, which is what every dashboard reaches for. This instrument is a deadline with contents: published on a date, due on a date, three gazetted gates between. So the window is the first object on the page and the only loud one, both of its ends carry their date and what the date is, and the days remaining are read off today's mark rather than announced. The last gate falls on the deadline itself, so it is the right end of the axis rather than a second mark printed on top of one.
+
+**The paper was warm cream with a green accent**, which is the commonest look of a generated page. The green moved into the paper and the ink became a green black mixed from the flag green rather than a tint of neutral.
+
+Type is one scale now, nine steps off a 16px base. Thirty distinct sizes had collected, seventeen of them between .72 and .95rem, which are differences nobody can see and that leave every surface looking slightly unresolved. Tracking is one value per role rather than seven ad hoc ones, and Arabic still overrides it to normal because Latin tracking closes the joins of a connected script. Mono is reserved for identifiers the instrument itself assigns: control ids, gazette dates, counts the regulation fixes.
+
+A test holds each of these. The arc has to darken along the sequence, the appendix has to sit outside it, the catalog and the workbench have to ship the same values, and a raw rem or a raw tracking value anywhere in the stylesheet fails the build.
+
 ## Hostile input
 
 An assessment file is untrusted. A portfolio roll up reads six of them from six subsidiaries, and a consultant hands one over without the entity seeing inside it.
@@ -338,7 +352,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 168 tests
+node --test test/*.test.js     # 171 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

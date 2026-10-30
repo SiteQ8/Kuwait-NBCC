@@ -40,6 +40,12 @@ export const REGULATION = {
   policyReviewYears: 2
 };
 
+/*
+ * The colour of a function is not decoration. The six defensive functions are a
+ * sequence, so they share one analogous arc and the step records the position.
+ * Appendix A applies only to an entity that consumes public cloud, so it sits
+ * outside the arc rather than reading as a seventh peer.
+ */
 export const FUNCTIONS = [
   {
     id: 'GOV',
@@ -47,7 +53,7 @@ export const FUNCTIONS = [
     nameAr: 'الحوكمة',
     blurb: 'Establish and monitor the cybersecurity risk management strategy, expectations and policy.',
     blurbAr: 'وضع استراتيجية إدارة مخاطر الأمن السيبراني والتطلعات والسياسات ومتابعتها.',
-    color: '#7c5cff'
+    color: '#0B8049'
   },
   {
     id: 'ID',
@@ -55,7 +61,7 @@ export const FUNCTIONS = [
     nameAr: 'التحديد',
     blurb: 'Determine the current cybersecurity risk to the entity.',
     blurbAr: 'تحديد مخاطر الأمن السيبراني الحالية على الجهة.',
-    color: '#0ea5a4'
+    color: '#0A7360'
   },
   {
     id: 'PR',
@@ -63,7 +69,7 @@ export const FUNCTIONS = [
     nameAr: 'الحماية',
     blurb: 'Prevent or reduce cybersecurity risks.',
     blurbAr: 'منع مخاطر الأمن السيبراني أو الحد منها.',
-    color: '#2563eb'
+    color: '#0C6671'
   },
   {
     id: 'DE',
@@ -71,7 +77,7 @@ export const FUNCTIONS = [
     nameAr: 'الكشف',
     blurb: 'Find and analyze possible cybersecurity attacks and compromise.',
     blurbAr: 'اكتشاف الهجمات السيبرانية المحتملة وحالات الاختراق وتحليلها.',
-    color: '#d97706'
+    color: '#14596F'
   },
   {
     id: 'RS',
@@ -79,7 +85,7 @@ export const FUNCTIONS = [
     nameAr: 'الاستجابة',
     blurb: 'Take action regarding a detected cybersecurity incident.',
     blurbAr: 'اتخاذ الإجراءات اللازمة حيال أي حادث سيبراني مكتشف.',
-    color: '#dc2626'
+    color: '#1C4E6B'
   },
   {
     id: 'RC',
@@ -87,7 +93,7 @@ export const FUNCTIONS = [
     nameAr: 'التعافي',
     blurb: 'Restore assets and operations impacted by a cybersecurity incident.',
     blurbAr: 'استعادة الأصول والعمليات المتأثرة بالحادث السيبراني.',
-    color: '#059669'
+    color: '#264466'
   },
   {
     id: 'CLD',
@@ -95,7 +101,7 @@ export const FUNCTIONS = [
     nameAr: 'الحوسبة السحابية',
     blurb: 'Appendix A minimum controls for entities consuming public cloud services.',
     blurbAr: 'الحد الأدنى من ضوابط الملحق أ للجهات التي تستخدم خدمات الحوسبة السحابية العامة.',
-    color: '#0891b2'
+    color: '#8A6203'
   }
 ];
 

@@ -35,14 +35,18 @@ export const PROFILE_FLAGS = [
     label: 'Uses public cloud services',
     labelAr: 'تستخدم خدمات سحابية عامة',
     question: 'Does the entity consume any SaaS, PaaS or IaaS service?',
-    affects: 'Appendix A cloud controls, CLD-1 to CLD-16'
+    questionAr: 'هل تستهلك الجهة أي خدمة برمجيات أو منصة أو بنية تحتية كخدمة؟',
+    affects: 'Appendix A cloud controls, CLD-1 to CLD-16',
+    affectsAr: 'ضوابط الملحق الأول للحوسبة السحابية، من CLD-1 إلى CLD-16'
   },
   {
     key: 'hasPublicAccounts',
     label: 'Operates official external accounts',
     labelAr: 'تدير حسابات رسمية على منصات خارجية',
     question: 'Does the entity run official accounts on social or video platforms?',
-    affects: 'PR-3.1'
+    questionAr: 'هل تدير الجهة حسابات رسمية على منصات التواصل أو الفيديو؟',
+    affects: 'PR-3.1',
+    affectsAr: 'PR-3.1'
   }
 ];
 

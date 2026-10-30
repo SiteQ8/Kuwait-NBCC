@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+<rect width="1280" height="640" fill="#0C1E16"/>
+<text x="84" y="118" font-family="IBM Plex Sans, sans-serif" font-size="21" fill="#8FBBA3">Annex (1) to Decision No. 2 of 2026 · Kuwait Al Youm, issue 1785</text>
+<text x="84" y="208" font-family="IBM Plex Sans, sans-serif" font-size="68" font-weight="600" letter-spacing="-2" fill="#F3F5F2">Kuwait NBCC</text>
+<text x="84" y="262" font-family="IBM Plex Sans, sans-serif" font-size="27" fill="#A8BDB2">44 mandatory controls, 329 checks, scored in your browser.</text>
+<line x1="84" y1="392" x2="1196" y2="392" stroke="rgba(255,255,255,.20)" stroke-width="4"/>
+<line x1="84" y1="392" x2="506.56" y2="392" stroke="#1FA362" stroke-width="4"/>
+<line x1="84" y1="372" x2="84" y2="412" stroke="#1FA362" stroke-width="4"/>
+<text x="84" y="362" text-anchor="start" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7D9C8B">2026-04-05</text>
+<text x="84" y="432" text-anchor="start" font-family="IBM Plex Sans, sans-serif" font-size="19" fill="#A8BDB2">published</text>
+<line x1="455.3" y1="378" x2="455.3" y2="406" stroke="rgba(255,255,255,.20)" stroke-width="2"/><text x="455.3" y="362" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7D9C8B">2026-10-05</text>
+<text x="455.3" y="432" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="19" fill="#A8BDB2">Establish</text><line x1="885.5" y1="378" x2="885.5" y2="406" stroke="rgba(255,255,255,.20)" stroke-width="2"/><text x="885.5" y="362" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7D9C8B">2027-05-05</text>
+<text x="885.5" y="432" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="19" fill="#A8BDB2">Engineer</text>
+<line x1="1196" y1="370" x2="1196" y2="414" stroke="#F3F5F2" stroke-width="4"/>
+<text x="1196" y="362" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7D9C8B">2027-10-05</text>
+<text x="1196" y="432" text-anchor="end" font-family="IBM Plex Sans, sans-serif" font-size="19" fill="#A8BDB2">Evidence</text>
+<line x1="84" y1="516" x2="1196" y2="516" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+<text x="84" y="562" font-family="IBM Plex Sans, sans-serif" font-size="21" fill="#88A396">Every control has to be in place by 5 October 2027.</text>
+<text x="1196" y="562" text-anchor="end" font-family="IBM Plex Sans, sans-serif" font-size="21" fill="#88A396">github.com/SiteQ8/Kuwait-NBCC</text>
+</svg>
