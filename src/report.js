@@ -254,8 +254,10 @@ section{padding:34px 0; border-top:1px solid var(--line)}
 section:first-of-type{border-top:none}
 .section-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:18px; flex-wrap:wrap}
 .section-head p{margin:0; color:var(--slate); font-size:.92rem; max-width:62ch}
-.headline{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--r); overflow:hidden}
-.headline > div{background:var(--paper); padding:16px 18px}
+.headline{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  border-top:2px solid var(--ink); border-bottom:1px solid var(--line)}
+.headline > div{background:var(--paper); padding:14px 20px 16px 0; border-inline-start:1px solid var(--line)}
+.headline > div:first-child{border-inline-start:0}
 .headline .v{font-family:var(--mono); font-size:2.05rem; font-variant-numeric:tabular-nums; letter-spacing:-.04em; line-height:1.1}
 .headline .k{font-size:.83rem; color:var(--slate); margin-top:3px}
 .window{background:var(--paper-alt); border:1px solid var(--line); border-radius:var(--r); padding:18px 20px 8px}

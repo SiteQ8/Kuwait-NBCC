@@ -13,11 +13,11 @@
  */
 
 export const TOKENS = {
-  ink: '#0C1E16',
+  ink: '#0A1A12',
   inkSoft: '#17332A',
-  paper: '#F3F5F2',
-  paperAlt: '#E7EBE6',
-  line: '#D2D9D2',
+  paper: '#FFFFFF',
+  paperAlt: '#F2F5F1',
+  line: '#DDE3DB',
   green: '#056839',
   greenSoft: '#E4EFE7',
   ochre: '#8A6203',

@@ -1648,22 +1648,43 @@ test('the measure is drawn at the width it occupies', () => {
   assert.ok(!/scaleSVG\(900,/.test(site), 'the measure should never be hard coded to 900');
 });
 
-test('the phone shows the window on the first screen', () => {
-  // The hero was 708px of an 844px viewport, so the window, which is the whole
-  // design, sat below the fold and the first impression was a wall of text.
-  // On a phone the window comes before the lede and the citation sheds the
-  // gazette issue, which costs a line the headline needs more.
-  const css = buildSite().match(/<style>([\s\S]*?)<\/style>/)[1];
+test('the deadline is page furniture, not a hero band', () => {
+  // The window used to live in a dark hero that only the first tab showed, so
+  // it scrolled away and the page wore the layout every product page wears.
+  // It is the second row of the sticky chrome now: on every tab, in both
+  // languages, always on screen. An entity does not stop owing 5 October 2027
+  // because it changed tab.
+  const site = buildSite();
+  const css = site.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.ok(/<div class="rail">[\s\S]{0,160}id="scaleSvg"/.test(site),
+    'the measure must sit in the header, not in a hero band');
+  assert.ok(/\.top\{position:sticky/.test(css), 'the chrome that carries it has to stay put');
+  assert.ok(!/\.hero\{background:var\(--ink\)/.test(css), 'the dark hero band should be gone');
+  assert.ok(/\.hero\{background:var\(--paper\)/.test(css), 'the page should open on the sheet');
+
+  // Pills are product chrome. These are entries marked by a rule.
+  assert.ok(!/\.tabs button\{[^}]*border-radius:100px/.test(css), 'the tabs are pills again');
+  assert.ok(/\.tabs button\[aria-selected="true"\]\{[^}]*border-bottom-color/.test(css),
+    'the current entry should be marked by a rule');
+
+  // Four captions do not fit on a phone and they overprinted each other.
+  assert.ok(/compact \? '' : cap\(/.test(site),
+    'the rail must drop its interior captions where they will not fit');
   const phone = css.slice(css.indexOf('@media(max-width:640px)'));
-  assert.ok(/\.hero \.head\{display:contents\}/.test(phone),
-    'the headline and lede must unwrap so the window can sit between them');
-  assert.ok(/\.hero \.window\{order:2/.test(phone) && /\.hero \.lede\{order:3/.test(phone),
-    'the window must come before the lede on a phone');
   assert.ok(/\.hero \.kick \.issue\{display:none\}/.test(phone),
     'the gazette issue should not cost a line in the citation on a phone');
-  // Six tabs do not fit on a phone, so the overflow has to be visible.
   assert.ok(/mask-image:linear-gradient/.test(phone), 'the tab overflow has no fade');
   assert.ok(/min-height:44px/.test(css), 'tab targets must reach 44px');
+});
+
+test('Arabic is not stretched by the display face', () => {
+  // Archivo carries a width axis and there is no wide Arabic cut, so a
+  // stretched Arabic heading would break the joins of a connected script.
+  const css = buildSite().match(/<style>([\s\S]*?)<\/style>/)[1];
+  for (const rule of [/\[lang=ar\] \.hero h1\{[^}]*font-stretch:normal/,
+                      /\[lang=ar\] \.tabs button\{[^}]*font-stretch:normal/]) {
+    assert.ok(rule.test(css), `Arabic still inherits a width axis: ${rule}`);
+  }
 });
 
 test('the function colours carry the structure of the instrument', () => {
@@ -1686,7 +1707,7 @@ test('the function colours carry the structure of the instrument', () => {
   assert.ok(!seq.includes(cloud), 'the conditional appendix should sit outside the arc');
 
   // Every one has to stay legible on the paper it is drawn on.
-  const paper = '#F3F5F2';
+  const paper = '#FFFFFF';
   const ratio = (a, b) => {
     const [x, y] = [lum(a), lum(b)];
     return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);

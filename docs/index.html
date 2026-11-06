@@ -12,18 +12,24 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7.5' fill='%23056839'/%3E%3Crect x='6' y='12.4' width='20' height='2.8' rx='1.4' fill='%23F3F5F2'/%3E%3Cpath d='M10.6 22.4 16 17l5.4 5.4' stroke='%23F3F5F2' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;450;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;450;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0C1E16; --ink-2:#17332A; --ink-3:#26463B;
-  --paper:#F3F5F2; --paper-2:#E7EBE6; --paper-3:#DCE2DA;
-  --line:#D2D9D2; --line-2:#BBC5BB;
+  --ink:#0A1A12; --ink-2:#17332A; --ink-3:#26463B;
+  --paper:#FFFFFF; --paper-2:#F2F5F1; --paper-3:#E6EBE4;
+  --line:#DDE3DB; --line-2:#BBC5BB;
   --green:#056839; --green-2:#E4EFE7;
   --ochre:#8A6203; --ochre-2:#F7EEDA;
   --crimson:#B3202E; --crimson-2:#F8E5E6;
   --blue:#2C5876; --blue-2:#E4EDF3;
   --slate:#566A5F; --slate-2:#5F7268;
   --sans:"IBM Plex Sans Arabic","IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  /* Archivo carries a width axis. Wide display type reads like the lettering
+     on a public building, which is what this instrument is, and it is the
+     opposite of the tight grotesque that every generated page reaches for.
+     Arabic has no wide cut here, so Arabic headings keep the body family and
+     earn their weight from size and leading instead. */
+  --display:"Archivo","IBM Plex Sans Arabic",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --r:4px; --maxw:1180px;
   /* A scale, not a drift. Thirty sizes had collected here, seventeen of them
@@ -34,13 +40,13 @@
   --t-base:1rem; --t-lg:1.0625rem; --t-xl:1.3rem; --t-2xl:1.7rem; --t-3xl:2.5rem;
   /* One value per role rather than seven ad hoc ones. Arabic overrides these to
      normal, because Latin tracking closes the joins of a connected script. */
-  --ls-display:-.03em; --ls-tight:-.02em; --ls-head:-.012em;
+  --ls-display:-.03em; --ls-tight:-.02em; --ls-head:-.012em; --ls-wide:.01em;
   /* Spacing was thirty one different values across two hundred and thirty
      three uses, including 11, 13, 17, 26, 34, 46 and 62, which are not
      decisions, they are drift. Twelve steps, each a visible interval. */
   --s-1:2px; --s-2:4px; --s-3:6px; --s-4:8px; --s-5:12px; --s-6:16px;
   --s-7:20px; --s-8:24px; --s-9:32px; --s-10:44px; --s-11:56px; --s-12:72px;
-  --rule:#DDE3DC; --rule-2:#C6CFC6;
+  --rule:#E8EDE6; --rule-2:#C6CFC6;
   /* The six defensive functions run Govern to Recover, so they are one arc and
      the step says where in the sequence a control sits. Appendix A is
      conditional, so it is not a seventh step: it leaves the arc. */
@@ -68,7 +74,18 @@ button{font:inherit; cursor:pointer}
 
 /* ---------- top bar ---------- */
 .top{position:sticky; top:0; z-index:40; background:var(--paper); border-bottom:1px solid var(--rule)}
-.top .wrap{display:flex; align-items:center; gap:var(--s-6); height:60px}
+.top .wrap{display:flex; align-items:center; gap:var(--s-6); height:58px}
+
+/* The compliance window, as the second row of the page chrome.
+ *
+ * It used to sit inside a dark hero band that only the first tab showed, which
+ * is the layout every product page has and it let the deadline scroll away.
+ * Here it is part of the furniture: pinned under the nav, on every tab, in
+ * both languages. An entity does not stop owing 5 October 2027 because it
+ * changed tab. */
+.rail{border-top:1px solid var(--rule); background:var(--paper-2)}
+.rail .wrap{padding-top:var(--s-3); padding-bottom:var(--s-2)}
+.rail .measure{margin:0}
 .brand .mark{border-radius:7px}
 .brand{display:flex; align-items:center; gap:var(--s-5); font-weight:600; letter-spacing:var(--ls-head); text-decoration:none; color:var(--ink)}
 .brand svg{flex:none}
@@ -79,24 +96,30 @@ button{font:inherit; cursor:pointer}
 .tabs{display:flex; gap:var(--s-1); margin-inline-start:auto; overflow-x:auto; scrollbar-width:none;
   scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch}
 .tabs::-webkit-scrollbar{display:none}
-.tabs button{background:none; border:none; padding:var(--s-4) var(--s-6); border-radius:100px; color:var(--slate);
-  font-weight:500; font-size:var(--t-ms); white-space:nowrap; scroll-snap-align:center;
-  min-height:44px; display:inline-flex; align-items:center}
-.tabs button:hover{background:var(--paper-2); color:var(--ink)}
-.tabs button[aria-selected="true"]{background:var(--ink); color:var(--paper)}
-.langbtn{background:none; border:1px solid var(--line-2); border-radius:100px; padding:var(--s-3) var(--s-5); font-size:var(--t-md); font-weight:500; color:var(--slate)}
+.tabs button{background:none; border:none; padding:var(--s-4) 0; margin:0 var(--s-5); color:var(--slate);
+  font-family:var(--display); font-weight:500; font-size:var(--t-md); white-space:nowrap;
+  scroll-snap-align:center; min-height:44px; display:inline-flex; align-items:center;
+  font-stretch:112%; letter-spacing:var(--ls-wide); border-bottom:2px solid transparent}
+[lang=ar] .tabs button{font-stretch:normal; letter-spacing:0}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--green); font-weight:600}
+.langbtn{background:none; border:1px solid var(--line-2); padding:var(--s-3) var(--s-5); font-size:var(--t-md); font-weight:500; color:var(--slate)}
 .langbtn:hover{border-color:var(--ink); color:var(--ink)}
 
 /* ---------- hero ---------- */
 body.working .hero{display:none}
-.hero{background:var(--ink); color:var(--paper); padding:var(--s-11) 0 0; position:relative}
+.hero{background:var(--paper); color:var(--ink); padding:var(--s-10) 0 var(--s-9); position:relative;
+  border-bottom:1px solid var(--rule)}
 .hero .wrap{position:relative; z-index:1; display:flex; flex-direction:column}
-.hero .kick{font-size:var(--t-sm); color:#8FBBA3; margin-bottom:var(--s-6); font-weight:450; letter-spacing:0}
-.hero .kick .mono{color:#7D9C8B}
+.hero .kick{font-size:var(--t-sm); color:var(--green); margin-bottom:var(--s-6); font-weight:500; letter-spacing:0}
+.hero .kick .mono{color:var(--slate-2)}
 .hero .head{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:var(--s-7) var(--s-11); align-items:end}
 @media(max-width:900px){.hero .head{grid-template-columns:1fr; gap:var(--s-7); align-items:start}}
-.hero h1{max-width:19ch; color:var(--paper); font-size:clamp(2rem,4vw,3.15rem); line-height:1.05; letter-spacing:var(--ls-display); font-weight:600; margin:0}
-.hero .lede{color:#A8BDB2; max-width:46ch; margin:0 0 var(--s-2); font-size:var(--t-lg); line-height:1.62}
+.hero h1{max-width:17ch; color:var(--ink); font-size:clamp(2.1rem,4.4vw,3.4rem); line-height:1.02;
+  letter-spacing:var(--ls-display); font-weight:700; margin:0;
+  font-family:var(--display); font-stretch:118%}
+[lang=ar] .hero h1{font-stretch:normal; font-weight:600; line-height:1.3; letter-spacing:normal}
+.hero .lede{color:var(--slate); max-width:46ch; margin:0 0 var(--s-2); font-size:var(--t-lg); line-height:1.62}
 .hero .split{display:block}
 .scaleOLD{margin-top:var(--s-9); background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.13); border-radius:var(--r); padding:var(--s-7) var(--s-8) var(--s-5)}
 .scale .row{display:flex; justify-content:space-between; align-items:baseline; gap:var(--s-6); flex-wrap:wrap; margin-bottom:var(--s-2)}
@@ -118,6 +141,13 @@ body.working .hero{display:none}
  * figure, because a number with a label and a row of supporting stats under it
  * is the treatment every dashboard reaches for and it says less than the axis
  * does: the axis shows which gate has already passed. */
+.standing{display:flex; align-items:baseline; gap:var(--s-4); flex-wrap:wrap; margin:var(--s-9) 0 0;
+  padding-top:var(--s-6); border-top:1px solid var(--rule)}
+.standing .n{font-family:var(--display); font-stretch:118%; font-weight:700; font-size:var(--t-3xl);
+  line-height:.9; letter-spacing:var(--ls-display); font-variant-numeric:tabular-nums; color:var(--ink)}
+.standing .u{font-size:var(--t-lg); color:var(--slate)}
+.standing .sub{flex:1 1 30ch; color:var(--slate); font-size:var(--t-md); line-height:1.55}
+.standing .sub b{color:var(--ink); font-weight:600}
 .window{margin-top:var(--s-10); padding:0 0 var(--s-11)}
 .window .measure{margin:0 0 var(--s-1)}
 .window .foot{display:flex; justify-content:space-between; align-items:flex-end; gap:var(--s-8) var(--s-10);
@@ -431,15 +461,16 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
   .tabs button{font-size:var(--t-md); padding:var(--s-4) var(--s-5)}
   .brand .ar{display:none}
 
-  .hero{padding-top:var(--s-8)}
-  .hero .head{display:contents}
-  .hero .kick{order:0; margin-bottom:var(--s-5); font-size:var(--t-xs)}
+  .hero{padding-top:var(--s-8); padding-bottom:var(--s-8)}
+  .hero .kick{margin-bottom:var(--s-5); font-size:var(--t-xs)}
   .hero .kick .issue{display:none}
-  .hero h1{order:1; font-size:var(--t-2xl); line-height:1.12; max-width:none}
-  .hero .window{order:2; margin-top:var(--s-8); padding-bottom:var(--s-8)}
-  .hero .lede{order:3; font-size:var(--t-base); max-width:none; margin:0 0 var(--s-9)}
-  .window .foot{margin-top:var(--s-7); padding-top:var(--s-5); gap:var(--s-5)}
-  .window .left .n{font-size:var(--t-2xl)}
+  .hero h1{font-size:var(--t-2xl); line-height:1.08; max-width:none}
+  .hero .head{display:block}
+  .hero .lede{font-size:var(--t-base); max-width:none; margin:var(--s-6) 0 0}
+  .standing{margin-top:var(--s-8); padding-top:var(--s-6)}
+  .standing .n{font-size:var(--t-2xl)}
+  .standing .sub{flex:1 1 100%; margin-top:var(--s-2)}
+  .rail .wrap{padding-top:var(--s-2); padding-bottom:0}
   .check{grid-template-columns:1fr}
   .seg{justify-self:start; flex-wrap:wrap}
   .grid2{grid-template-columns:1fr}
@@ -491,6 +522,11 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
     </nav>
     <button class="langbtn" id="lang" aria-label="Switch language">عربي</button>
   </div>
+  <div class="rail">
+    <div class="wrap">
+      <div class="measure" id="scaleSvg"></div>
+    </div>
+  </div>
 </header>
 
 <section class="hero">
@@ -501,13 +537,8 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
       <p class="lede" id="heroLede">Every entity under the mandate of the National Cyber Security Center has to meet 44 controls. This tool holds all of them, scores where you stand, and never sends a byte anywhere.</p>
     </div>
 
-    <div class="window">
-      <div class="measure" id="scaleSvg"></div>
-      <div class="foot">
-        <p class="pub" id="windowSub"></p>
-        <p class="left"><span class="n" id="daysN"></span><span id="daysUnit"></span></p>
-      </div>
-    </div>
+    <p class="standing"><span class="n" id="daysN"></span><span class="u" id="daysUnit"></span>
+      <span class="sub" id="windowSub"></span></p>
   </div>
 </section>
 
@@ -806,7 +837,7 @@ function paintAxis(){
   const w = measureWidth();
   if (host.dataset.w === String(w)) return;
   host.dataset.w = String(w);
-  host.innerHTML = scaleSVG(w, true);
+  host.innerHTML = scaleSVG(w, false);
 }
 function watchAxis(){
   const host = document.getElementById('scaleSvg');
@@ -818,7 +849,7 @@ function watchAxis(){
 function scaleSVG(w, dark){
   const compact = w < 560;
   const s = windowStatus(new Date());
-  const padL = 0, padR = 0, track = w - padL - padR, y = 44;
+  const padL = 0, padR = 0, track = w - padL - padR, y = 15;
   const x = padL + track * Math.max(0, Math.min(1, s.elapsedPct/100));
   const lineCol = dark ? 'rgba(255,255,255,.20)' : 'var(--line)';
   const txtCol  = dark ? '#A8BDB2' : 'var(--slate)';
@@ -826,9 +857,11 @@ function scaleSVG(w, dark){
   const markCol = dark ? '#F3F5F2' : 'var(--ink)';
   const doneCol = '#1FA362';
 
-  const cap = (px, anchor, date, label, strong) => `
-    <text x="${px}" y="${y-21}" text-anchor="${anchor}" font-size="10.5" fill="${dimCol}" font-family="var(--mono)" letter-spacing="0">${date}</text>
-    <text x="${px}" y="${y+28}" text-anchor="${anchor}" font-size="11.5" fill="${strong?txtCol:txtCol}" font-family="var(--sans)">${label}</text>`;
+  // One row of type, not two: the chrome has to stay thin. The date and the
+  // name of the gate sit together under the mark.
+  const cap = (px, anchor, date, label) => `
+    <text x="${px}" y="${y+21}" text-anchor="${anchor}" font-size="10.5" font-family="var(--mono)"
+      fill="${dimCol}" letter-spacing="0">${date}${label ? `<tspan fill="${txtCol}" font-family="var(--sans)" font-size="11"> ${label}</tspan>` : ''}</text>`;
 
   // The last gate falls on the deadline itself: eighteen months from publication
   // is 5 October 2027. Drawing both put two dates and two labels on the same
@@ -839,21 +872,21 @@ function scaleSVG(w, dark){
   const ticks = inner.map(m => {
     const mx = (padL + track * m.frac).toFixed(1);
     return `<line x1="${mx}" y1="${y-10}" x2="${mx}" y2="${y+10}" stroke="${lineCol}" stroke-width="1.5"/>
-      ${cap(mx, 'middle', compact ? '' : m.due, lang === 'ar' ? m.nameAr : m.name)}`;
+      ${compact ? '' : cap(mx, 'middle', m.due, lang === 'ar' ? m.nameAr : m.name)}`;
   }).join('');
 
   const endLabel = atEnd.length ? (lang === 'ar' ? atEnd[0].nameAr : atEnd[0].name) : t('axisDue');
 
-  return `<svg viewBox="0 0 ${w} 86" preserveAspectRatio="xMidYMid meet" direction="ltr" style="width:100%;height:auto;display:block;direction:ltr" role="img" aria-label="${t('axisAlt', s.elapsedPct)}">
+  return `<svg viewBox="0 0 ${w} 42" preserveAspectRatio="xMidYMid meet" direction="ltr" style="width:100%;height:42px;display:block;direction:ltr" role="img" aria-label="${t('axisAlt', s.elapsedPct)}">
     <line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="${lineCol}" stroke-width="3"/>
     <line x1="${padL}" y1="${y}" x2="${x.toFixed(1)}" y2="${y}" stroke="${doneCol}" stroke-width="3"/>
-    <line x1="${padL+1}" y1="${y-14}" x2="${padL+1}" y2="${y+14}" stroke="${doneCol}" stroke-width="2.5"/>
-    ${cap(padL, 'start', REG.publishedOn, t('axisPublished'))}
+    <line x1="${padL+1}" y1="${y-7}" x2="${padL+1}" y2="${y+7}" stroke="${doneCol}" stroke-width="2.5"/>
+    ${cap(padL, 'start', REG.publishedOn, compact ? '' : t('axisPublished'))}
     ${ticks}
-    <line x1="${w-padR-1}" y1="${y-15}" x2="${w-padR-1}" y2="${y+15}" stroke="${markCol}" stroke-width="3"/>
-    ${cap(w-padR, 'end', REG.deadline, endLabel)}
-    <line x1="${x.toFixed(1)}" y1="${y-17}" x2="${x.toFixed(1)}" y2="${y+17}" stroke="${markCol}" stroke-width="2"/>
-    <circle cx="${x.toFixed(1)}" cy="${y}" r="4" fill="${markCol}"/>
+    <line x1="${w-padR-1}" y1="${y-7}" x2="${w-padR-1}" y2="${y+7}" stroke="${markCol}" stroke-width="3"/>
+    ${cap(w-padR, 'end', REG.deadline, compact ? '' : endLabel)}
+    <line x1="${x.toFixed(1)}" y1="${y-9}" x2="${x.toFixed(1)}" y2="${y+9}" stroke="${markCol}" stroke-width="2"/>
+    <circle cx="${x.toFixed(1)}" cy="${y}" r="3.5" fill="${markCol}"/>
   </svg>`;
 }
 

@@ -292,27 +292,17 @@ nbcc crosswalk --to cis      # what an existing CIS IG1 programme already earns 
 
 ## The design
 
-### The phone
+The page still wore the shape every generated page wears: a dark hero band, then light body, then rounded pill tabs, one neutral sans throughout. Changing the colours inside that shape did not change the shape. So the structure changed instead.
 
-The phone is the first impression and it was the worst surface. The hero was 708 pixels of an 844 pixel screen, so the window, which is the whole design, sat below the fold and a visitor met a wall of text. Six tabs overflowed by 176 pixels with nothing to say there were more, so Documents and About were simply invisible. Tap targets were 38 pixels against a 44 pixel minimum.
+**The deadline is page furniture now.** It used to sit inside the dark hero, which only the first tab showed, so it scrolled away the moment you started working. It is the second row of the sticky chrome: on every tab, in both languages, always on screen. An entity does not stop owing 5 October 2027 because it changed tab, and the tool should not pretend otherwise. On a phone the rail keeps its two end dates and drops the interior captions, which collided.
 
-On a phone the window now comes straight after the headline and the lede follows it, the citation sheds the gazette issue because it costs a line the headline needs more, the nav fades at its trailing edge and scrolls, and every target reaches 44. The window is fully on the first screen at 390 and at 360, in both languages.
+**The dark band is gone.** The page opens on the sheet. White paper, one accent, rules instead of boxes, because this is a legal instrument with a register of numbered obligations and not a product dashboard. The report's five figures were bordered tiles and are now a ruled row.
 
-The mark is a surveyor's benchmark: a fixed datum with a mark rising to meet it. The instrument calls itself a floor, a level below which no entity may fall, and that is what a benchmark is. It is not a shield and not a padlock, which say security and nothing more, and unlike the old mark it still reads at 16 pixels.
+**The headline has a face.** Archivo carries a width axis, so the display type is set wide, which reads like the lettering on a public building rather than the tight grotesque every generated page reaches for. Arabic keeps the body family and is explicitly excluded from the width axis, because there is no wide Arabic cut and stretching one breaks the joins of a connected script. A test holds that exclusion.
 
-The page had three defaults in it that had nothing to do with Kuwait.
+**Pills became rules.** The current section is marked by a rule under it, the way a register marks a place.
 
-**The function colours were a stock rainbow.** Violet, teal, blue, amber, red, emerald, cyan, straight out of a utility framework and pasted onto a legal taxonomy. But the six defensive functions are a sequence, Govern through Recover, and Appendix A is not a seventh peer: it applies only to an entity that consumes public cloud. So the six are one analogous arc that darkens along the sequence, which means the colour now tells you where in the sequence a control sits, and the cloud appendix leaves the arc entirely because its legal status is different. Every step clears 4.5:1 on the paper and the arc is monotonic in lightness, so the ordering survives greyscale and colour blindness.
-
-**The hero was a big number with a label and four supporting stats**, which is what every dashboard reaches for. This instrument is a deadline with contents: published on a date, due on a date, three gazetted gates between. So the window is the first object on the page and the only loud one, both of its ends carry their date and what the date is, and the days remaining are read off today's mark rather than announced. The last gate falls on the deadline itself, so it is the right end of the axis rather than a second mark printed on top of one.
-
-**The paper was warm cream with a green accent**, which is the commonest look of a generated page. The green moved into the paper and the ink became a green black mixed from the flag green rather than a tint of neutral.
-
-Spacing is one scale too, twelve steps. There were thirty one different values across two hundred and thirty three uses, including 11, 13, 17, 26, 34, 46 and 62, which are not decisions.
-
-Type is one scale now, nine steps off a 16px base. Thirty distinct sizes had collected, seventeen of them between .72 and .95rem, which are differences nobody can see and that leave every surface looking slightly unresolved. Tracking is one value per role rather than seven ad hoc ones, and Arabic still overrides it to normal because Latin tracking closes the joins of a connected script. Mono is reserved for identifiers the instrument itself assigns: control ids, gazette dates, counts the regulation fixes.
-
-A test holds each of these. The arc has to darken along the sequence, the appendix has to sit outside it, the catalog and the workbench have to ship the same values, and a raw rem or a raw tracking value anywhere in the stylesheet fails the build.
+Underneath, the earlier work stands. The six defensive functions are one analogous arc that darkens along the sequence, so the colour says where in the sequence a control sits, and Appendix A leaves the arc because it applies only to an entity that consumes public cloud. Type is nine steps off a 16px base and spacing is twelve, replacing thirty and thirty one loose values. A raw rem, a raw tracking value or a raw spacing value anywhere in the stylesheet fails the build.
 
 ## Hostile input
 
@@ -362,7 +352,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 173 tests
+node --test test/*.test.js     # 174 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 
