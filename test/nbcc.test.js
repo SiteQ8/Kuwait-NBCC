@@ -1677,11 +1677,44 @@ test('the deadline is page furniture, not a hero band', () => {
   assert.ok(/min-height:44px/.test(css), 'tab targets must reach 44px');
 });
 
+test('the page opens on front matter, not on a slogan', () => {
+  // What was here was a sentence set very large, which is how a product
+  // announces itself to someone who has not heard of it. The reader is a
+  // compliance officer who already knows the Decision exists and needs to see
+  // what it is, who issued it, what it covers and when it falls due, stated
+  // the way a standard states those things.
+  const site = buildSite();
+  assert.ok(/<dl class="front" id="frontMatter">/.test(site), 'the front matter block is missing');
+  assert.ok(!/id="heroTitle">[^<]*floor/.test(site), 'the slogan is back in the title');
+  for (const key of ['fInstrument', 'fPublished', 'fAuthority', 'fApplies',
+    'fDue', 'fScope', 'fText']) {
+    assert.ok(site.includes(`${key}:`), `the front matter is missing ${key}`);
+  }
+  // The instrument is the Annex, not the Decision alone.
+  assert.ok(/frontAnnex:\(d\)=>`Annex \(1\) to/.test(site),
+    'the citation must name the Annex, since the controls are its annex');
+  // The figures come from the catalog, so they cannot drift from it.
+  assert.ok(/t\('frontScope', CONTROLS\.length, STATS\.checks, STATS\.evidenceItems\)/.test(site),
+    'the scope row must be read from the catalog, not typed');
+  assert.ok(/stats: CATALOG_STATS/.test(readFileSync(resolve(root, 'scripts/build-site.mjs'), 'utf8')),
+    'the payload has to carry the catalog stats');
+
+  // Two independent lists ruling at their own row heights read as unfinished,
+  // so both columns sit in one grid and the rules meet across the gutter.
+  const css = site.match(/<style>([\s\S]*?)<\/style>/)[1];
+  assert.ok(/\.front\{display:grid; grid-template-columns:[^}]*minmax\(0,1fr\) [\d.]+rem/.test(css),
+    'the front matter needs one grid across both columns');
+  // An alt title aligns to the page, not to its own script.
+  assert.ok(/\.ident \.alt\{[^}]*text-align:left/.test(css)
+    && /\[dir=rtl\] \.ident \.alt\{text-align:right\}/.test(css),
+    'the alt title must follow the page direction');
+});
+
 test('Arabic is not stretched by the display face', () => {
   // Archivo carries a width axis and there is no wide Arabic cut, so a
   // stretched Arabic heading would break the joins of a connected script.
   const css = buildSite().match(/<style>([\s\S]*?)<\/style>/)[1];
-  for (const rule of [/\[lang=ar\] \.hero h1\{[^}]*font-stretch:normal/,
+  for (const rule of [/\[lang=ar\] \.ident h1\{[^}]*font-stretch:normal/,
                       /\[lang=ar\] \.tabs button\{[^}]*font-stretch:normal/]) {
     assert.ok(rule.test(css), `Arabic still inherits a width axis: ${rule}`);
   }

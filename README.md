@@ -294,6 +294,8 @@ nbcc crosswalk --to cis      # what an existing CIS IG1 programme already earns 
 
 The page still wore the shape every generated page wears: a dark hero band, then light body, then rounded pill tabs, one neutral sans throughout. Changing the colours inside that shape did not change the shape. So the structure changed instead.
 
+**The page opens on front matter.** What was there was a sentence set very large, which is how a product announces itself to someone who has not heard of it. The reader here is a compliance officer who already knows the Decision exists. The opening is now what the front matter of a standard is: a ruled two column register of the instrument, its gazette citation, the issuing authority, who it binds, when it falls due, its size and which language text governs. Every figure is read from the catalog, so the page cannot disagree with the controls below it. The title block carries the instrument's name in both languages, as a bilingual instrument's title page does.
+
 **The deadline is page furniture now.** It used to sit inside the dark hero, which only the first tab showed, so it scrolled away the moment you started working. It is the second row of the sticky chrome: on every tab, in both languages, always on screen. An entity does not stop owing 5 October 2027 because it changed tab, and the tool should not pretend otherwise. On a phone the rail keeps its two end dates and drops the interior captions, which collided.
 
 **The dark band is gone.** The page opens on the sheet. White paper, one accent, rules instead of boxes, because this is a legal instrument with a register of numbered obligations and not a product dashboard. The report's five figures were bordered tiles and are now a ruled row.
@@ -352,7 +354,7 @@ Node 18 or newer. No runtime dependencies.
 ```bash
 git clone https://github.com/SiteQ8/Kuwait-NBCC.git
 cd Kuwait-NBCC
-node --test test/*.test.js     # 174 tests
+node --test test/*.test.js     # 175 tests
 node scripts/build-site.mjs    # regenerate docs/index.html from the catalog
 ```
 

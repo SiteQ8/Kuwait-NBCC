@@ -15,6 +15,7 @@ import { ISO_MAP } from '../src/crosswalk.js';
 import { PHASES, DEPENDENCIES } from '../src/plan.js';
 import { DOCUMENTS } from '../src/drafts.js';
 import { ROLES } from '../src/checklists.js';
+import { CATALOG_STATS } from '../src/catalog.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
@@ -55,6 +56,7 @@ export function buildPayload() {
     deps: DEPENDENCIES,
     documents: DOCUMENTS,
     roles: ROLES,
+    stats: CATALOG_STATS,
     profileFlags: PROFILE_FLAGS
   };
 }

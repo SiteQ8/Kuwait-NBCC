@@ -108,17 +108,33 @@ button{font:inherit; cursor:pointer}
 
 /* ---------- hero ---------- */
 body.working .hero{display:none}
-.hero{background:var(--paper); color:var(--ink); padding:var(--s-10) 0 var(--s-9); position:relative;
+.hero{background:var(--paper); color:var(--ink); padding:var(--s-9) 0 var(--s-9); position:relative;
   border-bottom:1px solid var(--rule)}
+.ident{border-bottom:2px solid var(--ink); padding-bottom:var(--s-6); margin-bottom:var(--s-1)}
+.ident h1{font-family:var(--display); font-stretch:110%; font-weight:700; letter-spacing:var(--ls-tight);
+  font-size:clamp(1.3rem,2.1vw,1.7rem); line-height:1.16; margin:0; max-width:34ch; color:var(--ink)}
+[lang=ar] .ident h1{font-stretch:normal; letter-spacing:normal; font-weight:600; line-height:1.45}
+.ident .alt{display:block; margin:var(--s-2) 0 0; color:var(--slate-2); font-size:var(--t-ms);
+  text-align:left}
+[dir=rtl] .ident .alt{text-align:right}
+.front{display:grid; grid-template-columns:10.5rem minmax(0,1fr) 10.5rem minmax(0,1fr);
+  column-gap:var(--s-6); margin:0}
+.front dt,.front dd{padding:var(--s-4) 0 var(--s-5); border-bottom:1px solid var(--rule); margin:0}
+.front dt{color:var(--slate); font-size:var(--t-sm); font-weight:450}
+.front dd{font-size:var(--t-md); line-height:1.5; color:var(--ink)}
+.front dt:nth-of-type(odd){padding-inline-end:var(--s-6)}
+.front dd:nth-of-type(odd){padding-inline-end:var(--s-12)}
+@media(max-width:900px){.front{grid-template-columns:10.5rem minmax(0,1fr)}
+  .front dd:nth-of-type(odd){padding-inline-end:0}}
+@media(max-width:520px){.front{grid-template-columns:1fr}
+  .front dt{padding-bottom:0; border-bottom:0}
+  .front dd{padding-top:var(--s-1)}}
+.hero .note{margin:var(--s-7) 0 0; color:var(--slate); font-size:var(--t-md); max-width:62ch}
 .hero .wrap{position:relative; z-index:1; display:flex; flex-direction:column}
 .hero .kick{font-size:var(--t-sm); color:var(--green); margin-bottom:var(--s-6); font-weight:500; letter-spacing:0}
 .hero .kick .mono{color:var(--slate-2)}
 .hero .head{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:var(--s-7) var(--s-11); align-items:end}
 @media(max-width:900px){.hero .head{grid-template-columns:1fr; gap:var(--s-7); align-items:start}}
-.hero h1{max-width:17ch; color:var(--ink); font-size:clamp(2.1rem,4.4vw,3.4rem); line-height:1.02;
-  letter-spacing:var(--ls-display); font-weight:700; margin:0;
-  font-family:var(--display); font-stretch:118%}
-[lang=ar] .hero h1{font-stretch:normal; font-weight:600; line-height:1.3; letter-spacing:normal}
 .hero .lede{color:var(--slate); max-width:46ch; margin:0 0 var(--s-2); font-size:var(--t-lg); line-height:1.62}
 .hero .split{display:block}
 .scaleOLD{margin-top:var(--s-9); background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.13); border-radius:var(--r); padding:var(--s-7) var(--s-8) var(--s-5)}
@@ -464,7 +480,6 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
   .hero{padding-top:var(--s-8); padding-bottom:var(--s-8)}
   .hero .kick{margin-bottom:var(--s-5); font-size:var(--t-xs)}
   .hero .kick .issue{display:none}
-  .hero h1{font-size:var(--t-2xl); line-height:1.08; max-width:none}
   .hero .head{display:block}
   .hero .lede{font-size:var(--t-base); max-width:none; margin:var(--s-6) 0 0}
   .standing{margin-top:var(--s-8); padding-top:var(--s-6)}
@@ -531,14 +546,12 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
 
 <section class="hero">
   <div class="wrap">
-    <div class="kick" id="heroKick"></div>
-    <div class="head">
-      <h1 id="heroTitle">Kuwait now has a mandatory cybersecurity floor.</h1>
-      <p class="lede" id="heroLede">Every entity under the mandate of the National Cyber Security Center has to meet 44 controls. This tool holds all of them, scores where you stand, and never sends a byte anywhere.</p>
+    <div class="ident">
+      <h1 id="heroTitle"></h1>
+      <p class="alt" id="heroTitleAlt"></p>
     </div>
-
-    <p class="standing"><span class="n" id="daysN"></span><span class="u" id="daysUnit"></span>
-      <span class="sub" id="windowSub"></span></p>
+    <dl class="front" id="frontMatter"></dl>
+    <p class="note" id="heroLede"></p>
   </div>
 </section>
 
@@ -644,7 +657,7 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
 <script>
 "use strict";
 const DATA = JSON.parse(document.getElementById('nbcc-data').textContent);
-const { regulation: REG, functions: FUNCS, controls: CONTROLS, iso: ISO, phases: PHASES, deps: DEPS, profileFlags: FLAGS, documents: DOCS, roles: ROLES } = DATA;
+const { regulation: REG, functions: FUNCS, controls: CONTROLS, iso: ISO, phases: PHASES, deps: DEPS, profileFlags: FLAGS, documents: DOCS, roles: ROLES, stats: STATS } = DATA;
 const BY_ID = new Map(CONTROLS.map(c => [c.id, c]));
 const FN = new Map(FUNCS.map(f => [f.id, f]));
 const STORE = 'nbcc.assessment.v1';
@@ -894,7 +907,16 @@ function scaleSVG(w, dark){
 const STR = {
   en:{
     heroTitle:'Kuwait now has a mandatory cybersecurity floor.',
-    heroLede:'Every entity under the mandate of the National Cyber Security Center has to meet 44 controls. This tool holds all of them, scores where you stand, and never sends a byte anywhere.',
+    heroLede:'Every control below carries its official text. Answer the checks and the tool scores readiness, drafts the paperwork and plans the work. Nothing you type leaves this browser.',
+    fInstrument:'Instrument', fPublished:'Published', fAuthority:'Issuing authority',
+    fApplies:'Applies to', fDue:'Compliance due', fScope:'Scope', fText:'Authoritative text',
+    frontAnnex:(d)=>`Annex (1) to ${d}`,
+    frontGazette:(d)=>`Kuwait Al Youm, issue 1785, year 72, on ${d}`,
+    frontApplies:'Every entity under the mandate of the National Cyber Security Center',
+    frontDue:(d,n)=>`${d}, with ${n} day${n===1?'':'s'} remaining`,
+    frontOverdue:(d,n)=>`${d}, passed ${n} day${n===1?'':'s'} ago`,
+    frontScope:(c,k,e)=>`${c} controls, ${k} checks, ${e} evidence artifacts`,
+    frontText:'English, per Article 6 of the Decision',
     axisPublished:'published',
     axisDue:'every control in place',
     axisAlt:(p)=>`The compliance window, ${p}% elapsed`,
@@ -980,7 +1002,17 @@ const STR = {
   },
   ar:{
     heroTitle:'أصبح للكويت حد أدنى إلزامي للأمن السيبراني.',
-    heroLede:'على كل جهة تقع ضمن اختصاص المركز الوطني للأمن السيبراني تطبيق أربعة وأربعين ضابطا، وهذه الأداة تضمها جميعا وتقيس موقعك منها دون أن ترسل أي بيانات إلى أي جهة.',
+    heroLede:'كل ضابط أدناه يحمل نصه الرسمي، فأجب عن بنود التحقق لتقيس الأداة جاهزيتك وتصوغ الأوراق وترتب العمل، ولا يغادر ما تكتبه هذا المتصفح.',
+    fInstrument:'الصك', fPublished:'النشر', fAuthority:'الجهة المصدرة',
+    fApplies:'نطاق السريان', fDue:'موعد الامتثال', fScope:'الحجم', fText:'النص المعتمد',
+    frontAnnex:(d)=>`Annex (1) to ${d}`,
+    frontAnnex:(d)=>`الملحق الأول من ${d}`,
+    frontGazette:(d)=>`الكويت اليوم، العدد 1785، السنة الثانية والسبعون، في ${d}`,
+    frontApplies:'كل جهة تقع ضمن اختصاص المركز الوطني للأمن السيبراني',
+    frontDue:(d,n)=>`${d}، ويتبقى ${arCount(n,'day')}`,
+    frontOverdue:(d,n)=>`${d}، وقد مضى عليه ${arCount(n,'day')}`,
+    frontScope:(c,k,e)=>`${arCount(c,'control')} و${arCount(k,'check')} و${arCount(e,'evidence')}`,
+    frontText:'الإنجليزية، وفق المادة السادسة من القرار',
     axisPublished:'النشر',
     axisDue:'الضوابط كلها قائمة',
     axisAlt:(p)=>`مدة الامتثال، وقد مضى منها ${p}٪`,
@@ -1208,14 +1240,49 @@ function toast(msg){
 }
 
 /* ---------- hero ---------- */
+/*
+ * The page opens on the instrument's front matter rather than on a headline.
+ *
+ * What was here was a slogan set very large, which is how a product announces
+ * itself to someone who has not heard of it. The reader here is a compliance
+ * officer who already knows the Decision exists and needs to see what it is,
+ * who issued it, what it covers and when it falls due, in the form a standard
+ * states those things: a two column register of facts, each one checkable
+ * against the gazette.
+ */
+function fmtDate(iso){
+  const d = new Date(iso + 'T00:00:00Z');
+  return d.toLocaleDateString(lang === 'ar' ? 'ar-KW-u-nu-latn' : 'en-GB',
+    { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
 function renderHero(){
   const s = windowStatus(new Date());
-  document.getElementById('heroKick').innerHTML = t('kick');
-  document.getElementById('heroTitle').textContent = t('heroTitle');
+  const ar = lang === 'ar';
+  document.getElementById('heroTitle').textContent = ar ? REG.titleAr : REG.title;
+  const alt = document.getElementById('heroTitleAlt');
+  alt.textContent = ar ? REG.title : REG.titleAr;
+  alt.setAttribute('lang', ar ? 'en' : 'ar');
+  alt.setAttribute('dir', ar ? 'ltr' : 'rtl');
   document.getElementById('heroLede').textContent = t('heroLede');
-  document.getElementById('daysN').textContent = Math.abs(s.remaining);
-  document.getElementById('daysUnit').textContent = s.remaining < 0 ? t('overdueUnit') : t('daysUnit');
-  document.getElementById('windowSub').innerHTML = t('windowSub', s.elapsedPct);
+
+  const due = s.remaining < 0
+    ? t('frontOverdue', fmtDate(REG.deadline), Math.abs(s.remaining))
+    : t('frontDue', fmtDate(REG.deadline), s.remaining);
+  const rows = [
+    [t('fInstrument'), t('frontAnnex', ar ? REG.decisionAr : REG.decision)],
+    [t('fPublished'),  t('frontGazette', fmtDate(REG.publishedOn))],
+    [t('fAuthority'),  ar ? REG.authorityAr : REG.authority],
+    [t('fApplies'),    t('frontApplies')],
+    [t('fDue'),        due],
+    [t('fScope'),      t('frontScope', CONTROLS.length, STATS.checks, STATS.evidenceItems)],
+    [t('fText'),       t('frontText')]
+  ];
+  // Flat dt and dd, so one grid places both columns on a shared baseline and
+  // the rules line up across the gutter.
+  document.getElementById('frontMatter').innerHTML = rows
+    .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
+
   document.getElementById('scaleSvg').dataset.w = '';
   paintAxis();
   watchAxis();
@@ -1574,7 +1641,9 @@ function draftMarkdown(doc, entity){
  */
 const AR_COUNTED = {
   control: ['ضابط واحد', 'ضابطان', 'ضوابط', 'ضابطا'],
-  check: ['بند واحد', 'بندان', 'بنود', 'بندا']
+  check: ['بند واحد', 'بندان', 'بنود', 'بندا'],
+  day: ['يوم واحد', 'يومان', 'أيام', 'يوما'],
+  evidence: ['دليل واحد', 'دليلان', 'أدلة', 'دليلا']
 };
 function arCount(n, kind){
   const [one, two, few, many] = AR_COUNTED[kind];
