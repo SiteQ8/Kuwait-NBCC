@@ -37,6 +37,12 @@ export const BASE_CSS = `
   --crimson:${TOKENS.crimson}; --crimson-soft:${TOKENS.crimsonSoft};
   --slate:${TOKENS.slate}; --slate-soft:${TOKENS.slateSoft};
   --sans:"IBM Plex Sans Arabic","IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  /* The report is read by a board and handed to a regulator, so it is set in
+     the register of the instrument it reports against: a transitional serif
+     for the Latin headings and a naskh, the type printed Arabic law uses, for
+     the Arabic. The body stays sans, which is easier to work in. */
+  --display:"Source Serif 4","Amiri",Georgia,serif;
+  --naskh:"Amiri","Noto Naskh Arabic",serif;
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
   --r:6px; --maxw:1180px;
 }

@@ -1704,20 +1704,36 @@ test('the page opens on front matter, not on a slogan', () => {
   const css = site.match(/<style>([\s\S]*?)<\/style>/)[1];
   assert.ok(/\.front\{display:grid; grid-template-columns:[^}]*minmax\(0,1fr\) [\d.]+rem/.test(css),
     'the front matter needs one grid across both columns');
-  // An alt title aligns to the page, not to its own script.
-  assert.ok(/\.ident \.alt\{[^}]*text-align:left/.test(css)
-    && /\[dir=rtl\] \.ident \.alt\{text-align:right\}/.test(css),
-    'the alt title must follow the page direction');
+
+  // A national instrument names itself the way a state publication does.
+  assert.ok(/\.masthead\{[^}]*text-align:center/.test(css), 'the masthead should be centred');
+  assert.ok(/\.masthead\{[^}]*border-bottom:3px double/.test(css),
+    'the masthead closes on the double rule official printing uses');
+  assert.ok(/\.masthead h1\{font-family:var\(--naskh\)/.test(css),
+    'the title is set in naskh, the register printed Arabic law uses');
+  // Arabic leads whichever way the interface is set, because Arabic is the
+  // language of the State.
+  assert.ok(/title\.textContent = REG\.titleAr;/.test(site)
+    && /alt\.textContent = REG\.title;/.test(site),
+    'the masthead must lead in Arabic in both interface languages');
+  // Raising the gravity of the page raises the duty to say what it is not.
+  assert.ok(/fStatus:/.test(site) && /frontStatus:/.test(site),
+    'a page that looks official has to state that it is not');
+  for (const lang of ['en', 'ar']) {
+    const table = site.slice(site.indexOf(lang === 'en' ? 'const STR' : "ar:{"));
+    assert.ok(/frontStatus:'[^']*/.test(table), `${lang} is missing the status line`);
+  }
 });
 
-test('Arabic is not stretched by the display face', () => {
-  // Archivo carries a width axis and there is no wide Arabic cut, so a
-  // stretched Arabic heading would break the joins of a connected script.
+test('nothing stretches Arabic letterforms', () => {
+  // A width axis on a connected script breaks its joins. The display face is
+  // a serif with no width axis now, so the rule is simply that no Arabic
+  // selector asks for one.
   const css = buildSite().match(/<style>([\s\S]*?)<\/style>/)[1];
-  for (const rule of [/\[lang=ar\] \.ident h1\{[^}]*font-stretch:normal/,
-                      /\[lang=ar\] \.tabs button\{[^}]*font-stretch:normal/]) {
-    assert.ok(rule.test(css), `Arabic still inherits a width axis: ${rule}`);
-  }
+  const stretched = [...css.matchAll(/\[lang=ar\][^{]*\{([^}]*)\}/g)]
+    .filter((m) => /font-stretch:\s*(?!normal)\d/.test(m[1]));
+  assert.deepEqual(stretched.map((m) => m[0]), [], 'an Arabic rule still stretches the face');
+  assert.ok(/--naskh:"Amiri"/.test(css), 'the naskh family is missing');
 });
 
 test('the function colours carry the structure of the instrument', () => {

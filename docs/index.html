@@ -9,10 +9,10 @@
 <meta property="og:title" content="Kuwait NBCC Toolkit. National Basic Cybersecurity Controls, Decision No. 2 of 2026">
 <meta property="og:description" content="44 controls, 329 checks, one browser tab. Assess readiness against Kuwait NCSC Decision No. 2 of 2026 without sending a byte anywhere.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7.5' fill='%23056839'/%3E%3Crect x='6' y='12.4' width='20' height='2.8' rx='1.4' fill='%23F3F5F2'/%3E%3Cpath d='M10.6 22.4 16 17l5.4 5.4' stroke='%23F3F5F2' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFFFFF'/%3E%3Ccircle cx='16' cy='16' r='15' fill='none' stroke='%230A1A12' stroke-width='1.4'/%3E%3Ccircle cx='16' cy='16' r='12.4' fill='none' stroke='%230A1A12' stroke-width='2.4'/%3E%3Crect x='9.4' y='13.4' width='13.2' height='2.1' fill='%230A1A12'/%3E%3Cpath d='M11.6 21.8 16 17.4l4.4 4.4' fill='none' stroke='%230A1A12' stroke-width='2.3'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;450;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400..700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;450;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#0A1A12; --ink-2:#17332A; --ink-3:#26463B;
@@ -24,12 +24,14 @@
   --blue:#2C5876; --blue-2:#E4EDF3;
   --slate:#566A5F; --slate-2:#5F7268;
   --sans:"IBM Plex Sans Arabic","IBM Plex Sans","Segoe UI",system-ui,sans-serif;
-  /* Archivo carries a width axis. Wide display type reads like the lettering
-     on a public building, which is what this instrument is, and it is the
-     opposite of the tight grotesque that every generated page reaches for.
-     Arabic has no wide cut here, so Arabic headings keep the body family and
-     earn their weight from size and leading instead. */
-  --display:"Archivo","IBM Plex Sans Arabic",system-ui,sans-serif;
+  /* This is a national instrument, so the title register is the one printed
+     Arabic law is set in. Amiri is a revival of the Bulaq Press naskh, which
+     is the tradition the official gazette belongs to, and Source Serif is a
+     transitional serif cut for legal and academic reading. A wide grotesque
+     said signage; a serif says instrument. The interface keeps the sans,
+     because a naskh at interface sizes is harder to work in all day. */
+  --display:"Source Serif 4","Amiri",Georgia,serif;
+  --naskh:"Amiri","Noto Naskh Arabic",serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --r:4px; --maxw:1180px;
   /* A scale, not a drift. Thirty sizes had collected here, seventeen of them
@@ -86,7 +88,7 @@ button{font:inherit; cursor:pointer}
 .rail{border-top:1px solid var(--rule); background:var(--paper-2)}
 .rail .wrap{padding-top:var(--s-3); padding-bottom:var(--s-2)}
 .rail .measure{margin:0}
-.brand .mark{border-radius:7px}
+.brand .mark{color:var(--ink); flex:none}
 .brand{display:flex; align-items:center; gap:var(--s-5); font-weight:600; letter-spacing:var(--ls-head); text-decoration:none; color:var(--ink)}
 .brand svg{flex:none}
 .brand .bw{display:flex; flex-direction:column; line-height:1.16}
@@ -110,13 +112,26 @@ button{font:inherit; cursor:pointer}
 body.working .hero{display:none}
 .hero{background:var(--paper); color:var(--ink); padding:var(--s-9) 0 var(--s-9); position:relative;
   border-bottom:1px solid var(--rule)}
-.ident{border-bottom:2px solid var(--ink); padding-bottom:var(--s-6); margin-bottom:var(--s-1)}
-.ident h1{font-family:var(--display); font-stretch:110%; font-weight:700; letter-spacing:var(--ls-tight);
-  font-size:clamp(1.3rem,2.1vw,1.7rem); line-height:1.16; margin:0; max-width:34ch; color:var(--ink)}
-[lang=ar] .ident h1{font-stretch:normal; letter-spacing:normal; font-weight:600; line-height:1.45}
-.ident .alt{display:block; margin:var(--s-2) 0 0; color:var(--slate-2); font-size:var(--t-ms);
-  text-align:left}
-[dir=rtl] .ident .alt{text-align:right}
+/* The masthead.
+ *
+ * A national instrument names itself the way a state publication does: the
+ * device, then the title in Arabic, which is the language of the State, then
+ * the English, then the citation, centred, closing on the double rule that
+ * official printing has used for two centuries. The register below returns to
+ * the start edge, because that is reading matter and this is a title page. */
+.masthead{text-align:center; padding:var(--s-4) 0 0; margin-bottom:var(--s-9);
+  border-bottom:3px double var(--ink)}
+.masthead .seal{color:var(--ink); margin:0 auto var(--s-6); display:block}
+.masthead h1{font-family:var(--naskh); font-weight:700; font-size:clamp(1.6rem,3.4vw,2.5rem);
+  line-height:1.5; margin:0 auto; max-width:26ch; color:var(--ink); letter-spacing:normal;
+  direction:rtl}
+.masthead .alt{font-family:var(--display); font-weight:600; font-size:clamp(1rem,1.7vw,1.3rem);
+  letter-spacing:var(--ls-head); line-height:1.3; margin:var(--s-4) auto 0; max-width:40ch;
+  color:var(--ink-3); direction:ltr}
+.masthead .cite{font-size:var(--t-sm); color:var(--slate); margin:var(--s-6) auto var(--s-6);
+  max-width:66ch; line-height:1.6}
+@media(max-width:560px){.masthead{margin-bottom:var(--s-8)}
+  .masthead .seal{width:44px; height:44px; margin-bottom:var(--s-5)}}
 .front{display:grid; grid-template-columns:10.5rem minmax(0,1fr) 10.5rem minmax(0,1fr);
   column-gap:var(--s-6); margin:0}
 .front dt,.front dd{padding:var(--s-4) 0 var(--s-5); border-bottom:1px solid var(--rule); margin:0}
@@ -524,8 +539,8 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#" data-tab="baseline">
-      <svg class="mark" width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7.5" fill="#056839"/><rect x="6" y="12.4" width="20" height="2.8" rx="1.4" fill="#F3F5F2"/><path d="M10.6 22.4 16 17l5.4 5.4" stroke="#F3F5F2" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="bw"><b>Kuwait NBCC</b><span class="ar" id="brandSub">National Basic Cybersecurity Controls</span></span>
+      <svg class="mark" width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="25" fill="none" stroke="currentColor" stroke-width="4"/><rect x="19" y="27" width="26" height="4" fill="currentColor"/><path d="M23.4 43.5 32 34.9l8.6 8.6" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+      <span class="bw"><b id="brandName">Kuwait NBCC</b><span class="ar" id="brandSub">National Basic Cybersecurity Controls</span></span>
     </a>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button role="tab" id="tab-baseline" aria-controls="panel-baseline" aria-selected="true" data-tab="baseline"></button>
@@ -546,9 +561,17 @@ footer .cols{display:flex; gap:var(--s-9); flex-wrap:wrap; justify-content:space
 
 <section class="hero">
   <div class="wrap">
-    <div class="ident">
+    <div class="masthead">
+      <svg class="seal" width="54" height="54" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="30.5" fill="none" stroke="currentColor" stroke-width="1"/>
+        <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <rect x="19" y="27.2" width="26" height="3" fill="currentColor"/>
+        <path d="M23.4 43 32 34.4 40.6 43" fill="none" stroke="currentColor" stroke-width="3"
+          stroke-linecap="square" stroke-linejoin="miter"/>
+      </svg>
       <h1 id="heroTitle"></h1>
       <p class="alt" id="heroTitleAlt"></p>
+      <p class="cite" id="heroCite"></p>
     </div>
     <dl class="front" id="frontMatter"></dl>
     <p class="note" id="heroLede"></p>
@@ -908,6 +931,8 @@ const STR = {
   en:{
     heroTitle:'Kuwait now has a mandatory cybersecurity floor.',
     heroLede:'Every control below carries its official text. Answer the checks and the tool scores readiness, drafts the paperwork and plans the work. Nothing you type leaves this browser.',
+    mastCite:(d,a)=>`Annex (1) to ${d}, issued by the ${a}`,
+    fStatus:'Status', frontStatus:'Readiness aid. Not an official instrument and carries no standing with the NCSC.',
     fInstrument:'Instrument', fPublished:'Published', fAuthority:'Issuing authority',
     fApplies:'Applies to', fDue:'Compliance due', fScope:'Scope', fText:'Authoritative text',
     frontAnnex:(d)=>`Annex (1) to ${d}`,
@@ -967,6 +992,7 @@ const STR = {
     unblocks:'unblocks', waitsOn:'waits on', openChecks:'open checks',
     noResults:'No control matches that search.',
     scopeQ:'Scope', profileNote:'A control is in scope until you record a reason it is not.',
+    brandName:'Kuwait NBCC',
     brandSub:'National Basic Cybersecurity Controls',
     tabs:{ baseline:'The baseline', assess:'Assess', plan:'Plan', crosswalk:'Crosswalk', docs:'Documents', about:'About' },
     clH:'Checklists to hand out',
@@ -1003,6 +1029,8 @@ const STR = {
   ar:{
     heroTitle:'أصبح للكويت حد أدنى إلزامي للأمن السيبراني.',
     heroLede:'كل ضابط أدناه يحمل نصه الرسمي، فأجب عن بنود التحقق لتقيس الأداة جاهزيتك وتصوغ الأوراق وترتب العمل، ولا يغادر ما تكتبه هذا المتصفح.',
+    mastCite:(d,a)=>`الملحق الأول من ${d}، الصادر عن ${a}`,
+    fStatus:'الصفة', frontStatus:'أداة استعداد، وليست صكا رسميا ولا صفة لها لدى المركز الوطني للأمن السيبراني.',
     fInstrument:'الصك', fPublished:'النشر', fAuthority:'الجهة المصدرة',
     fApplies:'نطاق السريان', fDue:'موعد الامتثال', fScope:'الحجم', fText:'النص المعتمد',
     frontAnnex:(d)=>`Annex (1) to ${d}`,
@@ -1066,7 +1094,8 @@ const STR = {
     unblocks:'يفتح الطريق أمام', waitsOn:'ينتظر', openChecks:'بندا مفتوحا',
     noResults:'لا يوجد ضابط يطابق البحث.',
     scopeQ:'النطاق', profileNote:'يظل الضابط ضمن النطاق حتى تسجل سببا لاستبعاده.',
-    brandSub:'الضوابط الوطنية الأساسية للأمن السيبراني',
+    brandName:'الضوابط الأساسية',
+    brandSub:'Kuwait National Basic Cybersecurity Controls',
     tabs:{ baseline:'الضوابط', assess:'التقييم', plan:'الخطة', crosswalk:'المواءمة', docs:'الوثائق', about:'عن الأداة' },
     clH:'قوائم تحقق تسلّمها',
     clP:'الأساس 329 بندا لا يستطيع شخص واحد العمل بها. وكل ضابط يملكه مكتب واحد بالضبط، والتقسيم قسمة تامة: تسلّم كل مكتب ورقته فيكون بينها كل شيء مغطى، لا مكرر ولا ساقط. وتوزيع المسؤوليات اجتهاد هذه الأداة، فالضابط GOV-1 هو الموضع الوحيد الذي يسمي فيه الملحق دورا.',
@@ -1259,11 +1288,17 @@ function fmtDate(iso){
 function renderHero(){
   const s = windowStatus(new Date());
   const ar = lang === 'ar';
-  document.getElementById('heroTitle').textContent = ar ? REG.titleAr : REG.title;
+  // The masthead is bilingual whichever way the interface is set, and Arabic
+  // leads, because Arabic is the language of the State. Only the citation and
+  // the register below follow the reader's choice.
+  const title = document.getElementById('heroTitle');
+  title.textContent = REG.titleAr;
+  title.setAttribute('lang', 'ar');
   const alt = document.getElementById('heroTitleAlt');
-  alt.textContent = ar ? REG.title : REG.titleAr;
-  alt.setAttribute('lang', ar ? 'en' : 'ar');
-  alt.setAttribute('dir', ar ? 'ltr' : 'rtl');
+  alt.textContent = REG.title;
+  alt.setAttribute('lang', 'en');
+  document.getElementById('heroCite').textContent =
+    t('mastCite', ar ? REG.decisionAr : REG.decision, ar ? REG.authorityAr : REG.authority);
   document.getElementById('heroLede').textContent = t('heroLede');
 
   const due = s.remaining < 0
@@ -1276,7 +1311,11 @@ function renderHero(){
     [t('fApplies'),    t('frontApplies')],
     [t('fDue'),        due],
     [t('fScope'),      t('frontScope', CONTROLS.length, STATS.checks, STATS.evidenceItems)],
-    [t('fText'),       t('frontText')]
+    [t('fText'),       t('frontText')],
+    // The page now carries the weight of a state publication, so it has to
+    // say plainly what it is not. A standard states its status in its front
+    // matter, and so does this.
+    [t('fStatus'),     t('frontStatus')]
   ];
   // Flat dt and dd, so one grid places both columns on a shared baseline and
   // the rules line up across the gutter.
@@ -1900,6 +1939,7 @@ function renderAll(){
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   document.getElementById('lang').textContent = lang === 'ar' ? 'English' : 'عربي';
+  document.getElementById('brandName').textContent = t('brandName');
   document.getElementById('brandSub').textContent = t('brandSub');
   const tabNames = STR[lang].tabs;
   document.querySelectorAll('.tabs button').forEach(b => { b.textContent = tabNames[b.dataset.tab]; });

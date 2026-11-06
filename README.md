@@ -294,6 +294,12 @@ nbcc crosswalk --to cis      # what an existing CIS IG1 programme already earns 
 
 The page still wore the shape every generated page wears: a dark hero band, then light body, then rounded pill tabs, one neutral sans throughout. Changing the colours inside that shape did not change the shape. So the structure changed instead.
 
+**It is set like an instrument of a state.** The faces are the ones printed Arabic law uses: Amiri, a revival of the Bulaq Press naskh, for the title, and Source Serif 4, a transitional serif cut for legal and academic reading, for the Latin. A wide grotesque said signage. A serif says instrument.
+
+**Arabic leads the masthead in both interface languages**, because Arabic is the language of the State. The title block is centred, opens on a monochrome device rather than a green app icon, and closes on the double rule official printing has used for two centuries. Only the citation and the register below follow the reader's choice of language. The report that goes to a board and to a regulator is set in the same register.
+
+Raising the gravity of a page raises the duty to say what it is not, so the front matter states its own status: a readiness aid, not an official instrument, with no standing before the NCSC.
+
 **The page opens on front matter.** What was there was a sentence set very large, which is how a product announces itself to someone who has not heard of it. The reader here is a compliance officer who already knows the Decision exists. The opening is now what the front matter of a standard is: a ruled two column register of the instrument, its gazette citation, the issuing authority, who it binds, when it falls due, its size and which language text governs. Every figure is read from the catalog, so the page cannot disagree with the controls below it. The title block carries the instrument's name in both languages, as a bilingual instrument's title page does.
 
 **The deadline is page furniture now.** It used to sit inside the dark hero, which only the first tab showed, so it scrolled away the moment you started working. It is the second row of the sticky chrome: on every tab, in both languages, always on screen. An entity does not stop owing 5 October 2027 because it changed tab, and the tool should not pretend otherwise. On a phone the rail keeps its two end dates and drops the interior captions, which collided.

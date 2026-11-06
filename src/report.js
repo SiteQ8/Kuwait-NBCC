@@ -245,7 +245,11 @@ const REPORT_CSS = `
 ${BASE_CSS}
 .masthead{background:var(--ink); color:var(--paper); padding:34px 0 30px}
 .masthead .wrap{display:flex; flex-wrap:wrap; gap:26px; justify-content:space-between; align-items:flex-end}
-.masthead h1{color:var(--paper); max-width:19ch}
+.masthead h1{color:var(--paper); max-width:22ch; font-family:var(--display); font-weight:700;
+  letter-spacing:-.015em}
+[dir=rtl] .masthead h1{font-family:var(--naskh); letter-spacing:normal; line-height:1.45}
+h2{font-family:var(--display); font-weight:700; letter-spacing:-.012em}
+[dir=rtl] h2{font-family:var(--naskh); letter-spacing:normal; line-height:1.5}
 .masthead .kicker{color:#9FBBAE; font-size:.95rem; margin-bottom:9px}
 .masthead dl{margin:0; display:grid; grid-template-columns:auto auto; gap:3px 18px; font-size:.88rem}
 .masthead dt{color:#8FA6AE}
@@ -475,7 +479,7 @@ export function renderReport(assessment, options = {}) {
 <meta name="description" content="${esc(tr('subtitle'))}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 <style>${REPORT_CSS}</style>
 </head>
 <body>
